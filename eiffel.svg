@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 262" width="240" height="524">
+  <defs>
+    <linearGradient id="m" x1="0" x2="1">
+      <stop offset="0" stop-color="#1b1b1e"/><stop offset=".42" stop-color="#5d5e64"/><stop offset=".55" stop-color="#7b7c82"/><stop offset="1" stop-color="#18181a"/>
+    </linearGradient>
+    <pattern id="lat" width="7" height="7" patternUnits="userSpaceOnUse">
+      <path d="M0 0 L7 7 M7 0 L0 7" stroke="#c9c9cf" stroke-width=".55" stroke-opacity=".55"/>
+    </pattern>
+    <clipPath id="t"><path id="tp" d="M60 4 L62 30 L64 60 L68 100 L74 140 L82 175 L94 215 L113 258 L89 258 Q60 204 31 258 L7 258 L26 215 L38 175 L46 140 L52 100 L56 60 L58 30 Z"/></clipPath>
+  </defs>
+  <path d="M60 4 L62 30 L64 60 L68 100 L74 140 L82 175 L94 215 L113 258 L89 258 Q60 204 31 258 L7 258 L26 215 L38 175 L46 140 L52 100 L56 60 L58 30 Z" fill="url(#m)"/>
+  <g clip-path="url(#t)">
+    <rect width="120" height="262" fill="url(#lat)"/>
+    <path d="M30 214 H90 M40 176 H80 M47 138 H73 M53 99 H67 M56 62 H64" stroke="#e5e5ea" stroke-opacity=".5" stroke-width="1"/>
+    <path d="M60 4 V258" stroke="#000" stroke-opacity=".25" stroke-width="1.2"/>
+  </g>
+  <path d="M89 258 Q60 204 31 258" fill="none" stroke="#2a2a2e" stroke-width="2"/>
+  <rect x="45" y="96" width="30" height="6" rx="1" fill="#2a2a2e"/>
+  <rect x="45" y="96" width="30" height="2" fill="#8d8e95"/>
+  <rect x="31" y="160" width="58" height="8" rx="1.5" fill="#2a2a2e"/>
+  <rect x="31" y="160" width="58" height="2.5" fill="#9a9ba2"/>
+  <rect x="58.6" y="0" width="2.8" height="8" fill="#3a3a3f"/>
+  <path d="M58 30 L56 60 L52 100" stroke="#b9bac0" stroke-width=".9" fill="none" stroke-opacity=".7"/>
+</svg>

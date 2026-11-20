@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 124 244" width="248" height="488">
+  <defs>
+    <linearGradient id="bd" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#4a4c52"/><stop offset=".5" stop-color="#2b2c30"/><stop offset="1" stop-color="#17181a"/>
+    </linearGradient>
+    <linearGradient id="rim" x1="0" x2="1">
+      <stop offset="0" stop-color="#9b9ea6"/><stop offset=".5" stop-color="#d7d9de"/><stop offset="1" stop-color="#6d7078"/>
+    </linearGradient>
+    <radialGradient id="lens" cx=".4" cy=".35" r=".7">
+      <stop offset="0" stop-color="#3b4a6b"/><stop offset=".45" stop-color="#121826"/><stop offset="1" stop-color="#05070b"/>
+    </radialGradient>
+    <linearGradient id="gl" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fff" stop-opacity=".16"/><stop offset=".4" stop-color="#fff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect x="2" y="2" width="120" height="240" rx="20" fill="url(#rim)"/>
+  <rect x="5" y="5" width="114" height="234" rx="17.5" fill="url(#bd)"/>
+  <rect x="0" y="60" width="2.5" height="16" rx="1" fill="#8d9098"/>
+  <rect x="0" y="84" width="2.5" height="26" rx="1" fill="#8d9098"/>
+  <rect x="121.5" y="78" width="2.5" height="34" rx="1" fill="#8d9098"/>
+  <rect x="12" y="12" width="56" height="56" rx="14" fill="#232428" stroke="#5c5f66" stroke-width="1.2"/>
+  <rect x="12" y="12" width="56" height="56" rx="14" fill="url(#gl)"/>
+  <g>
+    <circle cx="27" cy="27" r="11" fill="#0d0e10" stroke="#6f727a" stroke-width="1.6"/><circle cx="27" cy="27" r="7.2" fill="url(#lens)"/><circle cx="24.6" cy="24.4" r="1.8" fill="#fff" fill-opacity=".55"/>
+    <circle cx="27" cy="53" r="11" fill="#0d0e10" stroke="#6f727a" stroke-width="1.6"/><circle cx="27" cy="53" r="7.2" fill="url(#lens)"/><circle cx="24.6" cy="50.4" r="1.8" fill="#fff" fill-opacity=".55"/>
+    <circle cx="52" cy="40" r="11" fill="#0d0e10" stroke="#6f727a" stroke-width="1.6"/><circle cx="52" cy="40" r="7.2" fill="url(#lens)"/><circle cx="49.6" cy="37.4" r="1.8" fill="#fff" fill-opacity=".55"/>
+    <circle cx="53" cy="20" r="3.6" fill="#e9e2cf" stroke="#7c7f86" stroke-width=".8"/>
+    <circle cx="53" cy="60" r="2.4" fill="#0d0e10" stroke="#6f727a" stroke-width=".8"/>
+  </g>
+  <rect x="5" y="5" width="114" height="234" rx="17.5" fill="url(#gl)"/>
+</svg>
