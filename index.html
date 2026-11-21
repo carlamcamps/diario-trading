@@ -695,9 +695,9 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
     if (dlg.hidden && document.getElementById("calc").hidden) render();
   }
   function setAuth(session) {
-    ro = !session;
+    ro = false; // anyone with the link may edit (no sign-in needed)
     document.body.classList.toggle("ro", ro);
-    const b = document.getElementById("authBtn"); b.hidden = false; b.textContent = session ? "Sair" : "Entrar";
+    const b = document.getElementById("authBtn"); b.hidden = true; b.textContent = session ? "Sair" : "Entrar";
     idleStatus(); render();
   }
   async function init() {
@@ -707,7 +707,7 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
       render(); return;
     }
     sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-    mode = "db"; ro = true; document.body.classList.add("ro");
+    mode = "db"; ro = false; document.body.classList.remove("ro");
     setStatus("load", "A carregar…");
     const { data } = await sb.auth.getSession();
     setAuth(data && data.session);
