@@ -210,6 +210,11 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
 .stp button:disabled { opacity: .3; cursor: default; background: transparent; }
 .stp output { min-width: 14px; text-align: center; font-weight: 500; font-size: 13px; font-variant-numeric: tabular-nums; color: var(--champ); }
 .stp output.z { color: var(--soft); opacity: .7; }
+.stp { cursor: text; padding-right: 3px; }
+.stp input { width: 34px; height: 24px; border: 0; border-radius: 999px; background: rgba(255, 255, 255, .7); text-align: center; font: 600 13.5px/1 var(--sans); font-variant-numeric: tabular-nums; color: var(--ink); padding: 0; }
+.stp input.z { color: var(--soft); font-weight: 400; }
+.stp input:focus { outline: 1.5px solid var(--gold); outline-offset: 0; background: #fff; color: var(--ink); }
+.stp input[readonly] { background: transparent; }
 .res { justify-self: end; font-weight: 500; font-size: 13px; font-variant-numeric: tabular-nums; }
 .nb { width: 26px; height: 26px; border-radius: 50%; border: 0; background: transparent; cursor: pointer; display: grid; place-items: center; color: var(--soft); opacity: .55; position: relative; }
 .nb:hover { opacity: 1; background: rgba(58, 16, 24, .08); }
@@ -589,7 +594,7 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
   try { const v = localStorage.getItem(LS_VIEW); if (v === "conta" || v === "estrategia") shown = v; const t = localStorage.getItem(LS_TAB); if (t === "cal" || t === "diario" || t === "news") tab = t; } catch (_) {}
   const store = { estrategia: new Map(), conta: new Map(), prop_estrategia: new Map(), prop_conta: new Map() };
   const dirty = new Set(), timers = new Map(), inflight = new Map();
-  let mode = "loading", db = null, loadTimer = null, ro = false;
+  let mode = "loading", db = null, loadTimer = null, ro = false, skipSel = false, dirtyView = false;
   const confirmed = { estrategia: false, conta: false };
 
   const pad = n => String(n).padStart(2, "0");
@@ -743,10 +748,9 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
   const $ = id => document.getElementById(id);
   function stepper(s, id, field, val) {
     const L = field.toUpperCase();
-    return '<div class="stp ' + field + '"><span class="lb">' + L + '</span>' +
-      '<button type="button" data-k="' + s + '|' + id + '|' + field + '|-1" aria-label="Menos um ' + L + '"' + (val <= 0 ? " disabled" : "") + '>−</button>' +
-      '<output class="' + (val ? "" : "z") + '">' + val + '</output>' +
-      '<button type="button" data-k="' + s + '|' + id + '|' + field + '|1" aria-label="Mais um ' + L + '">+</button></div>';
+    // a small box to type the number (no + / − buttons)
+    return '<label class="stp ' + field + '"><span class="lb">' + L + '</span>' +
+      '<input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" autocomplete="off" class="' + (val ? "" : "z") + '" value="' + val + '" data-in="' + s + '|' + id + '|' + field + '" aria-label="' + L + ' do dia ' + id.slice(8) + '"' + (ro ? " readonly" : "") + '></label>';
   }
   function spark(s, days, w) {
     const ids = days.map(iso);
@@ -863,7 +867,9 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
   }
 
   function render() {
-    const fk = document.activeElement && document.activeElement.dataset ? (document.activeElement.dataset.k || document.activeElement.dataset.note) : null;
+    const ae = document.activeElement;
+    const fk = ae && ae.dataset ? (ae.dataset.k || ae.dataset.note) : null;
+    const fin = ae && ae.dataset && ae.dataset.in ? ae.dataset.in : null;
     const days = weekdays(view.y, view.m);
     const oldPn = document.querySelector(".panels");
     if (oldPn && oldPn.scrollWidth > oldPn.clientWidth + 2) shown = oldPn.scrollLeft > oldPn.clientWidth / 2 ? "conta" : "estrategia";
@@ -883,6 +889,7 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
       drawSparks(days);
     }
     if (fk) { const el = document.querySelector('[data-k="' + fk + '"], [data-note="' + fk + '"]'); if (el && !el.disabled) el.focus({ preventScroll: true }); }
+    if (fin) { const el = document.querySelector('[data-in="' + fin + '"]'); if (el) { skipSel = true; el.focus({ preventScroll: true }); skipSel = false; try { el.select(); } catch (_) {} } }
   }
   // phone: the two panels sit side by side in a snap carousel; swipe left for Conta, right for Estratégia
   function setupSwipe() {
@@ -1005,6 +1012,32 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
   $("view").addEventListener("focusout", hideTip);
   $("view").addEventListener("click", hideTip, true);
   window.addEventListener("scroll", hideTip, { passive: true });
+
+  // ---------- typing TP / SL ----------
+  $("view").addEventListener("click", e => { const i = e.target.closest("input[data-in]"); if (i && !i.readOnly) { try { i.select(); } catch (_) {} } });
+  $("view").addEventListener("focusin", e => { const i = e.target.closest("input[data-in]"); if (i && !i.readOnly && !skipSel) setTimeout(() => { try { i.select(); } catch (_) {} }, 0); });
+  $("view").addEventListener("input", e => {
+    const i = e.target.closest("input[data-in]"); if (!i || ro) return;
+    const clean = i.value.replace(/\D/g, "").slice(0, 2);
+    if (clean !== i.value) i.value = clean;
+    const [s, id, field] = i.dataset.in.split("|"), e0 = entry(s, id);
+    if (e0.off) return;
+    const v = clean === "" ? 0 : Math.min(99, +clean);
+    if (v === e0[field]) return;
+    setEntry(s, id, { [field]: v });
+    // update just this row while typing; the totals refresh when you leave the box
+    const row = i.closest(".lrow"), e1 = entry(s, id), p = pctOf(e1), res = row && row.querySelector(".res");
+    i.classList.toggle("z", !v);
+    if (row) { row.classList.remove("d-pos", "d-neg", "d-zero"); if (traded(s, id)) row.classList.add("d-" + cls(p)); }
+    if (res) { const eu = res.querySelector(".eur"); res.className = "res " + cls(p); res.firstChild.nodeValue = fmt(p); if (eu) eu.textContent = eur(euroOf(e1)); }
+    dirtyView = true;
+  });
+  $("view").addEventListener("change", e => { if (e.target.closest("input[data-in]") && dirtyView) { dirtyView = false; setTimeout(render, 0); } });
+  $("view").addEventListener("keydown", e => {
+    const i = e.target.closest("input[data-in]"); if (!i) return;
+    if (e.key === "Enter") { e.preventDefault(); const all = [...document.querySelectorAll('input[data-in]')]; const n = all[all.indexOf(i) + 1]; if (n) n.focus(); else i.blur(); }
+  });
+  $("view").addEventListener("focusout", e => { const i = e.target.closest("input[data-in]"); if (i && i.value === "") i.value = "0"; });
 
   // ---------- events ----------
   $("view").addEventListener("click", e => {
