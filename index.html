@@ -133,6 +133,19 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
 .controls { display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
 .monthnav { display: inline-flex; align-items: center; gap: 2px; border: 1px solid var(--line); border-radius: 999px; padding: 3px; background: rgba(0, 0, 0, .18); }
 .monthnav .ml { min-width: 160px; text-align: center; font-family: var(--display); font-size: 18px; color: var(--champ); }
+.monthnav { position: relative; }
+.mlbtn { border: 0; background: none; padding: 6px 8px; border-radius: 10px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.mlbtn:hover { background: rgba(205, 167, 94, .12); }
+/* month / year picker that opens when you tap the month */
+.mpick { position: absolute; top: calc(100% + 8px); left: 0; z-index: 30; width: 272px; padding: 12px; border-radius: 18px; background: #2A0811; border: 1px solid rgba(205, 167, 94, .5); box-shadow: 0 24px 50px -18px rgba(0, 0, 0, .9); animation: mpIn .18s ease-out; }
+@keyframes mpIn { from { opacity: 0; transform: translateY(-6px); } }
+.mp-y { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+.mp-y b { font-family: var(--display); font-size: 20px; color: var(--champ); font-weight: 500; }
+.mp-y button { width: 34px; height: 34px; border-radius: 50%; border: 1px solid rgba(205, 167, 94, .4); background: transparent; color: var(--gold); font-size: 18px; cursor: pointer; }
+.mp-g { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.mp-g button { height: 40px; border-radius: 12px; border: 1px solid rgba(205, 167, 94, .22); background: rgba(251, 243, 238, .05); color: #EFDCC6; font: 500 14px/1 var(--sans); cursor: pointer; }
+.mp-g button.hoje { border-color: rgba(205, 167, 94, .7); }
+.mp-g button.on { background: linear-gradient(135deg, #CDA75E, #A8833F); color: #2A0A11; border-color: transparent; font-weight: 600; }
 .circ { width: 32px; height: 32px; border-radius: 50%; border: 0; background: transparent; color: var(--gold); cursor: pointer; font-size: 18px; line-height: 1; display: grid; place-items: center; }
 .circ:hover { background: rgba(205, 167, 94, .14); }
 .todaybtn { height: 40px; padding: 0 18px; border-radius: 999px; border: 1px solid var(--line); background: rgba(0, 0, 0, .18); color: var(--gold); cursor: pointer; font-size: 13px; letter-spacing: .04em; }
@@ -1153,7 +1166,7 @@ body.ses-open .sesbtn { display: none !important; }
       <div class="controls">
         <div class="monthnav">
           <button class="circ" id="prev" aria-label="Mês anterior">‹</button>
-          <span class="ml" id="mlabel">Novembro 2026</span>
+          <button type="button" class="ml mlbtn" id="mlabel" aria-haspopup="true" aria-label="Escolher o mês e o ano">Novembro 2026</button>
           <button class="circ" id="next" aria-label="Mês seguinte">›</button>
         </div>
         <button class="todaybtn" id="today">Hoje</button>
@@ -3608,6 +3621,22 @@ body.ses-open .sesbtn { display: none !important; }
       markSwitch(); if (slideCtl) slideCtl.go(Math.max(0, AC_VIEWS.indexOf(acView)), true); else render();
     }
   });
+  // tap the month name: a little calendar of months and years to jump straight there
+  const mpick = document.createElement("div"); mpick.className = "mpick"; mpick.hidden = true; mpick.setAttribute("role", "dialog"); mpick.setAttribute("aria-label", "Escolher o mês e o ano");
+  $("mlabel").parentElement.appendChild(mpick);
+  let mpY = view.y;
+  function drawMp() {
+    mpick.innerHTML = '<div class="mp-y"><button type="button" data-mpy="-1" aria-label="Ano anterior">‹</button><b>' + mpY + '</b><button type="button" data-mpy="1" aria-label="Ano seguinte">›</button></div>' +
+      '<div class="mp-g">' + MON3.map((m, i) => '<button type="button" data-mpm="' + i + '" class="' + (i === view.m && mpY === view.y ? "on" : "") + (i === now.getMonth() && mpY === now.getFullYear() ? " hoje" : "") + '">' + cap(m) + '</button>').join("") + '</div>';
+  }
+  $("mlabel").addEventListener("click", e => { e.stopPropagation(); if (!mpick.hidden) { mpick.hidden = true; return; } mpY = view.y; drawMp(); mpick.hidden = false; });
+  mpick.addEventListener("click", e => {
+    e.stopPropagation();
+    const yb = e.target.closest("[data-mpy]"); if (yb) { mpY += +yb.dataset.mpy; drawMp(); return; }
+    const mb = e.target.closest("[data-mpm]"); if (mb) { view.y = mpY; view.m = +mb.dataset.mpm; mpick.hidden = true; render(); }
+  });
+  document.addEventListener("click", () => { mpick.hidden = true; });
+  document.addEventListener("keydown", e => { if (e.key === "Escape") mpick.hidden = true; });
   $("prev").addEventListener("click", () => { view.m--; if (view.m < 0) { view.m = 11; view.y--; } render(); });
   $("next").addEventListener("click", () => { view.m++; if (view.m > 11) { view.m = 0; view.y++; } render(); });
   $("today").addEventListener("click", () => {
