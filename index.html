@@ -60,7 +60,7 @@ img { max-width: 100%; }
 }
 * { box-sizing: border-box; }
 html { background: var(--wine); overflow-x: hidden; }
-body { background-color: var(--wine); color: var(--champ); font-family: var(--sans); font-size: 13.5px; line-height: 1.45; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+body { background-color: var(--wine); color: var(--champ); font-family: var(--sans); font-size: 13.5px; line-height: 1.45; -webkit-font-smoothing: antialiased; overflow-x: clip; }
 .page { position: relative; overflow: clip; min-height: 100vh; }
 .gut { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
 .content { position: relative; z-index: 2; }
@@ -583,7 +583,7 @@ body.night .lrow.d-pos { background: #86BB96; } body.night .lrow.d-neg { backgro
 @keyframes spFest { to { opacity: 1; transform: none; } }
 .splash.in .sp-icon { opacity: 1; transform: none; } .splash.in .sp-title, .splash.in .sp-quote { opacity: 1; transform: none; } .splash.in .sp-line { opacity: 1; }
 /* ---------- pull to refresh ---------- */
-html, body { overscroll-behavior-y: contain; }
+/* (no overscroll-behavior here: on the body it blocked the mouse wheel on computers) */
 .ptr { position: fixed; top: 0; left: 50%; z-index: 60; transform: translate(-50%, -60px); display: flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px; background: #2A0711; border: 1px solid rgba(205, 167, 94, .5); color: var(--gold); font: 500 13px/1 var(--sans); box-shadow: 0 10px 24px -10px rgba(0, 0, 0, .8); opacity: 0; pointer-events: none; transition: opacity .15s ease; }
 .ptr.show { opacity: 1; }
 .ptr-i { display: inline-block; transition: transform .2s ease; font-size: 15px; }
@@ -989,13 +989,12 @@ body.view-diario .gbar, body.view-stats .gbar, body.view-cal .gbar { position: f
 .gbar button { position: relative; z-index: 1; border: 0; padding: 0; background: none; font: 600 13px/1 var(--sans); letter-spacing: .05em; color: #EFDCC6; cursor: pointer; transition: color .2s ease; -webkit-tap-highlight-color: transparent; }
 .gbar button[aria-pressed="true"] { color: #2A0A11; }
 body.ses-open .gbar { display: none !important; }
-/* live session (phone only) */
+/* live session (phone and computer) */
 .sesbtn { display: none; }
-@media (max-width: 860px) {
-  body.view-diario .sesbtn { position: fixed; z-index: 15; right: 16px; bottom: max(18px, env(safe-area-inset-bottom, 0px)); display: inline-flex; align-items: center; gap: 6px; border: 1px solid rgba(205, 167, 94, .6); background: linear-gradient(135deg, #CDA75E, #A8833F); color: #2A0A11; border-radius: 999px; padding: 11px 16px 11px 13px; font: 600 14px/1 var(--sans); box-shadow: 0 12px 26px -8px rgba(0, 0, 0, .75); cursor: pointer; }
-  .sesbtn svg { width: 18px; height: 18px; }
-  body.ses-open .sesbtn { display: none !important; }
-}
+body.view-diario .sesbtn { position: fixed; z-index: 15; right: 16px; bottom: max(18px, env(safe-area-inset-bottom, 0px)); display: inline-flex; align-items: center; gap: 6px; border: 1px solid rgba(205, 167, 94, .6); background: linear-gradient(135deg, #CDA75E, #A8833F); color: #2A0A11; border-radius: 999px; padding: 11px 16px 11px 13px; font: 600 14px/1 var(--sans); box-shadow: 0 12px 26px -8px rgba(0, 0, 0, .75); cursor: pointer; }
+.sesbtn svg { width: 18px; height: 18px; }
+body.ses-open .sesbtn { display: none !important; }
+@media (min-width: 861px) { body.view-diario .sesbtn { right: 28px; bottom: 28px; padding: 13px 20px 13px 16px; font-size: 15px; } }
 .ses { position: fixed; inset: 0; z-index: 35; background: radial-gradient(120% 70% at 50% 0%, #4A0E1E, #170307 70%); color: var(--champ); display: flex; flex-direction: column; align-items: center; padding: max(16px, env(safe-area-inset-top, 0px)) 16px max(18px, env(safe-area-inset-bottom, 0px)); overflow-y: auto; }
 /* the day's result tints the session screen very lightly: green up, yellow at 0%, red down */
 .ses::before { content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: 0; transition: opacity .7s ease; background: var(--sesTint, transparent); }
