@@ -592,10 +592,19 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
 .pk-head h2 { margin: 2px 0 0; font-family: var(--display); font-weight: 400; font-size: clamp(38px, 5vw, 56px); line-height: 1; color: var(--champ); letter-spacing: .02em; }
 .pk-r { display: flex; align-items: center; gap: 14px; }
 .pk-tot { font-family: var(--display); font-weight: 600; font-size: 34px; line-height: 1; }
-.pk-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; position: relative; z-index: 1; }
-.pk-grid .pm { padding: 10px 9px 8px; }
-.pk-grid .pd { font-size: 9px; border-radius: 5px; }
-.pk-grid .pg { gap: 3px; }
+/* minimalist: tiny squares, no numbers; the day's result shows in the line above */
+.pk-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(112px, 1fr)) !important; gap: 8px !important; position: relative; z-index: 1; }
+.pk-grid .pm { padding: 8px 8px 7px !important; border-radius: 12px !important; }
+.pk-grid .pm-h { flex-direction: row !important; align-items: baseline !important; padding-bottom: 5px !important; margin-bottom: 5px !important; }
+.pk-grid .pm-h b { font-size: 12.5px !important; }
+.pk-grid .pm-h span { font-size: 10.5px !important; }
+.pk-grid .pd { font-size: 0 !important; border-radius: 3px !important; cursor: pointer; }
+.pk-grid .pg { gap: 2px !important; }
+.pk-grid .pw { font-size: 7.5px !important; }
+.pd.sel { box-shadow: 0 0 0 2px #3A1018; transform: scale(1.2); }
+.pk-info { display: flex; align-items: center; gap: 10px; min-height: 38px; padding: 8px 14px; border-radius: 12px; background: rgba(0, 0, 0, .25); border: 1px solid rgba(205, 167, 94, .3); color: var(--champ); font-size: 14px; position: relative; z-index: 1; }
+.pk-info .pd { width: 14px; height: 14px; aspect-ratio: auto; border-radius: 4px; flex: 0 0 auto; font-size: 0; }
+@media (max-width: 640px) { .pk-grid { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 5px !important; } .pk-grid .pm { padding: 6px 5px 5px !important; } .pk-info { font-size: 13px; } }
 .pm { background: #FBF6F2; border-radius: 14px; padding: 12px 12px 10px; color: #3A1018; box-shadow: 0 6px 14px -10px rgba(0, 0, 0, .5); }
 .pm-h { display: flex; justify-content: space-between; align-items: baseline; width: 100%; border: 0; background: transparent; padding: 0 0 8px; margin-bottom: 6px; border-bottom: 1px solid rgba(58, 16, 24, .1); cursor: pointer; font: inherit; color: inherit; }
 .pm-h b { font-family: var(--display); font-weight: 500; font-size: 15px; letter-spacing: .02em; }
@@ -704,6 +713,9 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
 .tstream svg { display: block; }
 .ts-d { left: .02em; top: .82em; } .ts-g { right: .05em; top: .78em; } .ts-e { left: 38%; top: .86em; }
 .mstreams { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+.xstreams { position: absolute; left: 0; top: 0; width: 100%; height: 3400px; z-index: 1; pointer-events: none; overflow: visible; filter: drop-shadow(0 2px 2px rgba(0, 0, 0, .35)); }
+.cfl { position: absolute; display: block; filter: drop-shadow(0 1px 2px rgba(0, 0, 0, .35)); }
+.cfl svg { display: block; }
 .mstream { position: absolute; opacity: .9; filter: drop-shadow(0 1px 1px rgba(0, 0, 0, .3)); }
 @media (max-width: 1100px) { .mstreams { display: none; } .ts-e { display: none; } }
 @media (max-width: 640px) { .ts-d svg, .ts-g svg { height: 90px !important; } }
@@ -744,9 +756,21 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
 /* account: headline chips, tabs row with Pagamentos */
 .tabrow { display: flex; align-items: flex-end; justify-content: space-between; gap: 10px; }
 .tabrow .ftabs { max-width: none; }
-.pagbtn { display: inline-flex; align-items: center; gap: 7px; margin: 0 10px 6px 0; border: 1px solid rgba(205, 167, 94, .55); background: linear-gradient(135deg, rgba(205, 167, 94, .28), rgba(205, 167, 94, .08)); color: var(--gold); border-radius: 999px; padding: 7px 14px; font: 500 13px/1 var(--sans); cursor: pointer; white-space: nowrap; }
-.pagbtn svg { width: 16px; height: 16px; }
-.pagbtn:hover, .pagbtn.on { background: var(--gold); color: #2A0A11; }
+.pagbtn { position: relative; overflow: hidden; display: inline-flex; align-items: center; gap: 8px; margin: 0 10px 6px 0; border: 0; background: linear-gradient(135deg, #F3DDA0, #CDA75E 45%, #A8833F); color: #2A0A11; border-radius: 999px; padding: 10px 18px; font: 700 14px/1 var(--sans); letter-spacing: .02em; cursor: pointer; white-space: nowrap; box-shadow: 0 6px 18px -6px rgba(205, 167, 94, .75), inset 0 1px 0 rgba(255, 255, 255, .5); animation: pagGlow 2.8s ease-in-out infinite; }
+.pagbtn::after { content: ""; position: absolute; top: 0; bottom: 0; width: 40%; left: -60%; background: linear-gradient(100deg, transparent, rgba(255, 255, 255, .55), transparent); animation: pagShine 3.2s ease-in-out infinite; }
+.pagbtn svg { width: 18px; height: 18px; }
+.pagbtn:hover { filter: brightness(1.06); }
+.pagbtn.on { background: rgba(0, 0, 0, .3); color: var(--gold); box-shadow: inset 0 0 0 1px rgba(205, 167, 94, .55); animation: none; }
+.pagbtn.on::after { display: none; }
+@keyframes pagGlow { 0%, 100% { box-shadow: 0 6px 18px -6px rgba(205, 167, 94, .75), inset 0 1px 0 rgba(255, 255, 255, .5); } 50% { box-shadow: 0 6px 26px -4px rgba(231, 201, 137, .95), inset 0 1px 0 rgba(255, 255, 255, .5); } }
+@keyframes pagShine { 0%, 55% { left: -60%; } 100% { left: 130%; } }
+@media (prefers-reduced-motion: reduce) { .pagbtn, .pagbtn::after { animation: none; } }
+/* Estratégia days of +30% or more: always sparkle */
+.lrow.star, .cd.star { position: relative; box-shadow: 0 0 0 1.5px #E7C989, 0 0 16px rgba(231, 201, 137, .6); background: linear-gradient(100deg, #CDEBD6, #F6E7C2 55%, #CDEBD6) !important; }
+.lrow.star::before, .lrow.star::after, .cd.star::before, .cd.star::after { content: ""; position: absolute; width: 11px; height: 11px; background: #FFF4D6; clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%); filter: drop-shadow(0 0 4px #FFD166); animation: spark 2.2s ease-in-out infinite; pointer-events: none; z-index: 2; }
+.lrow.star::before, .cd.star::before { top: -5px; left: 30%; }
+.lrow.star::after, .cd.star::after { bottom: -5px; right: 18%; animation-delay: 1.1s; width: 9px; height: 9px; }
+.lrow.star .res { color: #2F6B4B; font-weight: 700; }
 .achips { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 8px; position: relative; z-index: 1; }
 .achip { border-radius: 16px; padding: 12px 14px; background: linear-gradient(160deg, rgba(251, 243, 238, .97), rgba(240, 226, 216, .97)); color: var(--ink); display: flex; flex-direction: column; gap: 2px; box-shadow: inset 0 0 0 1px rgba(205, 167, 94, .25); }
 .achip span { font-size: 11.5px; color: #8C6168; letter-spacing: .02em; }
@@ -760,13 +784,27 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
 /* payments */
 .payform { background: rgba(0, 0, 0, .22); border: 1px solid rgba(205, 167, 94, .3); border-radius: 16px; padding: 12px; position: relative; z-index: 1; }
 .pf-t { font-family: var(--display); color: var(--gold); font-size: 15px; margin: 0 2px 8px; }
-.pf-g { display: grid; grid-template-columns: 150px 130px minmax(0, 1fr) 150px; gap: 8px; align-items: end; }
+.pf-g { display: grid; grid-template-columns: 160px 140px minmax(0, 1fr) 130px; gap: 8px; align-items: end; }
+.pf-who { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.pf-who > span { font-size: 11px; color: var(--soft); }
+.pf-who > div { display: flex; gap: 6px; }
+.pf-who label { flex: 1; cursor: pointer; }
+.pf-who input { position: absolute; opacity: 0; pointer-events: none; }
+.pf-who b { display: grid; place-items: center; height: 38px; border-radius: 10px; border: 1px solid rgba(205, 167, 94, .35); background: rgba(255, 255, 255, .08); color: var(--champ); font: 600 14px var(--sans); transition: background-color .15s ease; }
+.pf-who input:checked + b { background: var(--gold); color: #2A0A11; border-color: var(--gold); }
+.pf-who input:focus-visible + b { outline: 1.5px solid var(--gold); outline-offset: 2px; }
+.pay-who { border-radius: 999px; padding: 5px 12px; font: 600 12px/1 var(--sans); }
+.pay-who.pw-c { background: rgba(205, 167, 94, .22); color: #7A5A1E; }
+.pay-who.pw-m { background: rgba(77, 157, 224, .16); color: #2A5E8C; }
+.achip.who span::before { content: "♦ "; color: var(--gold); }
 .pf-g label { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
 .pf-g label > span { font-size: 11px; color: var(--soft); }
 .pf-g input, .pf-g select { width: 100%; height: 38px; border-radius: 10px; border: 1px solid rgba(205, 167, 94, .3); background: rgba(255, 255, 255, .94); color: var(--ink); padding: 0 10px; font: 14px var(--sans); color-scheme: light; }
 .pf-g input:focus, .pf-g select:focus { outline: 1.5px solid var(--gold); outline-offset: 1px; }
 .pf-eur { position: relative; } .pf-eur i { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-style: normal; color: #8C6168; }
 .pf-nota { grid-column: 1 / 4; }
+.pf-g .pf-nota { grid-column: auto; }
+.pf-g { grid-template-columns: 160px 140px 200px minmax(0, 1fr) 130px; }
 .pf-add { height: 38px; }
 .paylist { display: flex; flex-direction: column; gap: 4px; position: relative; z-index: 1; }
 .pay-y { display: flex; justify-content: space-between; align-items: baseline; padding: 8px 6px 2px; color: var(--soft); font-size: 12px; }
@@ -785,7 +823,7 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
 .pay-empty { background: rgba(251, 243, 238, .08); border-radius: 14px; color: var(--soft); position: relative; z-index: 1; }
 @media (max-width: 760px) {
   .pf-g { grid-template-columns: 1fr 1fr; }
-  .pf-g label:nth-child(3), .pf-nota { grid-column: 1 / -1; }
+  .pf-g .pf-who, .pf-g .pf-nota { grid-column: 1 / -1; }
   .pf-add { grid-column: 1 / -1; }
   .tabrow { flex-wrap: wrap; }
   .pagbtn { margin: 0 0 8px auto; padding: 6px 12px; font-size: 12.5px; }
@@ -1220,10 +1258,8 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
       "<ellipse cx='50' cy='121' rx='30' ry='4' fill='#000' opacity='.2'/><g clip-path='url(#c)'><rect width='100' height='126' fill='" + A + "'/>" + pat + "<rect width='100' height='126' fill='url(#h)'/></g>" +
       "<ellipse cx='35' cy='34' rx='6' ry='13' fill='#fff' opacity='.5' transform='rotate(-20 35 34)'/></svg>");
   }
-  const ART = {
-    pascoa: [0, 1, 2, 3, 4, 5].map(egg)
-  };
-  void pumpkin;
+  const ART = {};
+  void pumpkin; void egg;
   // a realistic spider web for a corner (pos: tl / tr / bl / br), drawn with fine silk threads
   function cobweb(size, flip) {
     const R = 100, n = 9, rings = 7; let d = "";
@@ -1246,7 +1282,7 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
   }
   // sparkles / webs around every box on the page (Christmas and Halloween), also in the tabs that are drawn later
   function decorateCards() {
-    if (SEASON_NOW !== "natal" && SEASON_NOW !== "halloween") return;
+    if (SEASON_NOW !== "natal" && SEASON_NOW !== "halloween" && SEASON_NOW !== "pascoa") return;
     const sel = (SEASON_NOW === "natal" ? "" : ".pbody, ") + ".cal, .calyr, .stp-card, .acc-card, .pocket, .nw-hero, .nw-cal";
     document.querySelectorAll(sel).forEach(el => {
       if (el.querySelector(":scope > .cdeco")) return;
@@ -1259,6 +1295,11 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
           const pos = edge === 0 ? "left:" + along + "%;top:-" + (s / 2) + "px" : edge === 1 ? "left:" + along + "%;bottom:-" + (s / 2) + "px" : edge === 2 ? "top:" + along + "%;left:-" + (s / 2) + "px" : "top:" + along + "%;right:-" + (s / 2) + "px";
           h += '<i class="spk" style="' + pos + ';width:' + s + 'px;height:' + s + 'px;--c:' + c + ';animation-delay:' + ((i * .41) % 2.8).toFixed(2) + 's"></i>';
         }
+      } else if (SEASON_NOW === "pascoa") {
+        // little bunches of flowers on the corners of every box
+        const FC = [["#F7A8C4", "#FFD84D"], ["#FFFFFF", "#F2B84B"], ["#B9A3E3", "#FFE08A"], ["#9FD8F0", "#FFFFFF"], ["#FFC48A", "#E0603A"]];
+        const spots = [["left:-6px;top:-6px", 0], ["left:14px;top:-8px", 1], ["right:-6px;top:-6px", 2], ["right:16px;top:-7px", 3], ["right:-5px;bottom:-6px", 4], ["right:15px;bottom:-8px", 0], ["left:-6px;bottom:-6px", 2], ["left:40%;top:-7px", 3], ["left:62%;bottom:-7px", 1]];
+        h += spots.map(([p, k], i) => '<span class="cfl" style="' + p + '">' + flower(FC[k][0], FC[k][1], 10 + (i % 3) * 3) + '</span>').join("");
       } else h += cobweb(64, "tl") + cobweb(48, "br");
       el.insertAdjacentHTML("beforeend", '<div class="cdeco" aria-hidden="true">' + h + '</div>');
     });
@@ -1310,12 +1351,12 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
       // tiny colourful flowers scattered in the margins and around the title
       const FC = [["#F7A8C4", "#FFD84D"], ["#FFFFFF", "#F2B84B"], ["#B9A3E3", "#FFE08A"], ["#9FD8F0", "#FFFFFF"], ["#FFC48A", "#E0603A"], ["#F4E06D", "#E08A1F"]];
       let seed = 4242, f = ""; const rnd = () => { seed = (seed * 1664525 + 1013904223) % 4294967296; return seed / 4294967296; };
-      for (let i = 0; i < 34; i++) {
-        const left = rnd() < .5, x = left ? 1 + rnd() * 12 : 87 + rnd() * 11, y = 120 + rnd() * 2900, c = FC[i % FC.length], s = 9 + Math.round(rnd() * 7);
+      for (let i = 0; i < 90; i++) {
+        const left = rnd() < .5, x = left ? 1 + rnd() * 13 : 86 + rnd() * 13, y = 20 + rnd() * 3300, c = FC[i % FC.length], s = 8 + Math.round(rnd() * 8);
         f += '<span class="fl' + (i % 3 ? " fm" : "") + '" style="left:' + x.toFixed(1) + '%;top:' + Math.round(y) + 'px;transform:rotate(' + Math.round(rnd() * 70) + 'deg)">' + flower(c[0], c[1], s) + '</span>';
       }
       document.getElementById("page").insertAdjacentHTML("afterbegin", '<div class="flowers" aria-hidden="true">' + f + '</div>');
-      h1.insertAdjacentHTML("beforeend", [[-.55, .05, 0, 14], [1.02, .1, 2, 12], [-.3, .9, 3, 11], [.98, .86, 5, 13], [.46, -.32, 1, 10]].map(([x, y, k, s]) => '<span class="tfl" style="left:' + (x * 100) + '%;top:' + (y * 100) + '%">' + flower(FC[k][0], FC[k][1], s) + '</span>').join(""));
+      h1.insertAdjacentHTML("beforeend", [[-.1, -.1, 0, 15], [-.06, .08, 4, 10], [1.02, .1, 2, 13], [1.06, -.08, 1, 10], [-.04, .9, 3, 11], [1.0, .86, 5, 13], [.46, -.34, 1, 10], [.2, -.3, 2, 9], [.74, -.3, 0, 11], [.36, 1.02, 4, 9], [.62, 1.04, 3, 10]].map(([x, y, k, s]) => '<span class="tfl" style="left:' + (x * 100) + '%;top:' + (y * 100) + '%">' + flower(FC[k][0], FC[k][1], s) + '</span>').join(""));
     }
     if (SEASON_NOW === "anonovo") {
       // fireworks behind the title (soft, in the background)
@@ -1360,6 +1401,16 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
         m += '<span class="mstream" style="left:' + x + '%;top:' + y + 'px;transform:rotate(' + (i % 2 ? 14 : -12) + 'deg)">' + fall(len, COLS[ci], 1.5, 12, 3 + (i % 3) * .5) + '</span>';
       });
       document.getElementById("page").insertAdjacentHTML("afterbegin", '<div class="mstreams" aria-hidden="true">' + m + '</div>');
+      // long streamers thrown from one side of the page to the other, each in its own band so they never pile up
+      const VIV = ["#FF5C9A", "#FFC83D", "#2EC4B6", "#4D9DE0", "#9B6DE0", "#FF8A3D", "#E9A6BE", "#7BD389"];
+      let cross = "";
+      for (let k = 0; k < 9; k++) {
+        const y0 = 260 + k * 340 + (k % 2 ? 40 : 0), dir = k % 2 ? -1 : 1, amp = 26 + (k % 3) * 10, waves = 3 + (k % 3);
+        let d = "";
+        for (let i = 0; i <= 80; i++) { const t = i / 80, x = dir > 0 ? -2 + t * 104 : 102 - t * 104, y = y0 + (t - .5) * 120 * dir + Math.sin(t * waves * 6.283) * amp; d += (i ? "L" : "M") + x.toFixed(2) + " " + y.toFixed(1); }
+        cross += '<path d="' + d + '" stroke="' + VIV[k % VIV.length] + '" stroke-width="2.2" fill="none" stroke-linecap="round" vector-effect="non-scaling-stroke" opacity=".85"/>';
+      }
+      document.getElementById("page").insertAdjacentHTML("afterbegin", '<svg class="xstreams" viewBox="0 0 100 3400" preserveAspectRatio="none" aria-hidden="true">' + cross + '</svg>');
       return;
     }
     // drawn pieces sitting around the title (pumpkins / Easter eggs)
@@ -1550,8 +1601,8 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
       for (const k of cdirty) { const i = k.indexOf("/"), a = k.slice(0, i), id = k.slice(i + 1), local = cstore[a].get(id); if (local) cm[a].set(id, local); else cm[a].delete(id); }
       cstore.fusion = cm.fusion; cstore.prop = cm.prop;
     }
-    const pr = await sb.from("pagamentos").select("id,conta,dia,valor,metodo,estado,nota").limit(5000);
-    if (!pr.error) { const pp = { fusion: [], prop: [] }; for (const r of pr.data || []) if (pp[r.conta]) pp[r.conta].push({ id: r.id, dia: String(r.dia).slice(0, 10), valor: +r.valor, metodo: r.metodo || "", estado: r.estado === "pedido" ? "pedido" : "recebido", nota: r.nota || "" }); pays = pp; }
+    const pr = await sb.from("pagamentos").select("id,conta,dia,valor,metodo,estado,nota,pessoa").limit(5000);
+    if (!pr.error) { const pp = { fusion: [], prop: [] }; for (const r of pr.data || []) if (pp[r.conta]) pp[r.conta].push({ id: r.id, dia: String(r.dia).slice(0, 10), valor: +r.valor, metodo: r.metodo || "", estado: r.estado === "pedido" ? "pedido" : "recebido", nota: r.nota || "", pessoa: r.pessoa || "Carla" }); pays = pp; }
     const hr = await sb.from("humor").select("dia,humor").limit(20000);
     if (!hr.error) { const mm = new Map(); for (const r of hr.data || []) if (MOOD[r.humor]) mm.set(String(r.dia).slice(0, 10), r.humor); moods = mm; }
     const typing = document.activeElement && document.activeElement.matches && document.activeElement.matches("input, textarea");
@@ -1735,7 +1786,8 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
           h += '<div class="lrow off' + ex + base + '" data-row="' + s.key + '|' + id + '">' + dateHtml + '<span class="offlbl">Sem operar</span>' + nbHtml + (notes ? "<span></span>" : "") + '</div>';
         } else {
           const eurHtml = notes && e.risk && traded(s.key, id) ? '<span class="eur">' + eur(euroOf(e)) + '</span>' : "";
-          h += '<div class="lrow' + ex + base + (traded(s.key, id) ? " d-" + cls(p) : "") + '" data-row="' + s.key + '|' + id + '">' + dateHtml +
+          const star = !s.acct && traded(s.key, id) && p >= BIG_DAY;
+          h += '<div class="lrow' + ex + base + (traded(s.key, id) ? " d-" + cls(p) : "") + (star ? " star" : "") + '" data-row="' + s.key + '|' + id + '"' + (star ? ' title="Dia acima de +' + BIG_DAY + '%"' : '') + '>' + dateHtml +
             stepper(s.key, id, "tp", e.tp) + stepper(s.key, id, "sl", e.sl) +
             '<span class="to' + (e.tp + e.sl ? "" : " z") + '" data-tip="plain" data-tv="Total de oportunidades (TP + SL)"><span class="lb">TO</span><b>' + (e.tp + e.sl) + '</b></span>' +
             '<span class="res ' + cls(p) + '">' + fmt(p) + eurHtml + '</span>' + nbHtml + cbHtml + '</div>';
@@ -1777,7 +1829,7 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
         else {
           weekIds.push(id);
           const e = entry(s.key, id), p = pctOf(e), has = traded(s.key, id);
-          const c = (e.off ? " off" : has ? " d-" + cls(p) : "") + (id === todayId ? " today" : id > todayId ? " future" : "");
+          const c = (e.off ? " off" : has ? " d-" + cls(p) : "") + (id === todayId ? " today" : id > todayId ? " future" : "") + (!s.acct && has && p >= BIG_DAY ? " star" : "");
           const md = moods.get(id);
           let inner = '<span class="cn">' + d.getDate() + '</span><span class="cmood' + (md ? " set" : "") + '" data-mood="' + id + '" role="button" tabindex="0" aria-label="Humor de ' + d.getDate() + ' de ' + MONTHS[view.m] + (md ? ": " + MOOD[md][2] : "") + '"' + (md ? ' data-tip="plain" data-tv="Humor: ' + MOOD[md][2] + '"' : ' data-tip="empty" data-tv="Como te sentiste?"') + '>' + (md ? moodImg(md, "cm-i") : '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><circle cx="8" cy="8" r="6.2"/><path d="M5.6 9.6a3 3 0 0 0 4.8 0"/><path d="M6 6.4h.01M10 6.4h.01" stroke-width="1.8"/></svg>') + '</span>';
           if (e.note) inner += '<svg class="cnote" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.8 2.6l2.6 2.6L6 12.6 2.8 13.2l.6-3.2z"/></svg>';
@@ -2019,12 +2071,13 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
         const k = e.off ? "off" : tr ? (p > 0 ? "pos" : p < 0 ? "neg" : "zero") : "none";
         if (k === "pos") gp++; else if (k === "zero") gz++; else if (k === "neg") gn++;
         const tv = d.getDate() + " " + MON3[m] + ": " + (e.off ? "sem operar" : tr ? fmt(p) + " (" + e.tp + " TP, " + e.sl + " SL)" : "não operei");
-        g += '<i class="pd ' + k + (id === todayId ? " td" : "") + '" data-tip="plain" data-tv="' + esc(tv) + '">' + d.getDate() + '</i>';
+        g += '<i class="pd ' + k + (id === todayId ? " td" : "") + '" data-pki="' + esc(tv) + '" data-pkc="' + k + '" tabindex="0" role="button" aria-label="' + esc(tv) + '"></i>';
       }
       months += '<div class="pm"><button type="button" class="pm-h" data-ycm="' + m + '" aria-label="Abrir ' + MONTHS[m] + ' no calendário"><b>' + cap(MONTHS[m]) + '</b><span class="' + cls(t.pct) + '">' + (t.tp + t.sl ? fmt(t.pct) : "") + '</span></button><div class="pg">' + g + '</div></div>';
     }
     let h = '<section class="pocket glass g-' + s.role + '"><div class="pk-head"><div><div class="kind">O teu ano</div><h2>' + y + '</h2></div>' +
       '<div class="pk-r"><div class="per" role="group" aria-label="Tabela">' + gs.map((x, i) => '<button type="button" data-ycs="' + i + '" aria-pressed="' + (x === s) + '">' + x.label + '</button>').join("") + '</div><div class="pk-tot ' + cls(yt) + '">' + fmt(yt) + '</div></div></div>';
+    h += '<div class="pk-info" id="pkInfo" aria-live="polite"><i class="pd none"></i><span>Toca ou passa num dia para veres o resultado</span></div>';
     h += '<div class="pk-grid">' + months + '</div>';
     h += '<div class="pk-foot"><span><i class="pd pos"></i>' + gp + ' positivos</span><span><i class="pd zero"></i>' + gz + ' a 0%</span><span><i class="pd neg"></i>' + gn + ' negativos</span><span><i class="pd none"></i>não operei</span></div>';
     return h + '</section>';
@@ -2183,7 +2236,8 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
   const LS_PAY = "diario-trading-pagamentos-v1";
   let pays = { fusion: [], prop: [] }, acMode = "conta";
   try { if (localStorage.getItem("diario-trading-conta-modo") === "pag") acMode = "pag"; } catch (_) {}
-  const METODOS = ["Banco", "Rise", "Wise", "PayPal", "Cripto", "Revolut"];
+  const METODOS = ["Banco", "Rise", "Wise", "PayPal", "Cripto", "Revolut"]; void METODOS;
+  const PESSOAS = ["Carla", "Miguel"];
   function savePayLocal() { try { localStorage.setItem(LS_PAY, JSON.stringify(pays)); } catch (_) {} }
   function payTotals(a) {
     let rec = 0, wait = 0, n = 0;
@@ -2191,12 +2245,12 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
     return { rec, wait, n };
   }
   async function addPay(a, p, restoreId) {
-    const item = { id: restoreId || ("l" + Date.now() + Math.random().toString(36).slice(2, 6)), dia: p.dia, valor: +p.valor, metodo: p.metodo || "", estado: p.estado === "pedido" ? "pedido" : "recebido", nota: p.nota || "" };
+    const item = { id: restoreId || ("l" + Date.now() + Math.random().toString(36).slice(2, 6)), dia: p.dia, valor: +p.valor, metodo: p.metodo || "", estado: p.estado === "pedido" ? "pedido" : "recebido", nota: p.nota || "", pessoa: PESSOAS.includes(p.pessoa) ? p.pessoa : "Carla" };
     pays[a].push(item);
     try {
       if (mode === "db") {
         setStatus("saving", "A guardar…");
-        const row = { conta: a, dia: item.dia, valor: item.valor, metodo: item.metodo, estado: item.estado, nota: item.nota };
+        const row = { conta: a, dia: item.dia, valor: item.valor, metodo: item.metodo, estado: item.estado, nota: item.nota, pessoa: item.pessoa };
         if (restoreId && !String(restoreId).startsWith("l")) row.id = restoreId;
         const r = await sb.from("pagamentos").insert(row).select("id").single();
         if (r.error) throw r.error; item.id = r.data.id; idleStatus();
@@ -2221,18 +2275,18 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
     const avg = T.n ? T.rec / T.n : 0;
     let h = '<section class="acc-card pag glass g-' + (a === "prop" ? "prop" : "conta") + '">';
     h += '<div class="st-head"><div><div class="kind">Pagamentos</div><h2>' + AC[a] + '</h2></div><div class="ac-now"><small>Total recebido</small><b>' + EUR.format(T.rec) + '</b></div></div>';
+    const byP = PESSOAS.map(n => [n, list.filter(p => p.pessoa === n && p.estado !== "pedido").reduce((s0, p) => s0 + p.valor, 0)]);
     h += '<div class="achips">' +
       '<div class="achip"><span>Pagamentos</span><b>' + T.n + '</b><small>recebidos</small></div>' +
-      '<div class="achip"><span>Média</span><b>' + (T.n ? EUR.format(avg) : "—") + '</b><small>por pagamento</small></div>' +
-      '<div class="achip"><span>Último</span><b>' + (last ? EUR.format(last.valor) : "—") + '</b><small>' + (last ? dayName(last.dia) + " " + last.dia.slice(0, 4) : "ainda nenhum") + '</small></div>' +
-      (T.wait ? '<div class="achip wait"><span>À espera</span><b>' + EUR.format(T.wait) + '</b><small>pedidos ainda por receber</small></div>' : '') +
+      byP.map(([n, v]) => '<div class="achip who"><span>Para ' + n + '</span><b>' + EUR.format(v) + '</b><small>' + list.filter(p => p.pessoa === n).length + ' pagamentos</small></div>').join("") +
+      '<div class="achip"><span>Último</span><b>' + (last ? EUR.format(last.valor) : "—") + '</b><small>' + (last ? dayName(last.dia) + " " + last.dia.slice(0, 4) + " · " + (last.pessoa || "Carla") : "ainda nenhum") + '</small></div>' +
       '</div>';
-    // form to add a payout
+    void avg;
+    // form to add a payout: date, amount, who it went to, note
     h += '<form class="payform" data-payform="' + a + '"><div class="pf-t">Registar um pagamento</div><div class="pf-g">' +
       '<label><span>Data</span><input type="date" name="dia" value="' + iso(new Date()) + '" required></label>' +
       '<label><span>Valor</span><div class="pf-eur"><input type="text" name="valor" inputmode="decimal" placeholder="0,00" required autocomplete="off"><i>€</i></div></label>' +
-      '<label><span>Como recebeste</span><input type="text" name="metodo" list="metodos" placeholder="Banco, Rise…" autocomplete="off"></label>' +
-      '<label><span>Estado</span><select name="estado"><option value="recebido">Recebido</option><option value="pedido">Pedido (à espera)</option></select></label>' +
+      '<div class="pf-who" role="radiogroup" aria-label="Para quem foi"><span>Para quem</span><div>' + PESSOAS.map((n, i) => '<label><input type="radio" name="pessoa" value="' + n + '"' + (i ? '' : ' checked') + '><b>' + n + '</b></label>').join("") + '</div></div>' +
       '<label class="pf-nota"><span>Nota</span><input type="text" name="nota" placeholder="Opcional" autocomplete="off"></label>' +
       '<button type="submit" class="btn primary pf-add">Adicionar</button></div></form>';
     // list
@@ -2245,8 +2299,8 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
         if (y !== year) { year = y; const ty = list.filter(q => q.dia.startsWith(y) && q.estado !== "pedido").reduce((s0, q) => s0 + q.valor, 0); h += '<div class="pay-y"><b>' + y + '</b><span>' + EUR.format(ty) + ' recebidos</span></div>'; }
         const [yy, mm, dd] = p.dia.split("-").map(Number), dt = new Date(yy, mm - 1, dd);
         h += '<div class="payrow' + (p.estado === "pedido" ? " wait" : "") + '"><div class="pay-d"><b>' + dd + '</b><span>' + MON3[mm - 1] + '</span></div>' +
-          '<div class="pay-m"><b>' + EUR.format(p.valor) + '</b><small>' + DOWL[dt.getDay()] + (p.metodo ? ' · ' + esc(p.metodo) : '') + (p.nota ? ' · ' + esc(p.nota) : '') + '</small></div>' +
-          '<button type="button" class="pay-st" data-payst="' + a + '|' + p.id + '" data-tip="plain" data-tv="Tocar para mudar o estado">' + (p.estado === "pedido" ? "À espera" : "Recebido") + '</button>' +
+          '<div class="pay-m"><b>' + EUR.format(p.valor) + '</b><small>' + DOWL[dt.getDay()] + (p.nota ? ' · ' + esc(p.nota) : '') + '</small></div>' +
+          '<span class="pay-who pw-' + (p.pessoa === "Miguel" ? "m" : "c") + '">' + esc(p.pessoa || "Carla") + '</span>' +
           '<button type="button" class="pay-x" data-paydel="' + a + '|' + p.id + '" aria-label="Apagar este pagamento">✕</button></div>';
       }
       h += '</div>';
@@ -2488,11 +2542,14 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
   document.body.appendChild(sesBtn);
   const ses = document.createElement("div"); ses.className = "ses"; ses.hidden = true; ses.setAttribute("role", "dialog"); ses.setAttribute("aria-modal", "true"); ses.setAttribute("aria-label", "Modo sessão"); document.body.appendChild(ses);
   let sesRole = "estrategia", sesHist = [];
-  try { const r = localStorage.getItem("diario-trading-sessao"); if (SERIES.some(x => x.role === r)) sesRole = r; } catch (_) {}
+  // only the two accounts (the strategies are filled in by hand)
+  const SES = () => SERIES.filter(x => x.acct);
+  sesRole = "conta";
+  try { const r = localStorage.getItem("diario-trading-sessao"); if (SES().some(x => x.role === r)) sesRole = r; } catch (_) {}
   function drawSes() {
-    if (byRole(sesRole).grp !== grp) sesRole = GS()[byRole(sesRole).side].role;
+    if (!SES().some(x => x.role === sesRole)) sesRole = "conta";
     const d = new Date(), id = iso(d), s = byRole(sesRole), e = entry(s.key, id), p = pctOf(e), we = d.getDay() === 0 || d.getDay() === 6;
-    ses.innerHTML = '<div class="ses-top"><div class="ses-tabs">' + GS().map(x => '<button type="button" data-sesr="' + x.role + '" aria-pressed="' + (x.role === sesRole) + '">' + x.label + '</button>').join("") + '</div>' + grpDots() + '<button type="button" class="ses-x" data-ses="close" aria-label="Fechar">✕</button></div>' +
+    ses.innerHTML = '<div class="ses-top"><div class="ses-tabs">' + SES().map(x => '<button type="button" data-sesr="' + x.role + '" aria-pressed="' + (x.role === sesRole) + '">' + x.label + '</button>').join("") + '</div><button type="button" class="ses-x" data-ses="close" aria-label="Fechar">✕</button></div>' +
       '<div class="ses-date">' + DOWL[d.getDay()] + ', ' + d.getDate() + ' de ' + MONTHS[d.getMonth()] + '</div>' +
       (we ? '<p class="ses-we">Hoje é fim de semana. O Diário só tem dias úteis.</p>' : e.off ? '<p class="ses-we">Este dia está marcado como "sem operar".</p>' :
         '<div class="ses-res ' + cls(p) + '">' + fmt(p) + '</div><div class="ses-cnt">' + e.tp + ' TP · ' + e.sl + ' SL' + (s.acct && e.risk ? ' · ' + eur(euroOf(e)) : '') + '</div>' +
@@ -2502,10 +2559,8 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
   }
   sesBtn.addEventListener("click", () => { sesHist = []; drawSes(); ses.hidden = false; document.body.classList.add("ses-open"); });
   ses.addEventListener("click", e => {
-    const gd = e.target.closest("[data-grp]");
-    if (gd) { setGrp(gd.dataset.grp, true); sesRole = GS()[byRole(sesRole).side].role; sesHist = []; drawSes(); return; }
     const r = e.target.closest("[data-sesr]");
-    if (r) { sesRole = r.dataset.sesr; try { localStorage.setItem("diario-trading-sessao", sesRole); } catch (_) {} drawSes(); return; }
+    if (r) { sesRole = r.dataset.sesr; sesHist = []; try { localStorage.setItem("diario-trading-sessao", sesRole); } catch (_) {} drawSes(); return; }
     const b = e.target.closest("[data-ses]"); if (!b) return;
     const a = b.dataset.ses, id = iso(new Date()), s = byRole(sesRole);
     if (a === "close") { ses.hidden = true; document.body.classList.remove("ses-open"); render(); return; }
@@ -2959,13 +3014,22 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
   })();
   document.querySelector(".tabs").addEventListener("click", e => { const b = e.target.closest("button[data-view]"); if (b) { setTab(b.dataset.view); b.scrollIntoView({ block: "nearest", inline: "center", behavior: "smooth" }); } });
   $("view").addEventListener("keydown", e => { const mo = e.target.closest(".cmood"); if (mo && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); e.stopPropagation(); openMood(mo, mo.dataset.mood); } }, true);
+  // year calendar: show the day's result in the line above the months (hover on a computer, tap on a phone)
+  const pkShow = el => {
+    const info = $("pkInfo"); if (!info) return;
+    info.innerHTML = '<i class="pd ' + el.dataset.pkc + '"></i><span></span>'; info.lastChild.textContent = el.dataset.pki;
+    document.querySelectorAll(".pd.sel").forEach(x => x.classList.remove("sel")); el.classList.add("sel");
+  };
+  $("view").addEventListener("mouseover", e => { const d = e.target.closest && e.target.closest(".pd[data-pki]"); if (d) pkShow(d); });
+  $("view").addEventListener("click", e => { const d = e.target.closest(".pd[data-pki]"); if (d) pkShow(d); });
+  $("view").addEventListener("focusin", e => { const d = e.target.closest(".pd[data-pki]"); if (d) pkShow(d); });
   // add a payout
   $("view").addEventListener("submit", async e => {
     const f = e.target.closest("form[data-payform]"); if (!f) return;
     e.preventDefault();
     const a = f.dataset.payform, v = parseNum(f.valor.value);
     if (!v || v <= 0) { f.valor.focus(); f.valor.setCustomValidity("Escreve o valor"); f.valor.reportValidity(); f.valor.setCustomValidity(""); return; }
-    const item = await addPay(a, { dia: f.dia.value || iso(new Date()), valor: v, metodo: f.metodo.value.trim().slice(0, 60), estado: f.estado.value, nota: f.nota.value.trim().slice(0, 300) });
+    const item = await addPay(a, { dia: f.dia.value || iso(new Date()), valor: v, estado: "recebido", pessoa: (f.querySelector('input[name="pessoa"]:checked') || {}).value, nota: f.nota.value.trim().slice(0, 300) });
     pushUndo("Pagamento de " + EUR.format(v) + " guardado", () => { delPay(a, item.id); hideUndo(); render(); });
     render();
   });
@@ -3009,7 +3073,7 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
   render();
   init();
   // the News tab draws itself later: decorate its boxes too
-  if (SEASON_NOW === "natal" || SEASON_NOW === "halloween") { let mo = 0; new MutationObserver(() => { if (mo) return; mo = requestAnimationFrame(() => { mo = 0; decorateCards(); }); }).observe($("view"), { childList: true, subtree: true }); }
+  if (SEASON_NOW === "natal" || SEASON_NOW === "halloween" || SEASON_NOW === "pascoa") { let mo = 0; new MutationObserver(() => { if (mo) return; mo = requestAnimationFrame(() => { mo = 0; decorateCards(); }); }).observe($("view"), { childList: true, subtree: true }); }
   // news & holidays for the * marks on Estratégia
   if (window.Noticias && window.Noticias.preload) window.Noticias.preload().then(() => { if ((tab === "diario" || tab === "stats") && !document.activeElement.matches("input")) render(); }).catch(() => {});
 })();
