@@ -13,14 +13,33 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Descarregar o calendario do Forex Factory
+      - name: Descarregar o calendario do Forex Factory e juntar ao arquivo
         run: |
           curl -fsSL -A "Mozilla/5.0" https://nfs.faireconomy.media/ff_calendar_thisweek.json -o novo.json
-          python3 -c "import json; json.load(open('novo.json'))"
+          python3 - <<'EOF'
+          import json, datetime
+          novo = json.load(open('novo.json'))
+          try:
+              arq = json.load(open('noticias-arquivo.json'))
+          except Exception:
+              arq = []
+          def iso(s):
+              return datetime.datetime.fromisoformat(s).astimezone(datetime.timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
+          m = {(e['country'], e['title'], e['date']): e for e in arq}
+          for e in novo:
+              if e.get('impact') not in ('High', 'Holiday'):
+                  continue
+              d = iso(e['date'])
+              k = (e['country'], e['title'], d)
+              old = m.get(k, {})
+              m[k] = {'title': e['title'], 'country': e['country'], 'date': d, 'impact': e['impact'],
+                      'actual': old.get('actual', ''), 'forecast': e.get('forecast', '') or '', 'previous': e.get('previous', '') or ''}
+          json.dump(sorted(m.values(), key=lambda x: x['date']), open('noticias-arquivo.json', 'w'), ensure_ascii=False, separators=(',', ':'))
+          EOF
           mv novo.json noticias.json
       - name: Guardar no site
         run: |
           git config user.name "atualizador-noticias"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add noticias.json
+          git add noticias.json noticias-arquivo.json
           git diff --cached --quiet || (git commit -m "Atualizar noticias" && git push)
