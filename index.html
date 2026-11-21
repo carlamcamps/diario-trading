@@ -489,6 +489,75 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
   .ac2 { grid-template-columns: 1fr; }
 }
 
+/* ---------- background: the gold ribbons move slowly ---------- */
+#rings .rib { animation: ribSway 30s ease-in-out infinite alternate; transform-box: view-box; }
+@keyframes ribSway { 0% { transform: translate(0, 0); } 50% { transform: translate(-1.2%, 14px); } 100% { transform: translate(1%, -10px); } }
+#rings .flow { animation: ribFlow 14s linear infinite; }
+@keyframes ribFlow { to { stroke-dashoffset: -160; } }
+#rings .glint { animation: ribGlint 11s ease-in-out infinite; filter: drop-shadow(0 0 3px #CDA75E); }
+@keyframes ribGlint { 0% { stroke-dashoffset: 100; opacity: 0; } 10% { opacity: .9; } 70% { opacity: .9; } 100% { stroke-dashoffset: -8; opacity: 0; } }
+#rings .bgspark { animation: bgTwinkle 5s ease-in-out infinite; transform-origin: center; }
+@keyframes bgTwinkle { 0%, 100% { opacity: .35; transform: scale(.8) rotate(0deg); } 50% { opacity: 1; transform: scale(1.15) rotate(45deg); } }
+@media (prefers-reduced-motion: reduce) { #rings .rib, #rings .flow, #rings .glint, #rings .bgspark { animation: none; } #rings .glint { opacity: 0; } }
+/* ---------- phone: a thin ticker with the time left in the trading day ---------- */
+.ticker { display: none; }
+@media (max-width: 860px) {
+  .ticker { display: block; position: relative; z-index: 5; height: 22px; overflow: hidden; background: linear-gradient(90deg, rgba(205, 167, 94, .05), rgba(205, 167, 94, .14), rgba(205, 167, 94, .05)); border-bottom: 1px solid rgba(205, 167, 94, .28); }
+  .ticker .tk-run { position: absolute; top: 0; left: 0; white-space: nowrap; display: flex; animation: tick 26s linear infinite; }
+  .ticker .tk-run span { padding: 0 28px; font: 500 11.5px/22px var(--sans); letter-spacing: .04em; color: var(--gold); font-variant-numeric: tabular-nums; }
+  .ticker .tk-run span b { color: var(--champ); font-weight: 600; }
+  .status { top: 30px !important; }
+  .mast { padding-top: 46px !important; }
+}
+@keyframes tick { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) { .ticker .tk-run { animation: none; } }
+.ses-clock { margin-top: 6px; font: 500 12.5px/1 var(--sans); color: var(--gold); letter-spacing: .04em; font-variant-numeric: tabular-nums; }
+/* ---------- opening screen ---------- */
+.splash { position: fixed; inset: 0; z-index: 100; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; padding: 24px; text-align: center; background: radial-gradient(70% 50% at 50% 40%, #3A0B17, #12030A 70%, #070205); transition: opacity .45s ease; }
+.splash .sp-icon, .splash .sp-title, .splash .sp-line, .splash .sp-quote { transition-duration: .5s !important; }
+.splash .sp-title { transition-delay: .1s !important; } .splash .sp-line { transition-delay: .18s !important; } .splash .sp-quote { transition-delay: .25s !important; }
+.splash.out { opacity: 0; pointer-events: none; }
+.sp-icon { position: relative; z-index: 1; width: 112px; height: 112px; filter: drop-shadow(0 18px 26px rgba(0, 0, 0, .7)); opacity: 0; transform: scale(.85); transition: opacity .7s ease, transform .9s cubic-bezier(.2, .8, .2, 1); }
+.sp-icon .sp-chart { stroke-dasharray: 1; stroke-dashoffset: 1; }
+.sp-icon .spc rect { transform-box: fill-box; transform-origin: 50% 100%; transform: scaleY(0); }
+.sp-icon .sp-dot { transform-box: fill-box; transform-origin: center; transform: scale(0); }
+.splash.in .sp-chart { animation: spDraw .75s ease-out .35s forwards; }
+.splash.in .spc rect { animation: spGrow .35s cubic-bezier(.2, .8, .2, 1) forwards; }
+.splash.in .spc rect:nth-child(1) { animation-delay: .2s; } .splash.in .spc rect:nth-child(2) { animation-delay: .28s; } .splash.in .spc rect:nth-child(3) { animation-delay: .36s; } .splash.in .spc rect:nth-child(4) { animation-delay: .44s; } .splash.in .spc rect:nth-child(5) { animation-delay: .52s; }
+.splash.in .sp-dot { animation: spPop .35s cubic-bezier(.2, 1.6, .4, 1) 1.05s forwards; }
+@keyframes spDraw { to { stroke-dashoffset: 0; } }
+@keyframes spGrow { to { transform: scaleY(1); } }
+@keyframes spPop { to { transform: scale(1); } }
+.sp-lines { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.sp-lines .spl { fill: none; stroke: #CDA75E; stroke-width: 1.2; vector-effect: non-scaling-stroke; stroke-opacity: .55; stroke-dasharray: 1; stroke-dashoffset: 1; }
+.splash.in .spl { animation: spDraw 1.3s ease-in-out forwards; }
+.splash.in .spl.s2 { animation-delay: .15s; stroke-opacity: .35; } .splash.in .spl.s3 { animation-delay: .3s; stroke-opacity: .25; }
+.sp-title, .sp-line, .sp-quote { position: relative; z-index: 1; }
+.sp-title { font-family: "DM Serif Display", Georgia, serif; font-size: 38px; color: #EFDCC6; opacity: 0; transform: translateY(8px); transition: opacity .7s ease .2s, transform .7s ease .2s; }
+.sp-title em { font-family: "Pinyon Script", cursive; font-style: normal; color: #CDA75E; }
+.sp-line { display: flex; align-items: center; gap: 10px; opacity: 0; transition: opacity .7s ease .35s; }
+.sp-line span { width: 54px; height: 1px; background: linear-gradient(90deg, transparent, #CDA75E); }
+.sp-line span:last-child { background: linear-gradient(90deg, #CDA75E, transparent); }
+.sp-line i { width: 6px; height: 6px; border: 1px solid #CDA75E; transform: rotate(45deg); display: block; }
+.sp-quote { max-width: 320px; margin: 0; font-family: "Playfair Display", Georgia, serif; font-style: italic; font-size: 18px; line-height: 1.45; color: #C7A9A3; opacity: 0; transform: translateY(8px); transition: opacity .8s ease .5s, transform .8s ease .5s; }
+.splash.in .sp-icon { opacity: 1; transform: none; } .splash.in .sp-title, .splash.in .sp-quote { opacity: 1; transform: none; } .splash.in .sp-line { opacity: 1; }
+/* ---------- pull to refresh ---------- */
+html, body { overscroll-behavior-y: contain; }
+.ptr { position: fixed; top: 0; left: 50%; z-index: 60; transform: translate(-50%, -60px); display: flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px; background: #2A0711; border: 1px solid rgba(205, 167, 94, .5); color: var(--gold); font: 500 13px/1 var(--sans); box-shadow: 0 10px 24px -10px rgba(0, 0, 0, .8); opacity: 0; pointer-events: none; transition: opacity .15s ease; }
+.ptr.show { opacity: 1; }
+.ptr-i { display: inline-block; transition: transform .2s ease; font-size: 15px; }
+.ptr.ready .ptr-i { transform: rotate(180deg); }
+.ptr.busy .ptr-i { animation: ptrSpin .8s linear infinite; }
+@keyframes ptrSpin { to { transform: rotate(360deg); } }
+/* ---------- night mode: darker and softer ---------- */
+body.night { --row: #E4D7CF; --row-future: #D6C8C1; --d-pos: #A9CDB2; --d-neg: #DCA3AE; --d-zero: #DCC888; }
+body.night .page::after { content: ""; position: fixed; inset: 0; z-index: 9; pointer-events: none; background: rgba(8, 1, 4, .2); }
+body.night #front .sk, body.night .lights-w, body.night .xstreams, body.night .flowers { opacity: .6; }
+body.night .st, body.night .chc, body.night .achip, body.night .rank, body.night .cmp, body.night .pm, body.night .hero-main, body.night .dnut, body.night .nw-card, body.night .nw-d:not(.hol), body.night .nw-ev { filter: brightness(.9); }
+/* summary: format choice and the tall Stories picture */
+.sumfmt { align-self: center; }
+#sumdlg.story .sum-card { width: min(380px, 100%); }
+#sumdlg.story .sum-img { max-height: 70vh; }
 /* ---------- daily quote, search, tools ---------- */
 .quote { margin: 2px 0 0; max-width: 560px; font-family: var(--display); font-style: italic; font-size: 15px; color: var(--soft); letter-spacing: .01em; text-wrap: balance; }
 .srchbtn { width: 40px; padding: 0; display: grid; place-items: center; }
@@ -848,13 +917,28 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
 .ses-res { font-family: var(--display); font-weight: 600; font-size: 76px; line-height: 1; margin-top: 6px; }
 .ses-res.pos { color: var(--pos); } .ses-res.neg { color: var(--neg); } .ses-res.zero { color: var(--champ); }
 .ses-cnt { color: var(--soft); font-size: 15px; margin-top: 6px; font-variant-numeric: tabular-nums; }
-.ses-btns { width: 100%; max-width: 460px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 26px; flex: 1; max-height: 360px; min-height: 200px; }
+.ses-btns { width: 100%; max-width: 460px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 40px; flex: 1; max-height: 340px; min-height: 220px; padding-bottom: 6px; }
 .ses-btns button { border: 0; border-radius: 26px; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; color: #fff; box-shadow: 0 18px 34px -16px rgba(0, 0, 0, .8), inset 0 1px 0 rgba(255, 255, 255, .25); transition: transform .12s ease, filter .12s ease; -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
 .ses-btns button b { font-family: var(--display); font-size: 44px; font-weight: 600; letter-spacing: .04em; }
 .ses-btns button span { font-size: 22px; font-weight: 600; opacity: .9; font-variant-numeric: tabular-nums; }
-.ses-tp { background: linear-gradient(160deg, #4E9A70, #2F6B4B); }
-.ses-sl { background: linear-gradient(160deg, #C8546B, #8E2C41); }
-.ses-btns button:active, .ses-btns button.hit { transform: scale(.96); filter: brightness(1.12); }
+/* keyboard keys: a raised keycap with a coloured side, that sinks when pressed */
+/* old chunky keyboard key: thick sloped skirt + smaller dished top; the whole key sinks when pressed */
+.ses-btns .key { --k1: #2F7D55; --k2: #1C5236; --k3: #0F3020; --k4: #071A10; --line: rgba(160, 230, 190, .22); --glow: rgba(70, 160, 110, .35); position: relative; padding: 0; border: 0; border-radius: 14px;
+  background: linear-gradient(90deg, rgba(0, 0, 0, .28), transparent 9%, transparent 91%, rgba(0, 0, 0, .28)), linear-gradient(180deg, var(--k1) 0%, var(--k2) 22%, var(--k3) 100%);
+  box-shadow: 0 16px 0 var(--k4), 0 16px 0 1px rgba(0, 0, 0, .5), 0 28px 30px -12px rgba(0, 0, 0, .9), 0 0 34px -14px var(--glow), inset 0 1px 0 rgba(255, 255, 255, .2);
+  transform: translateY(-16px); transition: transform .06s ease-out, box-shadow .06s ease-out; }
+.ses-btns .key.ses-sl { --k1: #8E2A40; --k2: #5E1627; --k3: #350A15; --k4: #1E040B; --line: rgba(240, 170, 185, .22); --glow: rgba(170, 60, 85, .35); }
+.ses-btns .key .cap { position: absolute; inset: 7px 13px 22px; border-radius: 11px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+  background: radial-gradient(90% 60% at 50% 30%, rgba(0, 0, 0, .16), transparent 70%), linear-gradient(180deg, var(--k2), var(--k1));
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, .35), inset 0 -1px 0 rgba(255, 255, 255, .18), 0 1px 0 rgba(255, 255, 255, .08), 0 0 0 1px rgba(0, 0, 0, .25); }
+.ses-btns .key .cap::after { content: ""; position: absolute; inset: 7px; border-radius: 8px; border: 1px solid var(--line); pointer-events: none; }
+.ses-btns .key b { font-family: var(--display); font-size: 46px; font-weight: 500; letter-spacing: .08em; color: #F5EDE6; text-shadow: 0 1px 0 rgba(0, 0, 0, .3); line-height: 1; }
+.ses-btns .key small { font: 500 10.5px/1 var(--sans); letter-spacing: .22em; text-transform: uppercase; color: rgba(245, 237, 230, .7); }
+.ses-btns .key .cnt { margin-top: 12px; min-width: 60px; padding: 6px 14px; border-radius: 8px; background: rgba(0, 0, 0, .28); box-shadow: inset 0 1px 3px rgba(0, 0, 0, .35); color: #F5EDE6; font: 600 22px/1 var(--sans); font-variant-numeric: tabular-nums; }
+.ses-btns .key:active, .ses-btns .key.hit { transform: translateY(-2px); box-shadow: 0 2px 0 var(--k4), 0 2px 0 1px rgba(0, 0, 0, .5), 0 6px 12px -6px rgba(0, 0, 0, .9), 0 0 44px -10px var(--glow), inset 0 1px 0 rgba(255, 255, 255, .12); filter: brightness(.94); }
+.plus1 { position: absolute; left: 50%; top: 18%; transform: translateX(-50%); font: 800 26px/1 var(--sans); color: #fff; text-shadow: 0 2px 6px rgba(0, 0, 0, .4); pointer-events: none; animation: plusUp .7s ease-out forwards; font-style: normal; }
+@keyframes plusUp { from { opacity: 1; transform: translate(-50%, 0) scale(1); } to { opacity: 0; transform: translate(-50%, -46px) scale(1.25); } }
+@media (prefers-reduced-motion: reduce) { .plus1 { animation: none; opacity: 0; } }
 .ses-undo { margin-top: 16px; border: 1px solid var(--line); background: rgba(0, 0, 0, .2); color: var(--gold); border-radius: 999px; padding: 10px 18px; font: 500 14px/1 var(--sans); cursor: pointer; }
 .ses-undo:disabled { opacity: .4; cursor: default; }
 .ses-help, .ses-we { color: var(--soft); font-size: 12.5px; text-align: center; margin: 14px 0 0; max-width: 320px; }
@@ -927,12 +1011,36 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
 @media (prefers-reduced-motion: reduce) { .lrow.flash { animation: none; } }
 </style>
 
+<!-- opening screen: the icon, the title and the quote of the day (once per visit) -->
+<div class="splash" id="splash" aria-hidden="true">
+  <svg class="sp-lines" viewBox="0 0 400 800" preserveAspectRatio="none">
+    <path class="spl" pathLength="1" d="M-20 180 C90 120 160 300 260 250 S380 160 430 230"/>
+    <path class="spl s2" pathLength="1" d="M430 560 C320 520 260 660 160 640 S30 560 -30 640"/>
+    <path class="spl s3" pathLength="1" d="M-20 720 C120 680 220 760 430 700"/>
+  </svg>
+  <svg class="sp-icon" viewBox="0 0 120 120">
+    <defs><linearGradient id="spg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F3DDA0"/><stop offset="1" stop-color="#A8833F"/></linearGradient></defs>
+    <rect x="1.5" y="1.5" width="117" height="117" rx="27" fill="#110D0B" stroke="url(#spg)" stroke-width="1.6"/>
+    <rect x="29" y="20" width="64" height="80" rx="6" fill="#2A211B" stroke="#CDA75E" stroke-width="1"/>
+    <rect x="35" y="24" width="55" height="72" rx="3" fill="#F7EFE4"/>
+    <g stroke="url(#spg)" stroke-width="2.2" fill="none" stroke-linecap="round"><path d="M27 32a4 3 0 0 0 10 0"/><path d="M27 44a4 3 0 0 0 10 0"/><path d="M27 56a4 3 0 0 0 10 0"/><path d="M27 68a4 3 0 0 0 10 0"/><path d="M27 80a4 3 0 0 0 10 0"/></g>
+    <rect x="41" y="29" width="22" height="3" rx="1.5" fill="#6B1A2C" opacity=".8"/>
+    <g class="spc"><rect x="44" y="72" width="5" height="12" rx="1" fill="#2F7D55"/><rect x="53" y="66" width="5" height="13" rx="1" fill="#2F7D55"/><rect x="62" y="70" width="5" height="8" rx="1" fill="#8E2A40"/><rect x="71" y="58" width="5" height="13" rx="1" fill="#2F7D55"/><rect x="80" y="48" width="5" height="14" rx="1" fill="#2F7D55"/></g>
+    <polyline class="sp-chart" pathLength="1" points="40,86 51,77 60,80 70,67 84,50" fill="none" stroke="#CDA75E" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle class="sp-dot" cx="84" cy="50" r="3.4" fill="#CDA75E"/>
+  </svg>
+  <div class="sp-title">Diário <em>de</em> Trading</div>
+  <div class="sp-line"><span></span><i></i><span></span></div>
+  <p class="sp-quote" id="spQuote"></p>
+</div>
+<script>try { if (sessionStorage.getItem("diario-splash")) document.getElementById("splash").remove(); } catch (_) {}</script>
 <div class="page" id="page">
   <div class="deco" id="rings" aria-hidden="true"></div>
   <div class="deco" id="back" aria-hidden="true"></div>
   <div class="deco" id="front" aria-hidden="true"></div>
 
   <div class="content">
+    <div class="ticker" aria-live="off"><div class="tk-run" id="tkRun"></div></div>
     <button type="button" class="authbtn" id="authBtn" hidden>Entrar</button>
     <span class="status" id="status" data-s="load"><i></i><span>A ligar…</span></span>
     <header class="mast gut">
@@ -966,6 +1074,7 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
       <div class="tools" role="group" aria-label="Ferramentas">
         <button type="button" id="bkJson"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2v8M4.8 7 8 10.2 11.2 7M3 12.5h10"/></svg>Cópia de segurança</button>
         <button type="button" id="bkCsv"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="2.5" width="11" height="11" rx="1.5"/><path d="M2.5 6.2h11M2.5 9.8h11M6.2 2.5v11"/></svg>Exportar para Excel</button>
+        <button type="button" id="nightBtn"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13.2 10.4A5.6 5.6 0 0 1 5.6 2.8a5.6 5.6 0 1 0 7.6 7.6z"/></svg>Modo noite: automático</button>
         <button type="button" id="instBtn"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4.2" y="1.8" width="7.6" height="12.4" rx="1.6"/><path d="M7 12h2"/></svg>Instalar como app</button>
       </div>
       <p class="foot" id="foot"></p>
@@ -1040,6 +1149,7 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
 
 <div class="dlg" id="sumdlg" hidden>
   <div class="dlg-card sum-card" role="dialog" aria-modal="true" aria-label="Resumo do mês">
+    <div class="sumfmt per" role="group" aria-label="Formato"><button type="button" data-fmt="post" aria-pressed="true">Post</button><button type="button" data-fmt="story" aria-pressed="false">Stories</button></div>
     <img id="sumImg" class="sum-img" alt="A preparar…">
     <div class="dlg-actions">
       <button type="button" class="btn" id="sumClose">Fechar</button>
@@ -1141,9 +1251,13 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
     ];
     let p = "";
     R.forEach((r, i) => {
+      // each ribbon sways gently on its own rhythm; the dotted strand flows along it; a soft light runs over the main line
+      p += '<g class="rib" style="animation-duration:' + (26 + i * 5) + 's;animation-delay:-' + (i * 4) + 's">';
       p += '<path d="' + r.d + '" stroke="' + G + '" stroke-width="1.3" stroke-opacity=".62"/>';
+      p += '<path d="' + r.d + '" class="glint" stroke="#FFF1C8" stroke-width="2" stroke-opacity=".9" pathLength="100" stroke-dasharray="7 93" style="animation-delay:-' + (i * 3.1) + 's"/>';
       p += '<path d="' + r.d + '" transform="translate(0 ' + (9 * r.s) + ')" stroke="' + G + '" stroke-width=".7" stroke-opacity=".38"/>';
-      p += '<path d="' + r.d + '" transform="translate(0 ' + (-7 * r.s) + ')" stroke="' + G + '" stroke-width=".5" stroke-opacity=".26" stroke-dasharray="1 7"/>';
+      p += '<path d="' + r.d + '" class="flow" transform="translate(0 ' + (-7 * r.s) + ')" stroke="' + G + '" stroke-width=".5" stroke-opacity=".26" stroke-dasharray="1 7"/>';
+      p += '</g>';
     });
     // fine single strands crossing the ribbons
     p += '<path d="M-60 980 C300 920 640 1040 1060 960" stroke="' + G + '" stroke-width=".6" stroke-opacity=".3"/>';
@@ -1152,7 +1266,7 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
       p.replace(/<path /g, '<path vector-effect="non-scaling-stroke" ') + '</g></svg>';
     // small four-point sparkles sitting on the ribbons
     const SP = [[52, 300], [19, 880], [50, 1640], [48, 2300], [60, 2980], [80, 470]];
-    const sparks = SP.map(([x, y]) => '<svg style="position:absolute;left:calc(' + x + '% - 9px);top:' + (y - 9) + 'px;width:18px;height:18px;overflow:visible" viewBox="0 0 18 18"><path d="M9 0 C9.6 6 12 8.4 18 9 C12 9.6 9.6 12 9 18 C8.4 12 6 9.6 0 9 C6 8.4 8.4 6 9 0 Z" fill="' + G + '" fill-opacity=".75"/></svg>').join("");
+    const sparks = SP.map(([x, y], i) => '<svg class="bgspark" style="animation-delay:-' + (i * 1.7) + 's;position:absolute;left:calc(' + x + '% - 9px);top:' + (y - 9) + 'px;width:18px;height:18px;overflow:visible" viewBox="0 0 18 18"><path d="M9 0 C9.6 6 12 8.4 18 9 C12 9.6 9.6 12 9 18 C8.4 12 6 9.6 0 9 C6 8.4 8.4 6 9 0 Z" fill="' + G + '" fill-opacity=".75"/></svg>').join("");
     document.getElementById("rings").innerHTML = svg + sparks;
   })();
   const RINGS = [];
@@ -1447,7 +1561,17 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
     "Emotions off, strategy on.", "Every expert was once a beginner.", "Know your plan, live your plan.", "Calm is a competitive advantage.",
     "You were made for this.", "Make today count.", "Fortune favours the prepared.", "Keep your standards higher than your fears."
   ];
-  (function () { const d = new Date(), n = Math.floor((new Date(d.getFullYear(), d.getMonth(), d.getDate()) - new Date(2026, 0, 1)) / 864e5); const q = document.getElementById("quote"); if (q) q.textContent = QUOTES[((n % QUOTES.length) + QUOTES.length) % QUOTES.length]; })();
+  (function () {
+    const d = new Date(), n = Math.floor((new Date(d.getFullYear(), d.getMonth(), d.getDate()) - new Date(2026, 0, 1)) / 864e5), txt = QUOTES[((n % QUOTES.length) + QUOTES.length) % QUOTES.length];
+    const q = document.getElementById("quote"); if (q) q.textContent = txt;
+    // opening screen: show the quote, then fade away
+    const sp = document.getElementById("splash"); if (!sp) return;
+    document.getElementById("spQuote").textContent = "“" + txt + "”";
+    try { sessionStorage.setItem("diario-splash", "1"); } catch (_) {}
+    requestAnimationFrame(() => sp.classList.add("in"));
+    const close = () => { sp.classList.add("out"); setTimeout(() => sp.remove(), 500); };
+    setTimeout(close, 1800); sp.addEventListener("click", close);
+  })();
 
   // ---------- data ----------
   const TP_PCT = 2, SL_PCT = 1;
@@ -1543,6 +1667,29 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
     try { const o = {}; for (const key of ALLKEYS) o[key] = Object.fromEntries(store[key]); localStorage.setItem(LS_KEY, JSON.stringify(o)); } catch (_) {}
     try { localStorage.setItem(LS_CKEY, JSON.stringify({ fusion: Object.fromEntries(cstore.fusion), prop: Object.fromEntries(cstore.prop) })); } catch (_) {}
   }
+  // ---------- offline: changes waiting to be sent ----------
+  const LS_PEND = "diario-trading-pendentes";
+  const pend = { d: new Set(), c: new Set(), m: new Set() };
+  function savePend() { try { localStorage.setItem(LS_PEND, JSON.stringify({ d: [...pend.d], c: [...pend.c], m: [...pend.m] })); } catch (_) {} }
+  function loadPend() { try { const o = JSON.parse(localStorage.getItem(LS_PEND) || "{}"); (o.d || []).forEach(k => pend.d.add(k)); (o.c || []).forEach(k => pend.c.add(k)); (o.m || []).forEach(k => pend.m.add(k)); } catch (_) {} }
+  const isNet = err => !navigator.onLine || /fetch|network|load failed|timeout/i.test(String((err && (err.message || err.details)) || err || ""));
+  const pendCount = () => pend.d.size + pend.c.size + pend.m.size + (typeof pays !== "undefined" ? pays.fusion.concat(pays.prop).filter(p => p.pending).length : 0);
+  function offlineStatus() { const n = pendCount(); setStatus("load", "Sem internet" + (n ? " · " + n + (n === 1 ? " alteração guardada" : " alterações guardadas") + " no telemóvel" : " · a mostrar o que estava guardado")); }
+  function cacheAll() { saveLocal(); try { saveMoodLocal(); savePayLocal(); } catch (_) {} }
+  async function syncPending() {
+    if (mode !== "db" || !navigator.onLine) return;
+    for (const k of [...pend.d]) { const i = k.indexOf("/"); await flush(k.slice(0, i), k.slice(i + 1)); }
+    for (const k of [...pend.c]) { const i = k.indexOf("/"); await cflush(k.slice(0, i), k.slice(i + 1)); }
+    for (const id of [...pend.m]) await setMood(id, moods.get(id) || null, true);
+    for (const a of ["fusion", "prop"]) for (const p of pays[a].filter(x => x.pending)) {
+      const r = await sb.from("pagamentos").insert({ conta: a, dia: p.dia, valor: p.valor, metodo: p.metodo || "", estado: p.estado, nota: p.nota || "", pessoa: p.pessoa || "Carla" }).select("id").single();
+      if (!r.error) { p.id = r.data.id; delete p.pending; }
+    }
+    savePayLocal();
+    if (!pendCount()) idleStatus();
+  }
+  window.addEventListener("online", async () => { setStatus("saving", "A enviar o que ficou guardado…"); await syncPending(); try { await loadRemote(); cacheAll(); } catch (_) {} if (!pendCount()) idleStatus(); });
+  window.addEventListener("offline", () => { if (mode === "db") offlineStatus(); });
   function setEntry(s, id, patch) {
     const e = { ...entry(s, id), ...patch };
     if (isEmpty(e)) store[s].delete(id); else store[s].set(id, e);
@@ -1568,8 +1715,11 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
     try {
       await p;
       if (!timers.has(k)) dirty.delete(k);
+      if (pend.d.delete(k)) savePend();
       if (!timers.size && dirty.size === 0) idleStatus();
     } catch (err) {
+      // no internet: keep it on the phone and send it when the connection comes back
+      if (isNet(err)) { pend.d.add(k); savePend(); saveLocal(); offlineStatus(); return; }
       const code = err && err.code;
       if (code === "unavailable" && !retried) { inflight.delete(k); setTimeout(() => flush(s, id, true), 600 + Math.random() * 900); return; }
       setStatus("err", code === "quota_exceeded" ? "Espaço cheio, não foi guardado" : "Não foi guardado, tenta outra vez");
@@ -1631,13 +1781,15 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
     }
     sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
     mode = "db"; ro = false; document.body.classList.remove("ro");
+    // show at once what was saved on this device last time (also works without internet)
+    loadLocal(); loadPend();
+    pend.d.forEach(k => dirty.add(k)); pend.c.forEach(k => cdirty.add(k));
+    render();
     setStatus("load", "A carregar…");
-    const { data } = await sb.auth.getSession();
-    setAuth(data && data.session);
-    sb.auth.onAuthStateChange((_ev, session) => setAuth(session));
-    try { await loadRemote(); idleStatus(); } catch (_) { setStatus("err", "Sem ligação, recarrega a página"); }
+    try { const { data } = await sb.auth.getSession(); setAuth(data && data.session); sb.auth.onAuthStateChange((_ev, session) => setAuth(session)); } catch (_) { setAuth(null); }
+    try { await loadRemote(); cacheAll(); idleStatus(); await syncPending(); } catch (_) { offlineStatus(); }
     goTodayOnce();
-    const refresh = () => { if (document.visibilityState === "visible" && dirty.size === 0 && !timers.size) loadRemote().catch(() => {}); };
+    const refresh = () => { if (document.visibilityState === "visible" && dirty.size === 0 && !timers.size && navigator.onLine) loadRemote().then(cacheAll).catch(() => {}); };
     document.addEventListener("visibilitychange", refresh);
     setInterval(refresh, 60000);
   }
@@ -2135,8 +2287,12 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
       if (mode === "db") await (e ? sb.from("contas").upsert({ conta: a, dia: id, inicio: e.inicio, fim: e.fim, risco: e.risco, deposito: e.dep || 0, levantamento: e.lev || 0, nota: e.nota || "" }).then(chk) : sb.from("contas").delete().eq("conta", a).eq("dia", id).then(chk));
       else saveLocal();
       if (!ctimers.has(k)) cdirty.delete(k);
+      if (pend.c.delete(k)) savePend();
       if (!ctimers.size && !timers.size) idleStatus();
-    } catch (_) { setStatus("err", "Não foi guardado, tenta outra vez"); }
+    } catch (err) {
+      if (isNet(err)) { pend.c.add(k); savePend(); saveLocal(); offlineStatus(); return; }
+      setStatus("err", "Não foi guardado, tenta outra vez");
+    }
   }
   // walk all saved days in order, carrying the closing balance into the next day
   function acCompute(a) {
@@ -2255,7 +2411,10 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
         const r = await sb.from("pagamentos").insert(row).select("id").single();
         if (r.error) throw r.error; item.id = r.data.id; idleStatus();
       } else savePayLocal();
-    } catch (_) { setStatus("err", "Não foi guardado, tenta outra vez"); }
+    } catch (err) {
+      if (isNet(err)) { item.pending = true; savePayLocal(); offlineStatus(); return item; }
+      setStatus("err", "Não foi guardado, tenta outra vez");
+    }
     return item;
   }
   async function delPay(a, id) {
@@ -2336,9 +2495,14 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
       if (mode === "db") {
         setStatus("saving", "A guardar…");
         const r = m ? await sb.from("humor").upsert({ dia: id, humor: m }) : await sb.from("humor").delete().eq("dia", id);
-        if (r.error) throw r.error; idleStatus();
+        if (r.error) throw r.error;
+        if (pend.m.delete(id)) savePend();
+        idleStatus();
       } else saveMoodLocal();
-    } catch (_) { setStatus("err", "Não foi guardado, tenta outra vez"); }
+    } catch (err) {
+      if (isNet(err)) { pend.m.add(id); savePend(); saveMoodLocal(); offlineStatus(); return; }
+      setStatus("err", "Não foi guardado, tenta outra vez");
+    }
   }
   const moodPop = document.createElement("div"); moodPop.className = "moodpop"; moodPop.hidden = true; document.body.appendChild(moodPop);
   let moodFor = null;
@@ -2506,11 +2670,32 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
     if (top) { g.font = '40px "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif'; g.textAlign = "right"; g.fillText(MOOD[top[0]][1], W - 90, 1292); g.textAlign = "center"; }
     return c;
   }
-  async function openSummary(s) {
+  // Instagram Stories size (1080 × 1920): the same summary, with a title on top and the quote of the day below
+  async function storyCanvas(s) {
+    const base = await summaryCanvas(s), W = 1080, H = 1920, c = document.createElement("canvas"); c.width = W; c.height = H; const g = c.getContext("2d");
+    const bg = g.createLinearGradient(0, 0, 0, H); bg.addColorStop(0, "#330914"); bg.addColorStop(.5, "#1C0409"); bg.addColorStop(1, "#0B0206"); g.fillStyle = bg; g.fillRect(0, 0, W, H);
+    const gl = g.createRadialGradient(W / 2, 260, 20, W / 2, 260, 700); gl.addColorStop(0, "rgba(205,167,94,.22)"); gl.addColorStop(1, "rgba(0,0,0,0)"); g.fillStyle = gl; g.fillRect(0, 0, W, H);
+    g.textAlign = "center"; g.fillStyle = "#CDA75E"; g.font = '500 30px "Jost", Arial, sans-serif'; g.fillText("R E S U M O   D O   M Ê S", W / 2, 190);
+    g.strokeStyle = "rgba(205,167,94,.6)"; g.lineWidth = 1.5; g.beginPath(); g.moveTo(W / 2 - 160, 220); g.lineTo(W / 2 + 160, 220); g.stroke();
+    g.drawImage(base, 0, 270);
+    // the quote of the day, wrapped on up to three lines
+    const q = ($("quote") && $("quote").textContent) || "Trust the process.";
+    g.fillStyle = "#EFDCC6"; g.font = 'italic 400 46px "Playfair Display", Georgia, serif';
+    const words = q.split(" "), lines = []; let ln = "";
+    for (const w of words) { const t = ln ? ln + " " + w : w; if (g.measureText(t).width > W - 200 && ln) { lines.push(ln); ln = w; } else ln = t; }
+    if (ln) lines.push(ln);
+    lines.slice(0, 3).forEach((l, i) => g.fillText((i === 0 ? "“" : "") + l + (i === Math.min(lines.length, 3) - 1 ? "”" : ""), W / 2, 1700 + i * 62));
+    return c;
+  }
+  let sumS = null, sumFmt = "post";
+  async function openSummary(s, fmtSel) {
+    sumS = s || sumS; if (fmtSel) sumFmt = fmtSel;
     const box = $("sumdlg"); box.hidden = false; $("sumImg").removeAttribute("src"); $("sumImg").alt = "A preparar…";
-    const c = await summaryCanvas(s), url = c.toDataURL("image/png");
-    $("sumImg").src = url; $("sumImg").alt = "Resumo de " + MONTHS[view.m] + " " + view.y + " · " + s.label;
-    const a = $("sumSave"); a.href = url; a.download = "resumo-" + MONTHS[view.m] + "-" + view.y + "-" + s.role + ".png";
+    box.querySelectorAll("[data-fmt]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.fmt === sumFmt)));
+    box.classList.toggle("story", sumFmt === "story");
+    const c = sumFmt === "story" ? await storyCanvas(sumS) : await summaryCanvas(sumS), url = c.toDataURL("image/png");
+    $("sumImg").src = url; $("sumImg").alt = "Resumo de " + MONTHS[view.m] + " " + view.y + " · " + sumS.label;
+    const a = $("sumSave"); a.href = url; a.download = "resumo-" + MONTHS[view.m] + "-" + view.y + "-" + sumS.role + (sumFmt === "story" ? "-stories" : "") + ".png";
   }
 
   // ---------- calendar: whole-year view with 12 small months ----------
@@ -2535,6 +2720,39 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
   }
   function calModeBtns() { return '<div class="per" role="group" aria-label="Ver">' + [["m", "Mês"], ["y", "Ano"]].map(([k, l]) => '<button type="button" data-calm="' + k + '" aria-pressed="' + (calMode === k) + '">' + l + '</button>').join("") + '</div>'; }
 
+  // ---------- trading day clock: 6:00 to 21:00, Monday to Friday ----------
+  const DAY_START = 6, DAY_END = 21;
+  const hms = ms => { const s = Math.max(0, Math.floor(ms / 1000)), h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60), x = s % 60; return h + ":" + String(m).padStart(2, "0") + ":" + String(x).padStart(2, "0"); };
+  function dayClock() {
+    const n = new Date(), wd = n.getDay(), at = (d, h) => new Date(d.getFullYear(), d.getMonth(), d.getDate(), h, 0, 0);
+    const nextStart = () => { const d = new Date(n.getFullYear(), n.getMonth(), n.getDate() + 1); while (d.getDay() === 0 || d.getDay() === 6) d.setDate(d.getDate() + 1); return at(d, DAY_START); };
+    if (wd === 0 || wd === 6) { const t = nextStart(); return { txt: 'Fim de semana · o dia de trading começa segunda às 6:00 · faltam <b>' + hms(t - n) + '</b>', short: "Fim de semana" }; }
+    const s = at(n, DAY_START), e = at(n, DAY_END);
+    if (n < s) return { txt: 'O dia de trading começa às 6:00 · faltam <b>' + hms(s - n) + '</b>', short: "Começa às 6:00 · faltam " + hms(s - n) };
+    if (n < e) return { txt: '⏳ Faltam <b>' + hms(e - n) + '</b> para acabar o dia de trading (21:00)', short: "Faltam " + hms(e - n) + " para as 21:00" };
+    const t = nextStart(); return { txt: 'Dia de trading terminado · o próximo começa às 6:00 · faltam <b>' + hms(t - n) + '</b>', short: "Dia terminado" };
+  }
+  (function () {
+    const run = document.getElementById("tkRun"); if (!run) return;
+    const tick = () => {
+      const c = dayClock(), one = '<span>' + c.txt + '</span><span>✦ Trust the process ✦</span>';
+      run.innerHTML = one + one;   // twice, so the strip loops without a gap
+      const sc = document.getElementById("sesClock"); if (sc) sc.textContent = c.short;
+    };
+    tick(); setInterval(tick, 1000);
+  })();
+  // a small vibration on tap: Android has navigator.vibrate; on iPhone (iOS 18+) Safari gives a light "tick"
+  // when a switch-style checkbox is toggled, so we toggle a hidden one
+  const haptic = (() => {
+    let lab = null;
+    return () => {
+      try {
+        if (navigator.vibrate && navigator.vibrate(12)) return;
+        if (!lab) { lab = document.createElement("label"); lab.setAttribute("aria-hidden", "true"); lab.style.cssText = "position:fixed;left:-9999px;top:0;opacity:0;pointer-events:none"; const i = document.createElement("input"); i.type = "checkbox"; i.setAttribute("switch", ""); i.tabIndex = -1; lab.appendChild(i); document.body.appendChild(lab); }
+        lab.click();
+      } catch (_) {}
+    };
+  })();
   // ---------- live session (phone): two big buttons to count TP / SL while trading ----------
   const sesBtn = document.createElement("button");
   sesBtn.type = "button"; sesBtn.className = "sesbtn"; sesBtn.setAttribute("aria-label", "Modo sessão: contar TP e SL ao vivo");
@@ -2550,10 +2768,10 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
     if (!SES().some(x => x.role === sesRole)) sesRole = "conta";
     const d = new Date(), id = iso(d), s = byRole(sesRole), e = entry(s.key, id), p = pctOf(e), we = d.getDay() === 0 || d.getDay() === 6;
     ses.innerHTML = '<div class="ses-top"><div class="ses-tabs">' + SES().map(x => '<button type="button" data-sesr="' + x.role + '" aria-pressed="' + (x.role === sesRole) + '">' + x.label + '</button>').join("") + '</div><button type="button" class="ses-x" data-ses="close" aria-label="Fechar">✕</button></div>' +
-      '<div class="ses-date">' + DOWL[d.getDay()] + ', ' + d.getDate() + ' de ' + MONTHS[d.getMonth()] + '</div>' +
+      '<div class="ses-date">' + DOWL[d.getDay()] + ', ' + d.getDate() + ' de ' + MONTHS[d.getMonth()] + '</div><div class="ses-clock" id="sesClock">' + dayClock().short + '</div>' +
       (we ? '<p class="ses-we">Hoje é fim de semana. O Diário só tem dias úteis.</p>' : e.off ? '<p class="ses-we">Este dia está marcado como "sem operar".</p>' :
         '<div class="ses-res ' + cls(p) + '">' + fmt(p) + '</div><div class="ses-cnt">' + e.tp + ' TP · ' + e.sl + ' SL' + (s.acct && e.risk ? ' · ' + eur(euroOf(e)) : '') + '</div>' +
-        '<div class="ses-btns"><button type="button" class="ses-tp" data-ses="tp"><b>TP</b><span>' + e.tp + '</span></button><button type="button" class="ses-sl" data-ses="sl"><b>SL</b><span>' + e.sl + '</span></button></div>' +
+        '<div class="ses-btns"><button type="button" class="key ses-tp" data-ses="tp" aria-label="Mais um TP"><span class="cap"><b>TP</b><small>Take profit</small><span class="cnt">' + e.tp + '</span></span></button><button type="button" class="key ses-sl" data-ses="sl" aria-label="Mais um SL"><span class="cap"><b>SL</b><small>Stop loss</small><span class="cnt">' + e.sl + '</span></span></button></div>' +
         '<button type="button" class="ses-undo" data-ses="undo"' + (sesHist.length ? '' : ' disabled') + '>↶ Desfazer o último toque</button>') +
       '<p class="ses-help">Toca em cada operação. Fica guardado no Diário de hoje, na ' + s.full + '.</p>';
   }
@@ -2569,10 +2787,12 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
     const before = pctOf(e0);
     setEntry(s.key, id, { [a]: Math.min(99, e0[a] + 1) });
     sesHist.push({ key: s.key, id, f: a });
-    if (navigator.vibrate) { try { navigator.vibrate(12); } catch (_) {} }
+    haptic();
     celebrate(before, pctOf(entry(s.key, id)));
     drawSes();
-    const nb = ses.querySelector('[data-ses="' + a + '"]'); if (nb) { nb.classList.add("hit"); setTimeout(() => nb.classList.remove("hit"), 160); }
+    // the key stays pressed for a moment and a "+1" floats up
+    const nb = ses.querySelector('[data-ses="' + a + '"]');
+    if (nb) { nb.classList.add("hit"); setTimeout(() => nb.classList.remove("hit"), 170); nb.insertAdjacentHTML("beforeend", '<i class="plus1">+1</i>'); }
   });
   document.addEventListener("keydown", e => { if (e.key === "Escape" && !ses.hidden) { ses.hidden = true; document.body.classList.remove("ses-open"); render(); } });
 
@@ -3040,7 +3260,7 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
   $("srchClose").addEventListener("click", () => { srch.hidden = true; });
   srch.addEventListener("click", e => { if (e.target === srch) { srch.hidden = true; return; } const b = e.target.closest("[data-sgo]"); if (!b) return; const [k, key, id] = b.dataset.sgo.split("|"); srch.hidden = true; goToDay(k, key, id); });
   $("sumClose").addEventListener("click", () => { $("sumdlg").hidden = true; });
-  $("sumdlg").addEventListener("click", e => { if (e.target === $("sumdlg")) $("sumdlg").hidden = true; });
+  $("sumdlg").addEventListener("click", e => { if (e.target === $("sumdlg")) { $("sumdlg").hidden = true; return; } const f = e.target.closest("[data-fmt]"); if (f && sumS) openSummary(null, f.dataset.fmt); });
   $("bkJson").addEventListener("click", backupJson);
   $("bkCsv").addEventListener("click", backupCsv);
   $("instBtn").addEventListener("click", installApp);
@@ -3072,6 +3292,43 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
 
   render();
   init();
+  // keep a copy of the site on the phone so it opens without internet
+  if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) navigator.serviceWorker.register("sw.js").catch(() => {});
+  // phone: pull the page down from the very top to refresh the data
+  (function () {
+    const ind = document.createElement("div"); ind.className = "ptr"; ind.setAttribute("aria-hidden", "true");
+    ind.innerHTML = '<span class="ptr-i">↓</span><span class="ptr-t">Puxa para atualizar</span>'; document.body.appendChild(ind);
+    let y0 = null, x0 = 0, dy = 0, busy = false;
+    const reset = () => { ind.classList.remove("show", "ready", "busy"); ind.style.transform = ""; };
+    window.addEventListener("touchstart", e => {
+      if (busy || window.scrollY > 2 || e.touches.length !== 1 || e.target.closest(".ses, .dlg, .nw-sheet, input, textarea")) { y0 = null; return; }
+      y0 = e.touches[0].clientY; x0 = e.touches[0].clientX; dy = 0;
+    }, { passive: true });
+    window.addEventListener("touchmove", e => {
+      if (y0 == null) return;
+      const t = e.touches[0], dx = Math.abs(t.clientX - x0); dy = t.clientY - y0;
+      if (dy <= 0 || dx > dy) { if (dx > 14) { y0 = null; reset(); } return; }
+      const d = Math.min(120, dy * .5);
+      ind.style.transform = "translate(-50%," + (d - 56) + "px)"; ind.classList.add("show"); ind.classList.toggle("ready", dy > 130);
+      ind.lastChild.textContent = dy > 130 ? "Larga para atualizar" : "Puxa para atualizar";
+    }, { passive: true });
+    window.addEventListener("touchend", async () => {
+      if (y0 == null) return; y0 = null;
+      if (dy <= 130 || busy) { reset(); return; }
+      busy = true; ind.classList.add("busy"); ind.lastChild.textContent = "A atualizar…"; ind.style.transform = "translate(-50%, 12px)";
+      try { if (mode === "db") { await syncPending(); await loadRemote(); cacheAll(); idleStatus(); } } catch (_) { offlineStatus(); }
+      setTimeout(() => { reset(); busy = false; }, 600);
+    });
+  })();
+  // night mode: automatic from 22h to 7h, or always on / off with the button at the bottom
+  (function () {
+    const LS_N = "diario-trading-noite", L = { auto: "Modo noite: automático", on: "Modo noite: ligado", off: "Modo noite: desligado" };
+    let nm = "auto"; try { const v = localStorage.getItem(LS_N); if (L[v]) nm = v; } catch (_) {}
+    const btn = $("nightBtn");
+    const apply = () => { const h = new Date().getHours(), on = nm === "on" || (nm === "auto" && (h >= 22 || h < 6)); document.body.classList.toggle("night", on); if (btn) btn.lastChild.textContent = L[nm]; };
+    if (btn) btn.addEventListener("click", () => { nm = nm === "auto" ? "on" : nm === "on" ? "off" : "auto"; try { localStorage.setItem(LS_N, nm); } catch (_) {} apply(); });
+    apply(); setInterval(apply, 5 * 60000);
+  })();
   // the News tab draws itself later: decorate its boxes too
   if (SEASON_NOW === "natal" || SEASON_NOW === "halloween" || SEASON_NOW === "pascoa") { let mo = 0; new MutationObserver(() => { if (mo) return; mo = requestAnimationFrame(() => { mo = 0; decorateCards(); }); }).observe($("view"), { childList: true, subtree: true }); }
   // news & holidays for the * marks on Estratégia
