@@ -692,6 +692,24 @@ body.night .st, body.night .chc, body.night .achip, body.night .rank, body.night
 .dchip { display: inline-flex; gap: 4px; align-items: baseline; font-size: 11px; color: #8C6168; background: rgba(58, 16, 24, .05); border-radius: 999px; padding: 2px 8px; margin: 0 4px 4px 0; }
 .dchip b { font-weight: 600; } .dchip.pos b { color: #3C7859; } .dchip.neg b { color: #B03F55; }
 .ch-note { margin: 8px 0 0; font-size: 11.5px; color: #8C6168; }
+/* NFP / CPI / FOMC: one table, a row per month */
+.nt-wrap { overflow-x: auto; }
+.nt { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 13px; color: var(--ink); }
+.nt th, .nt td { padding: 7px 8px; text-align: left; vertical-align: top; border-bottom: 1px solid rgba(58, 16, 24, .08); }
+.nt thead th { font-family: var(--display); font-size: 16px; font-weight: 600; color: var(--ink); border-bottom: 1.5px solid rgba(205, 167, 94, .5); }
+.nt thead th small { display: block; font: 400 10.5px/1.2 var(--sans); color: #8C6168; margin-top: 2px; }
+.nt tbody th { font-family: var(--display); font-weight: 500; color: #8C6168; width: 44px; }
+.nt tbody tr:nth-child(even) td, .nt tbody tr:nth-child(even) th { background: rgba(58, 16, 24, .03); }
+.nt td.nt-x { color: rgba(140, 97, 104, .5); }
+.nt-c { display: flex; align-items: baseline; justify-content: space-between; gap: 6px; white-space: nowrap; }
+.nt-c + .nt-c { margin-top: 4px; }
+.nt-c b { font-weight: 600; } .nt-c i { font-style: normal; font-size: 11.5px; color: #8C6168; }
+.nt-c em { font-style: normal; font-weight: 700; } .nt-c em.pos, .nt tfoot em.pos { color: #2F6B4B; } .nt-c em.neg, .nt tfoot em.neg { color: #A3324A; } .nt-c em.zero { color: #8C6168; }
+.nt-c.hoje b { color: #A8833F; }
+.nt tfoot th, .nt tfoot td { border-bottom: 0; border-top: 1.5px solid rgba(205, 167, 94, .5); padding-top: 9px; }
+.nt tfoot th { font-family: var(--display); color: var(--ink); }
+.nt tfoot em { font-style: normal; font-weight: 700; font-size: 15px; display: block; } .nt tfoot small { font-size: 10.5px; color: #8C6168; }
+@media (max-width: 520px) { .nt { font-size: 12px; } .nt th, .nt td { padding: 6px 5px; } .nt thead th { font-size: 14px; } .nt thead th small { display: none; } }
 /* NFP / CPI / FOMC tables */
 .nwgrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
 .nwc { border-radius: 12px; background: rgba(58, 16, 24, .04); padding: 10px; min-width: 0; }
@@ -2288,7 +2306,8 @@ body.ses-open .sesbtn { display: none !important; }
     let h = '<div class="stw"><section class="stp-card glass g-' + s.role + '">';
     h += '<div class="st-head"><div><div class="kind">Estatísticas</div><h2>' + plabel + '</h2></div>' +
       '<div class="st-hr"><button type="button" class="sumbtn" data-sum="' + s.role + '">✦ Resumo de ' + MONTHS[view.m] + '</button><div class="per" role="group" aria-label="Período">' + [["m", "Mês"], ["y", "Ano"], ["all", "Tudo"]].map(([k, l]) => '<button type="button" data-per="' + k + '" aria-pressed="' + (per === k) + '">' + l + '</button>').join("") + '</div></div></div>';
-    if (!r.n) { h += '<div class="ch-empty big-empty">Ainda não há dias registados neste período.</div></section></div>'; return h; }
+    // no days yet: still show the NFP / CPI / FOMC table of the year (handy for backtesting)
+    if (!r.n) { h += '<div class="ch-empty big-empty">Ainda não há dias registados neste período.</div><div class="sec"><span>Notícias</span><small>NFP, CPI e FOMC de ' + view.y + '</small></div><div class="charts">' + newsTables(s) + '</div></section></div>'; return h; }
     // headline: the result, the green / red days ring and the hit rate
     const pd = r.n ? r.pos / r.n * 100 : 0;
     h += '<div class="hero"><div class="hero-main"><span class="sl">Resultado</span><b class="' + cls(r.pct) + '">' + fmt(r.pct) + '</b><small>' + r.tp + ' TP, ' + r.sl + ' SL em ' + r.n + (r.n === 1 ? ' dia' : ' dias') + (s.acct && r.eurN ? ' · ' + eur(r.eur) : '') + '</small></div>' +
@@ -2329,6 +2348,28 @@ body.ses-open .sesbtn { display: none !important; }
     let h = '<div class="chc wide nwst"><div class="cht">Dias de notícias em ' + view.y + ' <small>NFP, CPI e FOMC: como correram esses dias</small></div>';
     if (!N || !N.dayEvents || !N.ready()) return h + '<div class="ch-empty">A carregar as notícias…</div></div>';
     const CATS = [["NFP", "Empregos (Non-Farm Payrolls)", /^(?!.*\bADP\b).*non-farm/i], ["CPI", "Inflação", /\bCPI\b/], ["FOMC", "Decisão de juros da Fed", /federal funds rate|fomc statement|fomc press/i]];
+    // one simple table: a row per month, a column for NFP, CPI and FOMC (the day + how that day went here)
+    {
+      const tdy0 = iso(new Date()), cols = CATS.map(c => ({ c, n: 0, op: 0, tot: 0 }));
+      let rowsH = "", known = false;
+      for (let m = 0; m < 12; m++) {
+        const cells = cols.map(col => {
+          const hits = weekdays(view.y, m).filter(d => { const ev = N.dayEvents(iso(d)); if (ev !== null) known = true; return ev && ev.some(t => col.c[2].test(t)); });
+          if (!hits.length) return '<td class="nt-x">—</td>';
+          return '<td>' + hits.map(d => {
+            const id = iso(d), e = entry(s.key, id), tr = traded(s.key, id), p = tr ? pctOf(e) : 0;
+            col.n++; if (tr) { col.op++; col.tot += p; }
+            const res = id > tdy0 ? '<i>por vir</i>' : e.off ? '<i>sem operar</i>' : tr ? '<em class="' + cls(p) + '">' + fmt(p) + '</em>' : '<i>—</i>';
+            return '<div class="nt-c' + (id === tdy0 ? " hoje" : "") + '"><b>' + DOW[d.getDay()] + ' ' + d.getDate() + '</b>' + res + '</div>';
+          }).join("") + '</td>';
+        });
+        rowsH += '<tr><th>' + cap(MON3[m]) + '</th>' + cells.join("") + '</tr>';
+      }
+      h += '<div class="nt-wrap"><table class="nt"><thead><tr><th></th>' + CATS.map(c => '<th>' + c[0] + '<small>' + c[1] + '</small></th>').join("") + '</tr></thead><tbody>' + rowsH + '</tbody>' +
+        '<tfoot><tr><th>Média</th>' + cols.map(x => '<td>' + (x.op ? '<em class="' + cls(x.tot) + '">' + fmt1(x.tot / x.op) + '</em><small>' + x.op + ' de ' + x.n + ' operados</small>' : '<small>' + x.n + ' dias, nenhum operado</small>') + '</td>').join("") + '</tr></tfoot></table></div>';
+      if (!known) h += '<p class="ch-note">Não há arquivo de notícias para ' + view.y + ' (começa em janeiro de 2024).</p>';
+      return h + '</div>';
+    }
     const days = []; for (let m = 0; m < 12; m++) days.push(...weekdays(view.y, m));
     const tdy = iso(new Date());
     h += '<div class="nwgrid">';
@@ -2877,7 +2918,7 @@ body.ses-open .sesbtn { display: none !important; }
       if (g.k !== "none" && g.k !== "other") h += '<tr class="chips"><td colspan="5">' + g.days.slice(-12).map(x => '<span class="dchip ' + cls(x.p) + '">' + dShort(x.d) + ' <b>' + fmt(x.p) + '</b></span>').join("") + '</td></tr>';
     }
     h += '</tbody></table>';
-    if (R.unknown) h += '<p class="ch-note">' + R.unknown + (R.unknown === 1 ? ' dia é' : ' dias são') + ' de antes de junho de 2026, quando ainda não havia arquivo de notícias.</p>';
+    if (R.unknown) h += '<p class="ch-note">' + R.unknown + (R.unknown === 1 ? ' dia é' : ' dias são') + ' de antes de janeiro de 2024, quando ainda não havia arquivo de notícias.</p>';
     return h + '</div>';
   }
   function moodCard(s, days) {
