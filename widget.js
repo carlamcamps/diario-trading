@@ -1,5 +1,5 @@
 // Diário de Trading — widget para o ecrã principal do iPhone (app grátis "Scriptable")
-// Mostra o dia de hoje: TP, SL e resultado da Fusion Markets e da Prop Firm, e quanto falta para as 21:00.
+// Mostra o dia de hoje: TP, SL e resultado da Fusion e da Prop, e quanto falta para as 21:00.
 // Tocar no widget abre o Diário.
 
 const SITE = "https://carlamcamps.github.io/diario-trading/";
@@ -20,7 +20,7 @@ try {
 } catch (e) { rows = null; }
 
 const pick = s => (rows || []).find(x => x.serie === s) || { tp: 0, sl: 0 };
-const ACC = [["conta", "Fusion Markets"], ["prop_conta", "Prop Firm"]];
+const ACC = [["conta", "Fusion"], ["prop_conta", "Prop"]];
 
 const w = new ListWidget();
 const g = new LinearGradient(); g.colors = [new Color("#3A0B17"), new Color("#12030A")]; g.locations = [0, 1]; w.backgroundGradient = g;

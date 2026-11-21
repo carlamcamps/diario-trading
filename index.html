@@ -191,7 +191,9 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
 .tip tr.total td { border-top: 1px solid rgba(205, 167, 94, .25); padding-top: 6px; font-family: var(--display); font-size: 17px; }
 .tip .pos { color: #A6DCB6; } .tip .neg { color: #F4A6B2; } .tip .zero { color: var(--champ); }
 .tip.small { min-width: 0; padding: 6px 10px; color: var(--soft); }
-.lrow.d-pos { background: var(--d-pos); } .lrow.d-neg { background: var(--d-neg); } .lrow.d-zero { background: var(--d-zero); }
+.lrow.d-pos { background: #93CBA4; } .lrow.d-neg { background: #E2909F; } .lrow.d-zero { background: #E2C36E; }
+.lrow.d-pos .res { color: #164A2E; font-weight: 700; } .lrow.d-neg .res { color: #7A1430; font-weight: 700; } .lrow.d-zero .res { color: #5C4210; font-weight: 700; }
+body.night .lrow.d-pos { background: #86BB96; } body.night .lrow.d-neg { background: #D28494; } body.night .lrow.d-zero { background: #D3B565; }
 .lrow.today { box-shadow: inset 0 0 0 1.5px var(--gold); }
 .lrow.flash { animation: flash 1.6s ease; }
 @keyframes flash { 0%, 45% { box-shadow: inset 0 0 0 2px var(--champ); } }
@@ -213,6 +215,8 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
 .stp { cursor: text; padding-right: 3px; }
 .stp input { width: 34px; height: 24px; border: 0; border-radius: 999px; background: rgba(255, 255, 255, .7); text-align: center; font: 600 13.5px/1 var(--sans); font-variant-numeric: tabular-nums; color: var(--ink); padding: 0; }
 .stp input.z { color: var(--soft); font-weight: 400; }
+.stp input::placeholder { color: rgba(140, 97, 104, .55); opacity: 1; }
+.lrow.vazio:not(.today) { opacity: .6; } .lrow.vazio .res, .lrow.vazio .to b { color: rgba(140, 97, 104, .6); font-weight: 400; }
 .stp input:focus { outline: 1.5px solid var(--gold); outline-offset: 0; background: #fff; color: var(--ink); }
 .stp input[readonly] { background: transparent; }
 .res { justify-self: end; font-weight: 500; font-size: 13px; font-variant-numeric: tabular-nums; }
@@ -510,6 +514,20 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
   .mast { padding-top: 46px !important; }
 }
 @keyframes tick { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+/* tab icons: computer shows the names, phone shows icons; the top is smaller on the phone */
+.mast .tabs { position: relative; z-index: 6; }
+.tabs .ti { display: none; width: 21px; height: 21px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+@media (max-width: 860px) {
+  .tabs { overflow: visible !important; -webkit-mask-image: none !important; mask-image: none !important; justify-content: space-between !important; width: 100%; max-width: 360px; }
+  .tabs button { display: inline-flex; align-items: center; justify-content: center; padding: 9px 0 !important; flex: 1 1 0 !important; }
+  .tabs .ti { display: block; }
+  .tabs .tl { display: none; }
+  .mast { padding-top: 34px !important; gap: 2px; }
+  .mast h1 { font-size: 38px !important; white-space: nowrap; }
+  .mast .motto { font-size: 22px !important; margin: 0 !important; }
+  .mast .quote, .mast .orn-rule { display: none !important; }
+  #front { transform: translateY(-92px); }   /* the top got ~92px shorter: move the stickers up with the content so they stay where they were */
+}
 @media (prefers-reduced-motion: reduce) { .ticker .tk-run { animation: none; } }
 .ses-clock { margin-top: 6px; font: 500 12.5px/1 var(--sans); color: var(--gold); letter-spacing: .04em; font-variant-numeric: tabular-nums; }
 /* ---------- opening screen ---------- */
@@ -540,6 +558,24 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
 .sp-line span:last-child { background: linear-gradient(90deg, #CDA75E, transparent); }
 .sp-line i { width: 6px; height: 6px; border: 1px solid #CDA75E; transform: rotate(45deg); display: block; }
 .sp-quote { max-width: 320px; margin: 0; font-family: "Playfair Display", Georgia, serif; font-style: italic; font-size: 18px; line-height: 1.45; color: #C7A9A3; opacity: 0; transform: translateY(8px); transition: opacity .8s ease .5s, transform .8s ease .5s; }
+/* ---------- end-of-day card ---------- */
+.eod-card { position: relative; overflow: hidden; text-align: center; background: radial-gradient(120% 80% at 50% 0%, #4A1020, #1E050C 75%); border-color: rgba(205, 167, 94, .6); animation: eodIn .5s cubic-bezier(.2, .9, .3, 1); }
+@keyframes eodIn { from { opacity: 0; transform: translateY(18px) scale(.96); } }
+.dlg-card.eod-card .eod-h .sub { line-height: 1.3; font-family: var(--sans); color: var(--gold); letter-spacing: .2em; text-transform: uppercase; font-size: 11px; }
+.eod-h h3 { margin: 6px 0 0; font-family: "Pinyon Script", cursive; font-weight: 400; font-size: 34px; color: #EFDCC6; }
+.eod-rows { display: flex; flex-direction: column; gap: 8px; }
+.eod-r { display: grid; grid-template-columns: 1fr auto auto auto; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 14px; background: rgba(251, 243, 238, .06); border: 1px solid rgba(205, 167, 94, .22); text-align: left; }
+.eod-n { color: #EFDCC6; font-weight: 600; font-size: 15px; }
+.eod-tp { color: #8FD4A8; font-weight: 600; font-size: 13px; } .eod-sl { color: #F29AAE; font-weight: 600; font-size: 13px; }
+.eod-x { grid-column: 2 / 5; color: #C7A9A3; font-size: 13px; justify-self: end; }
+.eod-p { font-family: "Playfair Display", Georgia, serif; font-size: 24px; min-width: 64px; text-align: right; }
+.eod-p.pos { color: #8FD4A8; } .eod-p.neg { color: #F29AAE; } .eod-p.zero { color: #E6CD92; }
+.eod-m { margin: 2px 0 0; font-family: "Playfair Display", Georgia, serif; font-style: italic; color: #C7A9A3; font-size: 16px; }
+.eod-s { position: absolute; width: 12px; height: 12px; background: linear-gradient(135deg, #FFF3C4, #E0A92E); clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%); animation: spark 2.4s ease-in-out infinite; pointer-events: none; }
+.eod-s.s1 { top: 16px; left: 22px; } .eod-s.s2 { top: 30px; right: 26px; width: 9px; height: 9px; animation-delay: .8s; } .eod-s.s3 { bottom: 70px; left: 30px; width: 8px; height: 8px; animation-delay: 1.6s; }
+.sp-fest { position: relative; z-index: 2; width: 128px; height: 128px; margin: -134px 0 -14px; pointer-events: none; opacity: 0; transform: scale(.7); }
+.splash.in .sp-fest { animation: spFest .55s cubic-bezier(.2, 1.5, .4, 1) .7s forwards; }
+@keyframes spFest { to { opacity: 1; transform: none; } }
 .splash.in .sp-icon { opacity: 1; transform: none; } .splash.in .sp-title, .splash.in .sp-quote { opacity: 1; transform: none; } .splash.in .sp-line { opacity: 1; }
 /* ---------- pull to refresh ---------- */
 html, body { overscroll-behavior-y: contain; }
@@ -811,7 +847,7 @@ body.night .st, body.night .chc, body.night .achip, body.night .rank, body.night
 .rank b.pos { color: #3C7859; } .rank b.neg { color: #B03F55; } .rank b.zero { color: #8C6168; }
 @media (max-width: 520px) { .rank li { grid-template-columns: 28px minmax(0, 1fr) 64px; } .rb { grid-column: 2 / 4; grid-row: 2; } }
 /* year tabs kept apart on the right */
-.tr-r { display: flex; align-items: flex-end; gap: 14px; }
+.tr-r { display: flex; align-items: flex-end; gap: 14px; padding-right: 18px; }
 .ftabs.ytabs { margin-left: 0; }
 .ftabs.ytabs .ftab { background: rgba(205, 167, 94, .14); color: var(--gold); }
 .ftabs.ytabs .ftab[aria-selected="true"] { background: rgba(12, 4, 7, .82); color: var(--champ); }
@@ -835,11 +871,15 @@ body.night .st, body.night .chc, body.night .achip, body.night .rank, body.night
 @keyframes pagShine { 0%, 55% { left: -60%; } 100% { left: 130%; } }
 @media (prefers-reduced-motion: reduce) { .pagbtn, .pagbtn::after { animation: none; } }
 /* Estratégia days of +30% or more: always sparkle */
-.lrow.star, .cd.star { position: relative; box-shadow: 0 0 0 1.5px #E7C989, 0 0 16px rgba(231, 201, 137, .6); background: linear-gradient(100deg, #CDEBD6, #F6E7C2 55%, #CDEBD6) !important; }
-.lrow.star::before, .lrow.star::after, .cd.star::before, .cd.star::after { content: ""; position: absolute; width: 11px; height: 11px; background: #FFF4D6; clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%); filter: drop-shadow(0 0 4px #FFD166); animation: spark 2.2s ease-in-out infinite; pointer-events: none; z-index: 2; }
-.lrow.star::before, .cd.star::before { top: -5px; left: 30%; }
-.lrow.star::after, .cd.star::after { bottom: -5px; right: 18%; animation-delay: 1.1s; width: 9px; height: 9px; }
-.lrow.star .res { color: #2F6B4B; font-weight: 700; }
+/* no gold on the row: just little stars twinkling around the percentage */
+.lrow.star .res, .cd.star { position: relative; }
+.lrow.star .res { text-shadow: 0 0 10px rgba(232, 184, 70, .55); }
+.lrow.star .res::before, .lrow.star .res::after, .lrow.star .res i.st3, .cd.star::before, .cd.star::after { content: ""; position: absolute; width: 14px; height: 14px; background: linear-gradient(135deg, #FFF6D0 10%, #F0B93A 55%, #B07A12); clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%); animation: spark 2.2s ease-in-out infinite; pointer-events: none; z-index: 2; }
+.lrow.star .res::before { top: -9px; left: -15px; }
+.lrow.star .res::after { bottom: -8px; right: -10px; width: 11px; height: 11px; animation-delay: 1.1s; }
+.lrow.star .res i.st3 { top: -11px; right: 6px; width: 9px; height: 9px; animation-delay: .55s; }
+.cd.star::before { top: 3px; right: 5px; }
+.cd.star::after { bottom: 4px; left: 6px; animation-delay: 1.1s; width: 8px; height: 8px; }
 .achips { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 8px; position: relative; z-index: 1; }
 .achip { border-radius: 16px; padding: 12px 14px; background: linear-gradient(160deg, rgba(251, 243, 238, .97), rgba(240, 226, 216, .97)); color: var(--ink); display: flex; flex-direction: column; gap: 2px; box-shadow: inset 0 0 0 1px rgba(205, 167, 94, .25); }
 .achip span { font-size: 11.5px; color: #8C6168; letter-spacing: .02em; }
@@ -872,6 +912,43 @@ body.night .st, body.night .chc, body.night .achip, body.night .rank, body.night
 .pf-g input:focus, .pf-g select:focus { outline: 1.5px solid var(--gold); outline-offset: 1px; }
 .pf-eur { position: relative; } .pf-eur i { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); font-style: normal; color: #8C6168; }
 .pf-nota { grid-column: 1 / 4; }
+/* several props: chips to pick one + "Nova prop" */
+.propbar { position: relative; z-index: 1; margin: 0 0 12px; display: flex; flex-direction: column; gap: 8px; }
+.pchips { display: flex; gap: 8px; overflow-x: auto; padding: 2px 2px 4px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+.pchips::-webkit-scrollbar { display: none; }
+.pchip { flex: none; height: 34px; padding: 0 16px; border-radius: 999px; border: 1px solid rgba(201, 164, 230, .45); background: rgba(23, 3, 7, .55); color: #EFDCC6; font: 600 13.5px/1 var(--sans); letter-spacing: .02em; cursor: pointer; transition: background .2s ease, color .2s ease; -webkit-tap-highlight-color: transparent; }
+.pchip[aria-pressed="true"] { background: linear-gradient(135deg, #C9A4E6, #9572B8); color: #2A0A11; border-color: transparent; box-shadow: 0 6px 16px -8px rgba(149, 114, 184, .9); }
+.pchip.padd { border-style: dashed; border-color: rgba(205, 167, 94, .6); color: var(--gold); background: transparent; }
+.pinfo { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 8px 8px 8px 14px; border-radius: 14px; background: rgba(0, 0, 0, .22); border: 1px solid rgba(201, 164, 230, .25); color: #E3CFE9; font-size: 13px; }
+.pinfo .nb { flex: none; color: var(--gold); }
+.ptot { font-size: 12.5px; color: var(--soft); padding: 0 4px; } .ptot b { color: #EFDCC6; font-weight: 600; }
+.pform label.pf1 { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.pform label.pf1 > span { font-size: 12px; color: var(--soft); }
+.pform input { width: 100%; box-sizing: border-box; height: 40px; border-radius: 10px; border: 1px solid rgba(205, 167, 94, .3); background: rgba(255, 255, 255, .94); color: var(--ink); padding: 0 10px; font: 15px var(--sans); color-scheme: light; }
+.pform .pf2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+/* "Tudo": every account in one list */
+.tlist { display: flex; flex-direction: column; gap: 8px; position: relative; z-index: 1; margin-bottom: 14px; }
+.tdr { display: grid; grid-template-columns: minmax(0, 1.3fr) repeat(3, minmax(0, 1fr)); align-items: center; gap: 8px; width: 100%; padding: 12px 14px; border-radius: 14px; border: 0; background: var(--row); color: var(--ink); text-align: left; cursor: pointer; font: inherit; }
+.tlist.arch .tdr { background: #E8DDD8; }
+.tl-n { font-weight: 600; font-size: 14px; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .tl-n small { display: block; font-weight: 400; font-size: 11.5px; color: #8C6168; }
+.tl-c { display: flex; flex-direction: column; gap: 1px; text-align: right; min-width: 0; } .tl-c small { font-size: 10.5px; color: #8C6168; } .tl-c b { font-size: 14px; font-weight: 600; white-space: nowrap; }
+.tl-c b.pos { color: #2F6B4B; } .tl-c b.neg { color: #A3324A; }
+/* code to open the Conta tab */
+.pinbox { max-width: 320px; margin: 18px auto 40px; padding: 26px 22px 22px; border-radius: 24px; background: radial-gradient(120% 80% at 50% 0%, #4A1020, #1E050C 75%); border: 1px solid rgba(205, 167, 94, .45); text-align: center; box-shadow: 0 30px 60px -24px rgba(0, 0, 0, .8); position: relative; z-index: 1; }
+.pin-lock { font-size: 28px; } .pin-t { font-family: var(--script); font-size: 34px; color: var(--gold); line-height: 1.1; } .pin-s { margin: 4px 0 16px; color: var(--soft); font-size: 14px; }
+.pin-dots { display: flex; justify-content: center; gap: 14px; margin-bottom: 20px; } .pin-dots i { width: 14px; height: 14px; border-radius: 50%; border: 1.5px solid var(--gold); transition: background .15s ease; } .pin-dots i.on { background: var(--gold); }
+.pinbox.bad .pin-dots { animation: pinShake .4s ease; } .pinbox.bad .pin-s { color: #F29AAE; }
+.pinbox.bad .pin-s::after { content: " · código errado"; }
+@keyframes pinShake { 20%, 60% { transform: translateX(-8px); } 40%, 80% { transform: translateX(8px); } }
+.pin-pad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.pin-pad button { height: 58px; border-radius: 16px; border: 1px solid rgba(205, 167, 94, .3); background: rgba(251, 243, 238, .06); color: #EFDCC6; font: 500 24px/1 var(--display); cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.pin-pad button:active { background: rgba(205, 167, 94, .3); }
+.pchip.parch { border-style: dashed; border-color: rgba(199, 169, 163, .45); color: var(--soft); background: transparent; }
+.pchip.arch { opacity: .75; border-style: dotted; }
+.pchip.arch[aria-pressed="true"] { opacity: 1; background: linear-gradient(135deg, #B9A6A2, #8C7672); }
+.pinfo .parq { font-style: normal; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; padding: 2px 8px; border-radius: 999px; background: rgba(199, 169, 163, .2); color: #EFDCC6; margin-right: 4px; }
+.pform .parchbtn { width: 100%; background: rgba(0, 0, 0, .2); border: 1px dashed rgba(205, 167, 94, .5); color: var(--gold); }
+.pform .btn.pdel { margin-right: auto; color: #F29AAE; border-color: rgba(242, 154, 174, .45); }
 .pf-g .pf-nota { grid-column: auto; }
 .pf-g { grid-template-columns: 160px 140px 200px minmax(0, 1fr) 130px; }
 .pf-add { height: 38px; }
@@ -899,6 +976,14 @@ body.night .st, body.night .chc, body.night .achip, body.night .rank, body.night
   .achips { grid-template-columns: 1fr 1fr; }
   .achip b { font-size: 20px; }
 }
+/* Fusion / Prop switch: small bar at the bottom */
+.gbar { display: none; }
+body.view-diario .gbar, body.view-stats .gbar, body.view-cal .gbar { position: fixed; z-index: 15; left: 16px; bottom: max(18px, env(safe-area-inset-bottom, 0px)); display: grid; grid-template-columns: 1fr 1fr; width: 148px; height: 40px; padding: 3px; box-sizing: border-box; border-radius: 999px; background: rgba(23, 3, 7, .82); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); border: 1px solid rgba(205, 167, 94, .45); box-shadow: 0 12px 26px -8px rgba(0, 0, 0, .75); touch-action: none; -webkit-user-select: none; user-select: none; }
+.gbar .gthumb { position: absolute; top: 3px; bottom: 3px; left: 3px; width: calc(50% - 3px); border-radius: 999px; background: linear-gradient(135deg, #CDA75E, #A8833F); box-shadow: 0 2px 8px rgba(0, 0, 0, .4); transition: transform .3s cubic-bezier(.3, 1.3, .5, 1), background .3s ease; }
+.gbar.prop .gthumb { transform: translateX(100%); background: linear-gradient(135deg, #C9A4E6, #9572B8); }
+.gbar button { position: relative; z-index: 1; border: 0; padding: 0; background: none; font: 600 13px/1 var(--sans); letter-spacing: .05em; color: #EFDCC6; cursor: pointer; transition: color .2s ease; -webkit-tap-highlight-color: transparent; }
+.gbar button[aria-pressed="true"] { color: #2A0A11; }
+body.ses-open .gbar { display: none !important; }
 /* live session (phone only) */
 .sesbtn { display: none; }
 @media (max-width: 860px) {
@@ -907,6 +992,12 @@ body.night .st, body.night .chc, body.night .achip, body.night .rank, body.night
   body.ses-open .sesbtn { display: none !important; }
 }
 .ses { position: fixed; inset: 0; z-index: 35; background: radial-gradient(120% 70% at 50% 0%, #4A0E1E, #170307 70%); color: var(--champ); display: flex; flex-direction: column; align-items: center; padding: max(16px, env(safe-area-inset-top, 0px)) 16px max(18px, env(safe-area-inset-bottom, 0px)); overflow-y: auto; }
+/* the day's result tints the session screen very lightly: green up, yellow at 0%, red down */
+.ses::before { content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: 0; transition: opacity .7s ease; background: var(--sesTint, transparent); }
+.ses[data-res="pos"] { --sesTint: radial-gradient(85% 55% at 50% 62%, rgba(70, 190, 120, .34), rgba(70, 190, 120, .12) 60%, transparent 85%); }
+.ses[data-res="zero"] { --sesTint: radial-gradient(85% 55% at 50% 62%, rgba(235, 195, 85, .3), rgba(235, 195, 85, .1) 60%, transparent 85%); }
+.ses[data-res="neg"] { --sesTint: radial-gradient(85% 55% at 50% 62%, rgba(225, 60, 90, .34), rgba(225, 60, 90, .12) 60%, transparent 85%); }
+.ses[data-res="pos"]::before, .ses[data-res="zero"]::before, .ses[data-res="neg"]::before { opacity: 1; }
 .ses[hidden] { display: none; }
 .ses-top { width: 100%; display: flex; align-items: center; gap: 8px; }
 .ses-tabs { flex: 1; display: flex; gap: 3px; padding: 3px; border-radius: 999px; border: 1px solid var(--line); background: rgba(0, 0, 0, .25); }
@@ -1049,11 +1140,11 @@ body.night .st, body.night .chc, body.night .achip, body.night .rank, body.night
       <p class="quote" id="quote"></p>
       <div class="orn-rule" aria-hidden="true"><span></span><i></i><span></span></div>
       <div class="tabs" role="group" aria-label="Vista">
-        <button type="button" data-view="diario" aria-pressed="true">Diário</button>
-        <button type="button" data-view="stats" aria-pressed="false">Estatísticas</button>
-        <button type="button" data-view="cal" aria-pressed="false">Calendário</button>
-        <button type="button" data-view="acct" aria-pressed="false">Conta</button>
-        <button type="button" data-view="news" aria-pressed="false">Notícias</button>
+        <button type="button" data-view="diario" aria-pressed="true" aria-label="Diário"><svg class="ti" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4.5A1.5 1.5 0 0 1 6.5 3H19v15H6.5A1.5 1.5 0 0 0 5 19.5z"/><path d="M5 19.5A1.5 1.5 0 0 0 6.5 21H19v-3"/><path d="M9 7.5h6M9 11h4"/></svg><span class="tl">Diário</span></button>
+        <button type="button" data-view="stats" aria-pressed="false" aria-label="Estatísticas"><svg class="ti" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h16"/><path d="M7 16v-4M12 16V7M17 16v-7"/></svg><span class="tl">Estatísticas</span></button>
+        <button type="button" data-view="cal" aria-pressed="false" aria-label="Calendário"><svg class="ti" viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 17h.01M12 17h.01" stroke-width="2.4"/></svg><span class="tl">Calendário</span></button>
+        <button type="button" data-view="acct" aria-pressed="false" aria-label="Conta"><svg class="ti" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7.5A2.5 2.5 0 0 1 6.5 5H18v3"/><rect x="4" y="8" width="16" height="11" rx="2.5"/><path d="M16 13.5h.01" stroke-width="2.6"/></svg><span class="tl">Conta</span></button>
+        <button type="button" data-view="news" aria-pressed="false" aria-label="Notícias"><svg class="ti" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5h11v14H6.5A1.5 1.5 0 0 1 5 17.5z"/><path d="M16 9h3v8.5a1.5 1.5 0 0 1-3 0"/><path d="M8 9h5M8 12.5h5M8 16h3"/></svg><span class="tl">Notícias</span></button>
       </div>
       <div class="controls">
         <div class="monthnav">
@@ -1107,7 +1198,7 @@ body.night .st, body.night .chc, body.night .achip, body.night .rank, body.night
 <div class="dlg" id="acdlg" hidden>
   <form class="dlg-card" id="acForm" role="dialog" aria-modal="true" aria-labelledby="acTitle">
     <div>
-      <div class="sub" id="acSub">Fusion Markets</div>
+      <div class="sub" id="acSub">Fusion</div>
       <h3 id="acTitle">Segunda, 3 de novembro</h3>
     </div>
     <div class="ac2">
@@ -1347,6 +1438,35 @@ body.night .st, body.night .chc, body.night .achip, body.night .rank, body.night
     return wk5.some(d => (d.getMonth() === 1 && d.getDate() === 8) || (d.getMonth() === 4 && d.getDate() === 17));
   }
   const SEASON_NOW = seasonOf(new Date());
+  // festive app icon: tab icon / home-screen icon (icon-<season>.png) + decorations popping onto the opening-screen icon
+  function festDeco(e) {
+    const star = (x, y, r, c) => `<path transform="translate(${x},${y}) scale(${r / 10})" d="M0-10L2.4-2.4 10 0 2.4 2.4 0 10-2.4 2.4-10 0-2.4-2.4Z" fill="${c}"/>`;
+    const flower = (x, y, s, c, mid = "#F4C542") => { let p = ""; for (let i = 0; i < 5; i++) p += `<ellipse cx="0" cy="-13" rx="8" ry="13" fill="${c}" transform="rotate(${i * 72})"/>`; return `<g transform="translate(${x},${y}) scale(${s})">${p}<circle r="7" fill="${mid}"/></g>`; };
+    const leaf = (x, y, rot, s = 1) => `<path transform="translate(${x},${y}) rotate(${rot}) scale(${s})" d="M0 0C10-14 30-14 40 0C30 14 10 14 0 0Z" fill="#5E9C64"/>`;
+    const burst = (x, y, r, c) => { let l = ""; for (let i = 0; i < 12; i++) { const a = i * Math.PI / 6; l += `<line x1="${x + Math.cos(a) * r * .35}" y1="${y + Math.sin(a) * r * .35}" x2="${x + Math.cos(a) * r}" y2="${y + Math.sin(a) * r}" stroke="${c}" stroke-width="5" stroke-linecap="round"/><circle cx="${x + Math.cos(a) * r}" cy="${y + Math.sin(a) * r}" r="4" fill="${c}"/>`; } return l; };
+    const bat = (x, y, s) => `<g transform="translate(${x},${y}) scale(${s})" fill="#9A6BB0"><path d="M0 0C-14-16-34-14-50-4C-40-2-34 6-34 14C-24 6-12 8 0 16C12 8 24 6 34 14C34 6 40-2 50-4C34-14 14-16 0 0Z"/><circle cy="2" r="8"/></g>`;
+    const D = {
+      natal: [[60, 70], [460, 60], [470, 300], [40, 330], [430, 470], [90, 460], [250, 40], [490, 180]].map(([x, y], i) => `<circle cx="${x}" cy="${y}" r="${5 + i % 3 * 2}" fill="#fff" opacity=".85"/>`).join("") +
+        `<g transform="translate(168,112) rotate(-18)"><path d="M-78 12C-52-58 18-118 104-84C78-70 60-40 66 12Z" fill="#B3192E"/><path d="M-40 12C-20-40 30-84 92-80C70-66 56-38 60 12Z" fill="#D62839" opacity=".55"/><rect x="-90" y="0" width="166" height="36" rx="18" fill="#F7F1E8"/><circle cx="106" cy="-84" r="20" fill="#F7F1E8"/></g>` +
+        `<g transform="translate(410,410)">${leaf(0, 0, -150, 1.4)}${leaf(0, 0, -30, 1.4)}${leaf(0, 0, -90, 1.2)}<circle cx="-8" cy="6" r="11" fill="#C8102E"/><circle cx="10" cy="8" r="11" fill="#C8102E"/><circle cx="1" cy="-8" r="11" fill="#E0283F"/></g>`,
+      anonovo: burst(92, 92, 70, "#E9C46A") + burst(430, 96, 56, "#F4E3B5") + burst(440, 420, 48, "#E9C46A") + burst(70, 430, 40, "#F4E3B5") + star(250, 50, 12, "#FFF3C4") + star(480, 250, 9, "#FFF3C4") + star(30, 250, 8, "#FFF3C4"),
+      halloween: `<g transform="translate(410,420)"><ellipse cx="-34" rx="34" ry="42" fill="#D9661F"/><ellipse cx="34" rx="34" ry="42" fill="#D9661F"/><ellipse rx="36" ry="46" fill="#F07F2A"/><path d="M-4-44C-6-60 4-70 14-72" stroke="#4E6B2E" stroke-width="9" fill="none" stroke-linecap="round"/><path d="M-30-8l12-14 12 14Z M6-8l12-14 12 14Z" fill="#3A1505"/><path d="M-30 14C-14 30 14 30 30 14L20 18 12 10 0 20-12 10-20 18Z" fill="#3A1505"/></g>` + bat(400, 80, 1) + bat(90, 70, .6),
+      pascoa: leaf(70, 440, -60, 1.3) + leaf(70, 440, -10, 1.1) + leaf(440, 80, 120, 1.2) + leaf(440, 80, 170, 1) + flower(70, 440, 1.5, "#F2A7C3") + flower(118, 470, 1, "#C9B6E8") + flower(30, 392, .9, "#FFFFFF") +
+        flower(440, 80, 1.4, "#FFFFFF") + flower(392, 50, .95, "#F2A7C3") + flower(478, 128, .9, "#C9B6E8") + flower(450, 440, 1.1, "#F7D774", "#E08A3C") + flower(66, 80, .95, "#F7D774", "#E08A3C"),
+      carnaval: `<path d="M20 40C80 90 120 10 180 60S280 30 330 70 430 20 492 60" stroke="#E63B6F" stroke-width="10" fill="none" stroke-linecap="round"/><path d="M10 90C60 60 90 120 140 92" stroke="#2BB5A9" stroke-width="9" fill="none" stroke-linecap="round"/><path d="M380 100C420 70 450 130 500 96" stroke="#F4C542" stroke-width="9" fill="none" stroke-linecap="round"/>` +
+        [[60, 200, "#F4C542"], [470, 220, "#E63B6F"], [40, 320, "#7C5CD6"], [480, 340, "#2BB5A9"], [120, 470, "#E63B6F"], [250, 490, "#F4C542"], [330, 470, "#2BB5A9"]].map(([x, y, c], i) => `<rect x="${x}" y="${y}" width="16" height="9" rx="2" fill="${c}" transform="rotate(${i * 37} ${x} ${y})"/>`).join("") +
+        `<g transform="translate(420,430) rotate(-14)"><path d="M-58-14C-40-30-14-24 0-12C14-24 40-30 58-14C60 10 40 28 18 22C10 18 6 10 0 10S-10 18-18 22C-40 28-60 10-58-14Z" fill="#7C5CD6"/><ellipse cx="-24" rx="12" ry="8" fill="#1A0A10"/><ellipse cx="24" rx="12" ry="8" fill="#1A0A10"/><path d="M40-22C56-56 70-60 84-58C70-48 60-36 52-18Z" fill="#F4C542"/></g>`
+    };
+    return D[e] || "";
+  }
+  if (SEASON_NOW && festDeco(SEASON_NOW)) {
+    try {
+      const ic = "icon-" + SEASON_NOW + ".png";
+      document.querySelectorAll('link[rel="icon"], link[rel="apple-touch-icon"]').forEach(l => { l.href = ic; });
+      const spi = document.querySelector("#splash .sp-icon");
+      if (spi) spi.insertAdjacentHTML("afterend", '<svg class="sp-fest" viewBox="0 0 512 512" aria-hidden="true">' + festDeco(SEASON_NOW) + '</svg>');
+    } catch (_) {}
+  }
   // drawn decorations (sharp at any size): realistic pumpkins and painted Easter eggs
   const svgUri = s => "data:image/svg+xml;utf8," + encodeURIComponent(s);
   function pumpkin(v) {
@@ -1581,9 +1701,9 @@ body.night .st, body.night .chc, body.night .achip, body.night .rank, body.night
   // The two small buttons on the right switch between the pairs everywhere on the site.
   const SERIES = [
     { key: "estrategia", role: "estrategia", grp: "fusion", side: 0, label: "Estratégia", full: "Estratégia (Fusion)", acct: false },
-    { key: "conta", role: "conta", grp: "fusion", side: 1, label: "Fusion Markets", full: "Fusion Markets", acct: true },
+    { key: "conta", role: "conta", grp: "fusion", side: 1, label: "Fusion", full: "Fusion", acct: true },
     { key: "prop_estrategia", role: "pestrategia", grp: "prop", side: 0, label: "Estratégia", full: "Estratégia (Prop)", acct: false },
-    { key: "prop_conta", role: "prop", grp: "prop", side: 1, label: "Prop Firm", full: "Prop Firm", acct: true }
+    { key: "prop_conta", role: "prop", grp: "prop", side: 1, label: "Prop", full: "Prop", acct: true }
   ];
   const byRole = r => SERIES.find(s => s.role === r) || SERIES[0];
   const byKey = k => SERIES.find(s => s.key === k) || SERIES[0];
@@ -1592,6 +1712,7 @@ body.night .st, body.night .chc, body.night .achip, body.night .rank, body.night
   try { if (localStorage.getItem(LS_GRP) === "prop") grp = "prop"; } catch (_) {}
   const GS = () => SERIES.filter(s => s.grp === grp);
   function grpDots() {
+    return "";   // the Fusion / Prop switch now lives in the small bar at the bottom (.gbar)
     return '<div class="gdots" role="group" aria-label="Escolher a estratégia">' + [["fusion", "Fusion Markets"], ["prop", "Prop Firm"]].map(([g, l]) => '<button type="button" class="gdot gd-' + g + '" data-grp="' + g + '" aria-pressed="' + (grp === g) + '" aria-label="' + l + '" data-tip="plain" data-tv="' + l + '"></button>').join("") + '</div>';
   }
   const MONTHS = ["janeiro","fevereiro","março","abril","maio","junho","julho","agosto","setembro","outubro","novembro","dezembro"];
@@ -1657,15 +1778,15 @@ body.night .st, body.night .chc, body.night .achip, body.night .rank, body.night
       const o = JSON.parse(raw);
       for (const key of ALLKEYS) for (const [id, e] of Object.entries(o[key] || {})) { const n = norm(e); if (!isEmpty(n)) store[key].set(id, n); }
       const c = JSON.parse(localStorage.getItem(LS_CKEY) || "{}");
-      for (const a of ["fusion", "prop"]) for (const [id, e] of Object.entries(c[a] || {})) { const n = cnorm(e); if (!cIsEmpty(n)) cstore[a].set(id, n); }
+      for (const a of Object.keys(c).filter(isAcc)) for (const [id, e] of Object.entries(c[a] || {})) { const n = cnorm(e); if (!cIsEmpty(n)) cstore[a].set(id, n); }
       const mm = JSON.parse(localStorage.getItem(LS_MOOD) || "{}");
       for (const [id, m] of Object.entries(mm)) if (MOOD[m]) moods.set(id, m);
-      const pl = JSON.parse(localStorage.getItem(LS_PAY) || "null"); if (pl && Array.isArray(pl.fusion) && Array.isArray(pl.prop)) pays = pl;
+      const pl = JSON.parse(localStorage.getItem(LS_PAY) || "null"); if (pl && typeof pl === "object") pays = accBag(() => [], Object.fromEntries(Object.entries(pl).filter(([k, v]) => isAcc(k) && Array.isArray(v))));
     } catch (_) {}
   }
   function saveLocal() {
     try { const o = {}; for (const key of ALLKEYS) o[key] = Object.fromEntries(store[key]); localStorage.setItem(LS_KEY, JSON.stringify(o)); } catch (_) {}
-    try { localStorage.setItem(LS_CKEY, JSON.stringify({ fusion: Object.fromEntries(cstore.fusion), prop: Object.fromEntries(cstore.prop) })); } catch (_) {}
+    try { localStorage.setItem(LS_CKEY, JSON.stringify(Object.fromEntries(Object.keys(cstore).map(a => [a, Object.fromEntries(cstore[a])])))); } catch (_) {}
   }
   // ---------- offline: changes waiting to be sent ----------
   const LS_PEND = "diario-trading-pendentes";
@@ -1673,7 +1794,7 @@ body.night .st, body.night .chc, body.night .achip, body.night .rank, body.night
   function savePend() { try { localStorage.setItem(LS_PEND, JSON.stringify({ d: [...pend.d], c: [...pend.c], m: [...pend.m] })); } catch (_) {} }
   function loadPend() { try { const o = JSON.parse(localStorage.getItem(LS_PEND) || "{}"); (o.d || []).forEach(k => pend.d.add(k)); (o.c || []).forEach(k => pend.c.add(k)); (o.m || []).forEach(k => pend.m.add(k)); } catch (_) {} }
   const isNet = err => !navigator.onLine || /fetch|network|load failed|timeout/i.test(String((err && (err.message || err.details)) || err || ""));
-  const pendCount = () => pend.d.size + pend.c.size + pend.m.size + (typeof pays !== "undefined" ? pays.fusion.concat(pays.prop).filter(p => p.pending).length : 0);
+  const pendCount = () => pend.d.size + pend.c.size + pend.m.size + (typeof pays !== "undefined" ? Object.values(pays).flat().filter(p => p.pending).length : 0);
   function offlineStatus() { const n = pendCount(); setStatus("load", "Sem internet" + (n ? " · " + n + (n === 1 ? " alteração guardada" : " alterações guardadas") + " no telemóvel" : " · a mostrar o que estava guardado")); }
   function cacheAll() { saveLocal(); try { saveMoodLocal(); savePayLocal(); } catch (_) {} }
   async function syncPending() {
@@ -1681,7 +1802,7 @@ body.night .st, body.night .chc, body.night .achip, body.night .rank, body.night
     for (const k of [...pend.d]) { const i = k.indexOf("/"); await flush(k.slice(0, i), k.slice(i + 1)); }
     for (const k of [...pend.c]) { const i = k.indexOf("/"); await cflush(k.slice(0, i), k.slice(i + 1)); }
     for (const id of [...pend.m]) await setMood(id, moods.get(id) || null, true);
-    for (const a of ["fusion", "prop"]) for (const p of pays[a].filter(x => x.pending)) {
+    for (const a of Object.keys(pays)) for (const p of pays[a].filter(x => x.pending)) {
       const r = await sb.from("pagamentos").insert({ conta: a, dia: p.dia, valor: p.valor, metodo: p.metodo || "", estado: p.estado, nota: p.nota || "", pessoa: p.pessoa || "Carla" }).select("id").single();
       if (!r.error) { p.id = r.data.id; delete p.pending; }
     }
@@ -1746,13 +1867,21 @@ body.night .st, body.night .chc, body.night .achip, body.night .rank, body.night
     // account balances (the table may be missing on an old database: then just skip)
     const cr = await sb.from("contas").select("conta,dia,inicio,fim,risco,deposito,levantamento,nota").limit(20000);
     if (!cr.error) {
-      const cm = { fusion: new Map(), prop: new Map() };
-      for (const r of cr.data || []) { if (!cm[r.conta]) continue; const n = cnorm({ inicio: r.inicio, fim: r.fim, risco: r.risco, dep: r.deposito, lev: r.levantamento, nota: r.nota || "" }); if (!cIsEmpty(n)) cm[r.conta].set(String(r.dia).slice(0, 10), n); }
+      const cm = accBag(() => new Map());
+      for (const r of cr.data || []) { if (!isAcc(r.conta)) continue; const n = cnorm({ inicio: r.inicio, fim: r.fim, risco: r.risco, dep: r.deposito, lev: r.levantamento, nota: r.nota || "" }); if (!cIsEmpty(n)) cm[r.conta].set(String(r.dia).slice(0, 10), n); }
       for (const k of cdirty) { const i = k.indexOf("/"), a = k.slice(0, i), id = k.slice(i + 1), local = cstore[a].get(id); if (local) cm[a].set(id, local); else cm[a].delete(id); }
-      cstore.fusion = cm.fusion; cstore.prop = cm.prop;
+      cstore = cm;
+    }
+    // the list of props (table "props"; when it is missing, keep the one "Prop")
+    const prr = await sb.from("props").select("id,nome,tamanho,custo,criada,nota,ordem,arquivada").limit(500);
+    if (!prr.error) {
+      props = (prr.data || []).filter(x => isAcc(x.id) && x.id !== "fusion").map(x => ({ id: x.id, nome: String(x.nome || "Prop").slice(0, 40), tamanho: numOrNull(x.tamanho), custo: numOrNull(x.custo), criada: x.criada ? String(x.criada).slice(0, 10) : null, nota: x.nota || "", ordem: +x.ordem || 0, arquivada: x.arquivada === true }));
+      for (const k of Object.keys(cstore)) if (k !== "fusion" && !props.some(x => x.id === k)) props.push({ id: k, nome: "Prop", tamanho: null, custo: null, criada: null, nota: "", ordem: 99 });
+      sortProps(); saveProps();
+      if (!props.some(x => x.id === propSel)) propSel = "prop";
     }
     const pr = await sb.from("pagamentos").select("id,conta,dia,valor,metodo,estado,nota,pessoa").limit(5000);
-    if (!pr.error) { const pp = { fusion: [], prop: [] }; for (const r of pr.data || []) if (pp[r.conta]) pp[r.conta].push({ id: r.id, dia: String(r.dia).slice(0, 10), valor: +r.valor, metodo: r.metodo || "", estado: r.estado === "pedido" ? "pedido" : "recebido", nota: r.nota || "", pessoa: r.pessoa || "Carla" }); pays = pp; }
+    if (!pr.error) { const pp = accBag(() => []); for (const r of pr.data || []) if (isAcc(r.conta)) pp[r.conta].push({ id: r.id, dia: String(r.dia).slice(0, 10), valor: +r.valor, metodo: r.metodo || "", estado: r.estado === "pedido" ? "pedido" : "recebido", nota: r.nota || "", pessoa: r.pessoa || "Carla" }); pays = pp; }
     const hr = await sb.from("humor").select("dia,humor").limit(20000);
     if (!hr.error) { const mm = new Map(); for (const r of hr.data || []) if (MOOD[r.humor]) mm.set(String(r.dia).slice(0, 10), r.humor); moods = mm; }
     const typing = document.activeElement && document.activeElement.matches && document.activeElement.matches("input, textarea");
@@ -1817,11 +1946,11 @@ body.night .st, body.night .chc, body.night .achip, body.night .rank, body.night
 
   // ---------- diário ----------
   const $ = id => document.getElementById(id);
-  function stepper(s, id, field, val) {
+  function stepper(s, id, field, val, emp) {
     const L = field.toUpperCase();
     // a small box to type the number (no + / − buttons)
     return '<label class="stp ' + field + '"><span class="lb">' + L + '</span>' +
-      '<input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" autocomplete="off" class="' + (val ? "" : "z") + '" value="' + val + '" data-in="' + s + '|' + id + '|' + field + '" aria-label="' + L + ' do dia ' + id.slice(8) + '"' + (ro ? " readonly" : "") + '></label>';
+      '<input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="2" autocomplete="off" class="' + (val ? "" : "z") + '" value="' + (emp ? "" : val) + '"' + (emp ? ' placeholder="—"' : '') + ' data-in="' + s + '|' + id + '|' + field + '" aria-label="' + L + ' do dia ' + id.slice(8) + '"' + (ro ? " readonly" : "") + '></label>';
   }
   function spark(s, days, w) {
     const ids = days.map(iso);
@@ -1939,10 +2068,10 @@ body.night .st, body.night .chc, body.night .achip, body.night .rank, body.night
         } else {
           const eurHtml = notes && e.risk && traded(s.key, id) ? '<span class="eur">' + eur(euroOf(e)) + '</span>' : "";
           const star = !s.acct && traded(s.key, id) && p >= BIG_DAY;
-          h += '<div class="lrow' + ex + base + (traded(s.key, id) ? " d-" + cls(p) : "") + (star ? " star" : "") + '" data-row="' + s.key + '|' + id + '"' + (star ? ' title="Dia acima de +' + BIG_DAY + '%"' : '') + '>' + dateHtml +
-            stepper(s.key, id, "tp", e.tp) + stepper(s.key, id, "sl", e.sl) +
-            '<span class="to' + (e.tp + e.sl ? "" : " z") + '" data-tip="plain" data-tv="Total de oportunidades (TP + SL)"><span class="lb">TO</span><b>' + (e.tp + e.sl) + '</b></span>' +
-            '<span class="res ' + cls(p) + '">' + fmt(p) + eurHtml + '</span>' + nbHtml + cbHtml + '</div>';
+          h += '<div class="lrow' + ex + base + (traded(s.key, id) ? " d-" + cls(p) : " vazio") + (star ? " star" : "") + '" data-row="' + s.key + '|' + id + '"' + (star ? ' title="Dia acima de +' + BIG_DAY + '%"' : '') + '>' + dateHtml +
+            stepper(s.key, id, "tp", e.tp, !traded(s.key, id)) + stepper(s.key, id, "sl", e.sl, !traded(s.key, id)) +
+            '<span class="to' + (e.tp + e.sl ? "" : " z") + '" data-tip="plain" data-tv="Total de oportunidades (TP + SL)"><span class="lb">TO</span><b>' + (e.tp + e.sl || (traded(s.key, id) ? 0 : "—")) + '</b></span>' +
+            '<span class="res ' + cls(p) + '">' + (traded(s.key, id) ? fmt(p) : "—") + eurHtml + (star ? '<i class="st3"></i>' : '') + '</span>' + nbHtml + cbHtml + '</div>';
         }
       }
       // the week always counts its 5 real days, also the ones in the month before / after
@@ -2254,11 +2383,27 @@ body.night .st, body.night .chc, body.night .achip, body.night .rank, body.night
   }
 
   // ---------- conta: start / end balance per day, for Fusion Markets and the Prop Firm ----------
-  const AC = { fusion: "Fusion Markets", prop: "Prop Firm" }, AC_KEY = { fusion: "conta", prop: "prop_conta" };
+  // accounts: "fusion", and one or more props ("prop" = the first one, "prop-xxxx" = props added later)
+  const isAcc = a => a === "fusion" || a === "prop" || /^prop-[a-z0-9]{3,20}$/.test(String(a));
+  const isProp = a => a !== "fusion";
+  const LS_PROPS = "diario-trading-props-v1", LS_PSEL = "diario-trading-prop-escolhida";
+  let props = [{ id: "prop", nome: "Prop", tamanho: null, custo: null, criada: null, nota: "", ordem: 0 }];
+  try { const pl = JSON.parse(localStorage.getItem(LS_PROPS) || "null"); if (Array.isArray(pl) && pl.length) props = pl.filter(x => x && isAcc(x.id) && x.id !== "fusion"); } catch (_) {}
+  const sortProps = () => { if (!props.some(x => x.id === "prop")) props.unshift({ id: "prop", nome: "Prop", tamanho: null, custo: null, criada: null, nota: "", ordem: 0 }); props.sort((x, y) => (x.ordem || 0) - (y.ordem || 0) || String(x.criada || "").localeCompare(String(y.criada || ""))); };
+  sortProps();
+  let propSel = "prop";
+  try { const v = localStorage.getItem(LS_PSEL); if (v && props.some(x => x.id === v)) propSel = v; } catch (_) {}
+  const acName = a => a === "fusion" ? "Fusion" : ((props.find(x => x.id === a) || {}).nome || "Prop");
+  const acDk = a => a === "fusion" ? "conta" : "prop_conta";   // the Diário table shown next to each day
+  const ACC_ALL = () => ["fusion", ...props.map(x => x.id)];
+  // a bag of per-account things that creates the account's entry the first time it is asked for
+  const accBag = (mk, init) => new Proxy(init || {}, { get: (t, k) => (typeof k === "string" && !(k in t) && isAcc(k)) ? (t[k] = mk()) : t[k] });
+  const AC = new Proxy({}, { get: (_, k) => acName(k) }); void AC;
   const LS_AC = "diario-trading-aba-conta", LS_CKEY = "diario-trading-contas-v1";
   let acView = "fusion";
-  try { if (localStorage.getItem(LS_AC) === "prop") acView = "prop"; } catch (_) {}
-  const cstore = { fusion: new Map(), prop: new Map() };
+  const AC_VIEWS = ["fusion", "prop", "tudo"];
+  try { const v = localStorage.getItem(LS_AC); if (AC_VIEWS.includes(v)) acView = v; } catch (_) {}
+  let cstore = accBag(() => new Map());
   const CEMPTY = { inicio: null, fim: null, risco: null, dep: 0, lev: 0, nota: "" };
   const centry = (a, id) => cstore[a].get(id) || CEMPTY;
   const cIsEmpty = e => e.inicio == null && e.fim == null && e.risco == null && !e.dep && !e.lev && !e.nota;
@@ -2312,7 +2457,7 @@ body.night .st, body.night .chc, body.night .achip, body.night .rank, body.night
   const eurS = v => v == null ? "—" : eur(v);
   const pctS = v => v == null ? "" : fmt1(v);
   function acHtml(a) {
-    const C = acCompute(a), days = weekdays(view.y, view.m), ids = days.map(iso), dk = AC_KEY[a];
+    const C = acCompute(a), days = weekdays(view.y, view.m), ids = days.map(iso), dk = acDk(a);
     // month numbers
     let mp = 0, mStart = null, best = null, worst = null, green = 0, red = 0, rs = 0, rn = 0, mDep = 0, mLev = 0;
     const pts = [];
@@ -2326,7 +2471,7 @@ body.night .st, body.night .chc, body.night .achip, body.night .rank, body.night
     }
     const growth = C.first != null && C.last != null ? C.last - C.first - C.dep + C.lev : null;
     const curDD = C.peak && C.last != null ? (C.peak - C.last) / C.peak * 100 : 0;
-    let h = '<section class="acc-card glass g-' + (a === "prop" ? "prop" : "conta") + '">';
+    let h = '<section class="acc-card glass g-' + (isProp(a) ? "prop" : "conta") + '">';
     h += '<div class="st-head"><div><div class="kind">Conta</div><h2>' + cap(MONTHS[view.m]) + ' <em>' + view.y + '</em></h2></div>' +
       '<div class="ac-now"><small>Saldo atual</small><b>' + (C.last != null ? EUR.format(C.last) : "—") + '</b></div></div>';
     // three headline chips: this month, since the start, money already taken out
@@ -2366,7 +2511,7 @@ body.night .st, body.night .chc, body.night .achip, body.night .rank, body.night
           fld("inicio", e.inicio, "Início", ph) + fld("fim", e.fim, "Fim") +
           '<div class="apr ' + (r && r.profit != null ? cls(r.profit) : "zero") + '"><b>' + (r && r.profit != null ? eur(r.profit) : "—") + '</b><small>' + (r ? pctS(r.pct) : "") + '</small></div>' +
           '<div class="ark">' + fld("risco", e.risco, "Risco") + '<small>' + (r && r.rpct != null ? NUM1.format(r.rpct) + "% do saldo" : "") + '</small></div>' +
-          '<div class="adi" title="Resultado no Diário (' + (a === "prop" ? "Prop Firm" : "Conta") + ')">' + (de.off ? '<i>sem operar</i>' : dtr ? '<b class="' + cls(dp) + '">' + fmt(dp) + '</b><small>' + de.tp + ' TP, ' + de.sl + ' SL</small>' : '<small>—</small>') + '</div>' +
+          '<div class="adi" title="Resultado no Diário (' + (isProp(a) ? "Prop" : "Fusion") + ')">' + (de.off ? '<i>sem operar</i>' : dtr ? '<b class="' + cls(dp) + '">' + fmt(dp) + '</b><small>' + de.tp + ' TP, ' + de.sl + ' SL</small>' : '<small>—</small>') + '</div>' +
           '<button type="button" class="nb' + (extra ? " has" : "") + '" data-acday="' + a + '|' + id + '" aria-label="Depósitos, levantamentos e nota de ' + d.getDate() + ' de ' + MONTHS[d.getMonth()] + '"' + (r && r.nota ? ' data-tip="note" data-tv="' + esc(r.nota.slice(0, 600)) + '"' : ' data-tip="empty" data-tv="Depósito, levantamento ou nota"') + '>' + PEN + '</button>' +
           (r && (r.dep || r.lev) ? '<div class="amov">' + (r.dep ? '<span>+ depósito ' + EUR.format(r.dep) + '</span>' : '') + (r.lev ? '<span>− levantamento ' + EUR.format(r.lev) + '</span>' : '') + '</div>' : '') +
           '</div>';
@@ -2390,7 +2535,7 @@ body.night .st, body.night .chc, body.night .achip, body.night .rank, body.night
 
   // ---------- pagamentos: payouts taken out of each account ----------
   const LS_PAY = "diario-trading-pagamentos-v1";
-  let pays = { fusion: [], prop: [] }, acMode = "conta";
+  let pays = accBag(() => []), acMode = "conta";
   try { if (localStorage.getItem("diario-trading-conta-modo") === "pag") acMode = "pag"; } catch (_) {}
   const METODOS = ["Banco", "Rise", "Wise", "PayPal", "Cripto", "Revolut"]; void METODOS;
   const PESSOAS = ["Carla", "Miguel"];
@@ -2432,8 +2577,8 @@ body.night .st, body.night .chc, body.night .achip, body.night .rank, body.night
   function pagHtml(a) {
     const list = pays[a].slice().sort((x, y) => y.dia.localeCompare(x.dia)), T = payTotals(a), last = list.find(p => p.estado !== "pedido");
     const avg = T.n ? T.rec / T.n : 0;
-    let h = '<section class="acc-card pag glass g-' + (a === "prop" ? "prop" : "conta") + '">';
-    h += '<div class="st-head"><div><div class="kind">Pagamentos</div><h2>' + AC[a] + '</h2></div><div class="ac-now"><small>Total recebido</small><b>' + EUR.format(T.rec) + '</b></div></div>';
+    let h = '<section class="acc-card pag glass g-' + (isProp(a) ? "prop" : "conta") + '">';
+    h += '<div class="st-head"><div><div class="kind">Pagamentos</div><h2>' + acName(a) + '</h2></div><div class="ac-now"><small>Total recebido</small><b>' + EUR.format(T.rec) + '</b></div></div>';
     const byP = PESSOAS.map(n => [n, list.filter(p => p.pessoa === n && p.estado !== "pedido").reduce((s0, p) => s0 + p.valor, 0)]);
     h += '<div class="achips">' +
       '<div class="achip"><span>Pagamentos</span><b>' + T.n + '</b><small>recebidos</small></div>' +
@@ -2470,6 +2615,133 @@ body.night .st, body.night .chc, body.night .achip, body.night .rank, body.night
     h += '<p class="achelp">Os pagamentos ficam só aqui, não mexem no saldo da conta. Se quiseres que o saldo conte com o levantamento, põe-no também no dia, no lápis da conta.</p>';
     return h + '</section>';
   }
+
+  // ---------- several props: pick which one you are looking at, add new ones as you buy them ----------
+  function saveProps() { try { localStorage.setItem(LS_PROPS, JSON.stringify(props)); } catch (_) {} }
+  function propHasData(id) { return cstore[id].size > 0 || pays[id].length > 0; }
+  function propBar() {
+    const sel = props.find(x => x.id === propSel) || props[0];
+    const info = [sel.tamanho != null ? "Conta de " + EUR0.format(sel.tamanho) : "", sel.custo != null ? "custou " + EUR.format(sel.custo) : "", sel.criada ? "comprada a " + dayName(sel.criada) + " " + sel.criada.slice(0, 4) : ""].filter(Boolean).join(" · ");
+    let rec = 0, cost = 0; for (const x of props) { rec += payTotals(x.id).rec; cost += x.custo || 0; }
+    const act = props.filter(x => !x.arquivada), arch = props.filter(x => x.arquivada), openA = showArch || sel.arquivada;
+    const chip = x => '<button type="button" class="pchip' + (x.arquivada ? " arch" : "") + '" data-psel="' + x.id + '" aria-pressed="' + (x.id === sel.id) + '">' + esc(x.nome) + '</button>';
+    return '<div class="propbar"><div class="pchips" role="group" aria-label="Escolher a prop">' +
+      act.map(chip).join("") +
+      '<button type="button" class="pchip padd" data-padd>+ Nova prop</button>' +
+      (arch.length ? '<button type="button" class="pchip parch" data-parch aria-expanded="' + !!openA + '">Arquivadas (' + arch.length + ') ' + (openA ? "▴" : "▾") + '</button>' + (openA ? arch.map(chip).join("") : "") : "") + '</div>' +
+      '<div class="pinfo"><span>' + (sel.arquivada ? '<i class="parq">Arquivada</i> ' : '') + (info ? esc(info) : "Toca no lápis para pores o tamanho da conta e quanto pagaste") + '</span><button type="button" class="nb" data-pedit aria-label="Editar esta prop" data-tip="plain" data-tv="Editar esta prop">' + PEN + '</button></div>' +
+      (props.length > 1 ? '<div class="ptot">Todas as props: <b>' + EUR.format(rec) + '</b> recebidos' + (cost ? ' · <b>' + EUR.format(cost) + '</b> pagos pelas contas' : '') + '</div>' : '') + '</div>';
+  }
+  // ---------- "Tudo": Fusion and every prop together ----------
+  function acMonth(a) {
+    const C = acCompute(a); let mp = 0, mStart = null, n = 0;
+    for (const d of weekdays(view.y, view.m)) { const r = C.rows.get(iso(d)); if (!r) continue; if (mStart == null && r.start != null) mStart = r.start; if (r.profit != null) { mp += r.profit; n++; } }
+    return { mp, mStart, n, last: C.last, pay: payTotals(a) };
+  }
+  function tudoHtml() {
+    const live = ["fusion", ...props.filter(x => !x.arquivada).map(x => x.id)], arch = props.filter(x => x.arquivada);
+    const M = Object.fromEntries(ACC_ALL().map(a => [a, acMonth(a)]));
+    let mp = 0, ms = 0, bal = 0, hasBal = false, rec = 0, wait = 0;
+    for (const a of live) { mp += M[a].mp; if (M[a].mStart) ms += M[a].mStart; if (M[a].last != null) { bal += M[a].last; hasBal = true; } }
+    for (const a of ACC_ALL()) { rec += M[a].pay.rec; wait += M[a].pay.wait; }
+    let pRec = 0, pCost = 0; for (const x of props) { pRec += M[x.id].pay.rec; pCost += x.custo || 0; }
+    let h = '<section class="acc-card tudo glass g-conta"><div class="st-head"><div><div class="kind">Tudo junto</div><h2>' + cap(MONTHS[view.m]) + ' <em>' + view.y + '</em></h2></div><div class="ac-now"><small>Saldo de todas</small><b>' + (hasBal ? EUR.format(bal) : "—") + '</b></div></div>';
+    h += '<div class="achips">' +
+      '<div class="achip"><span>Lucro do mês</span><b class="' + cls(mp) + '">' + eur(mp) + '</b><small>' + (ms ? fmt1(mp / ms * 100) + " · Fusion + props ativas" : "Fusion + props ativas") + '</small></div>' +
+      '<div class="achip pay"><span>Já levantaste</span><b>' + EUR.format(rec) + '</b><small>de todas as contas' + (wait ? " · " + EUR0.format(wait) + " à espera" : "") + '</small></div>' +
+      '<div class="achip"><span>Props: recebido − pago</span><b class="' + cls(pRec - pCost) + '">' + eur(pRec - pCost) + '</b><small>' + EUR0.format(pRec) + ' recebidos, ' + EUR0.format(pCost) + ' pagos</small></div></div>';
+    const row = (a, x) => { const m = M[a]; return '<button type="button" class="tdr" data-tgo="' + a + '"><span class="tl-n">' + esc(acName(a)) + (x && x.tamanho != null ? '<small>' + EUR0.format(x.tamanho) + '</small>' : '') + '</span>' +
+      '<span class="tl-c"><small>Saldo</small><b>' + (m.last != null ? EUR0.format(m.last) : "—") + '</b></span>' +
+      '<span class="tl-c"><small>Este mês</small><b class="' + (m.n ? cls(m.mp) : "") + '">' + (m.n ? eur(m.mp) : "—") + '</b></span>' +
+      '<span class="tl-c"><small>Recebido</small><b>' + EUR0.format(m.pay.rec) + '</b></span></button>'; };
+    h += '<div class="cht ondark">Cada conta</div><div class="tlist">' + live.map(a => row(a, props.find(x => x.id === a))).join("") + '</div>';
+    if (arch.length) h += '<div class="cht ondark">Props arquivadas</div><div class="tlist arch">' + arch.map(x => { const r0 = M[x.id].pay.rec, c0 = x.custo || 0; return '<button type="button" class="tdr" data-tgo="' + x.id + '"><span class="tl-n">' + esc(x.nome) + (x.tamanho != null ? '<small>' + EUR0.format(x.tamanho) + '</small>' : '') + '</span><span class="tl-c"><small>Pagaste</small><b>' + EUR0.format(c0) + '</b></span><span class="tl-c"><small>Recebeste</small><b>' + EUR0.format(r0) + '</b></span><span class="tl-c"><small>Ficou</small><b class="' + cls(r0 - c0) + '">' + eur(r0 - c0) + '</b></span></button>'; }).join("") + '</div>';
+    h += '<p class="achelp">Toca numa conta para a abrir. O saldo e o lucro contam a Fusion e as props ativas; o "recebido − pago" conta todas as props, também as arquivadas.</p>';
+    return h + '</section>';
+  }
+  document.addEventListener("click", e => {
+    const t = e.target.closest("button[data-tgo]"); if (!t) return;
+    const a = t.dataset.tgo;
+    if (a === "fusion") acView = "fusion"; else { acView = "prop"; propSel = a; try { localStorage.setItem(LS_PSEL, a); } catch (_) {} }
+    try { localStorage.setItem(LS_AC, acView); } catch (_) {}
+    render();
+  });
+  // ---------- a 4-number code to open the Conta tab ----------
+  const AC_PIN = "1234", SS_PIN = "diario-conta-aberta";
+  let pinOk = false, pinIn = "";
+  try { pinOk = sessionStorage.getItem(SS_PIN) === "1"; } catch (_) {}
+  function pinHtml(bad) {
+    return '<div class="pinbox' + (bad ? " bad" : "") + '"><div class="pin-lock" aria-hidden="true">🔒</div><div class="pin-t">Conta</div><p class="pin-s">Escreve o código para entrar</p>' +
+      '<div class="pin-dots" aria-live="polite" aria-label="' + pinIn.length + ' de 4 números">' + [0, 1, 2, 3].map(i => '<i' + (i < pinIn.length ? ' class="on"' : '') + '></i>').join("") + '</div>' +
+      '<div class="pin-pad">' + ["1", "2", "3", "4", "5", "6", "7", "8", "9", "", "0", "⌫"].map(k => k ? '<button type="button" data-pin="' + k + '" aria-label="' + (k === "⌫" ? "Apagar" : k) + '">' + k + '</button>' : '<span></span>').join("") + '</div></div>';
+  }
+  function pinPress(k) {
+    if (pinOk || tab !== "acct") return;
+    if (k === "⌫") pinIn = pinIn.slice(0, -1); else if (/^\d$/.test(k) && pinIn.length < 4) pinIn += k;
+    try { haptic(); } catch (_) {}
+    if (pinIn.length === 4) {
+      if (pinIn === AC_PIN) { pinOk = true; pinIn = ""; try { sessionStorage.setItem(SS_PIN, "1"); } catch (_) {} render(); return; }
+      pinIn = ""; $("view").innerHTML = pinHtml(true); return;
+    }
+    $("view").innerHTML = pinHtml(false);
+  }
+  document.addEventListener("click", e => { const b = e.target.closest("button[data-pin]"); if (b) pinPress(b.dataset.pin); });
+  document.addEventListener("keydown", e => { if (tab !== "acct" || pinOk) return; if (/^\d$/.test(e.key)) pinPress(e.key); else if (e.key === "Backspace") pinPress("⌫"); });
+  const pdlg = document.createElement("div"); pdlg.className = "dlg"; pdlg.id = "propdlg"; pdlg.hidden = true; document.body.appendChild(pdlg);
+  let pEditId = null, showArch = false;
+  function openPropDlg(id) {
+    const o = id ? props.find(x => x.id === id) : null; pEditId = o ? o.id : null;
+    const canDel = o && o.id !== "prop" && !propHasData(o.id);
+    pdlg.innerHTML = '<form class="dlg-card pform" role="dialog" aria-modal="true" aria-labelledby="pfT"><div><div class="sub">Prop</div><h3 id="pfT">' + (o ? "Editar " + esc(o.nome) : "Nova prop") + '</h3></div>' +
+      '<label class="pf1"><span>Nome</span><input name="nome" maxlength="40" required autocomplete="off" placeholder="Ex.: FTMO 50k" value="' + (o ? esc(o.nome) : "") + '"></label>' +
+      '<div class="pf2"><label class="pf1"><span>Tamanho da conta</span><div class="pf-eur"><input name="tamanho" inputmode="decimal" autocomplete="off" placeholder="50000" value="' + (o ? inVal(o.tamanho) : "") + '"><i>€</i></div></label>' +
+      '<label class="pf1"><span>Quanto pagaste</span><div class="pf-eur"><input name="custo" inputmode="decimal" autocomplete="off" placeholder="0,00" value="' + (o ? inVal(o.custo) : "") + '"><i>€</i></div></label></div>' +
+      '<label class="pf1"><span>Data de compra</span><input type="date" name="criada" value="' + ((o && o.criada) || (o ? "" : iso(new Date()))) + '"></label>' +
+      '<label class="pf1"><span>Nota</span><input name="nota" maxlength="300" autocomplete="off" placeholder="Opcional" value="' + (o ? esc(o.nota || "") : "") + '"></label>' +
+      (o ? '<button type="button" class="btn parchbtn" data-parchset>' + (o.arquivada ? "↺ Voltar a pôr nas props ativas" : "🗄 Arquivar esta prop (chumbou ou terminou)") + '</button>' : '') +
+      '<div class="dlg-actions">' + (canDel ? '<button type="button" class="btn pdel" data-pdel>Apagar</button>' : '') + '<button type="button" class="btn" data-pclose>Cancelar</button><button type="submit" class="btn primary">Guardar</button></div></form>';
+    pdlg.hidden = false; setTimeout(() => { const i = pdlg.querySelector("input[name=nome]"); if (i && !o) i.focus(); }, 30);
+  }
+  const closePropDlg = () => { pdlg.hidden = true; pEditId = null; };
+  async function putProp(o) {
+    const i = props.findIndex(x => x.id === o.id); if (i >= 0) props[i] = o; else props.push(o);
+    sortProps(); saveProps();
+    if (mode !== "db") return;
+    try { setStatus("saving", "A guardar…"); const r = await sb.from("props").upsert({ id: o.id, nome: o.nome, tamanho: o.tamanho, custo: o.custo, criada: o.criada, nota: o.nota, ordem: o.ordem, arquivada: !!o.arquivada }); if (r.error) throw r.error; idleStatus(); }
+    catch (_) { setStatus("err", "A prop não foi guardada, tenta outra vez"); }
+  }
+  pdlg.addEventListener("submit", async e => {
+    e.preventDefault(); const f = e.target, nome = f.nome.value.trim().slice(0, 40); if (!nome) return;
+    const old = pEditId ? props.find(x => x.id === pEditId) : null;
+    const o = { id: old ? old.id : "prop-" + Date.now().toString(36), nome, tamanho: parseNum(f.tamanho.value), custo: parseNum(f.custo.value), criada: f.criada.value || null, nota: f.nota.value.trim().slice(0, 300), ordem: old ? old.ordem || 0 : Math.max(0, ...props.map(x => x.ordem || 0)) + 1, arquivada: old ? !!old.arquivada : false };
+    closePropDlg(); propSel = o.id; try { localStorage.setItem(LS_PSEL, propSel); } catch (_) {}
+    await putProp(o); render();
+  });
+  pdlg.addEventListener("click", async e => {
+    if (e.target === pdlg || e.target.closest("[data-pclose]")) { closePropDlg(); return; }
+    if (e.target.closest("[data-parchset]") && pEditId) {
+      const o = props.find(x => x.id === pEditId); closePropDlg(); if (!o) return;
+      const n = { ...o, arquivada: !o.arquivada };
+      if (n.arquivada) { showArch = false; const nxt = props.find(x => !x.arquivada && x.id !== o.id); if (nxt) propSel = nxt.id; }
+      else propSel = o.id;
+      try { localStorage.setItem(LS_PSEL, propSel); } catch (_) {}
+      await putProp(n); render(); return;
+    }
+    if (e.target.closest("[data-pdel]") && pEditId) {
+      const id = pEditId; closePropDlg();
+      props = props.filter(x => x.id !== id); saveProps(); propSel = "prop"; try { localStorage.setItem(LS_PSEL, propSel); } catch (_) {}
+      if (mode === "db") { try { const r = await sb.from("props").delete().eq("id", id); if (r.error) throw r.error; idleStatus(); } catch (_) { setStatus("err", "Não foi apagada, tenta outra vez"); } }
+      render();
+    }
+  });
+  document.addEventListener("keydown", e => { if (e.key === "Escape" && !pdlg.hidden) closePropDlg(); });
+  document.addEventListener("click", e => {
+    const s = e.target.closest("button[data-psel]");
+    if (s) { if (s.dataset.psel !== propSel) { propSel = s.dataset.psel; try { localStorage.setItem(LS_PSEL, propSel); } catch (_) {} try { haptic(); } catch (_) {} render(); } return; }
+    if (e.target.closest("button[data-padd]")) { openPropDlg(null); return; }
+    if (e.target.closest("button[data-parch]")) { showArch = !showArch; render(); return; }
+    if (e.target.closest("button[data-pedit]")) { openPropDlg(propSel); return; }
+  });
 
   // ======================================================================
   // ---------- mood: one face per day (shared by the three tables) ----------
@@ -2767,6 +3039,7 @@ body.night .st, body.night .chc, body.night .achip, body.night .rank, body.night
   function drawSes() {
     if (!SES().some(x => x.role === sesRole)) sesRole = "conta";
     const d = new Date(), id = iso(d), s = byRole(sesRole), e = entry(s.key, id), p = pctOf(e), we = d.getDay() === 0 || d.getDay() === 6;
+    ses.dataset.res = !we && !e.off && traded(s.key, id) ? cls(p) : "";   // soft green / yellow / red glow behind the keys
     ses.innerHTML = '<div class="ses-top"><div class="ses-tabs">' + SES().map(x => '<button type="button" data-sesr="' + x.role + '" aria-pressed="' + (x.role === sesRole) + '">' + x.label + '</button>').join("") + '</div><button type="button" class="ses-x" data-ses="close" aria-label="Fechar">✕</button></div>' +
       '<div class="ses-date">' + DOWL[d.getDay()] + ', ' + d.getDate() + ' de ' + MONTHS[d.getMonth()] + '</div><div class="ses-clock" id="sesClock">' + dayClock().short + '</div>' +
       (we ? '<p class="ses-we">Hoje é fim de semana. O Diário só tem dias úteis.</p>' : e.off ? '<p class="ses-we">Este dia está marcado como "sem operar".</p>' :
@@ -2796,13 +3069,41 @@ body.night .st, body.night .chc, body.night .achip, body.night .rank, body.night
   });
   document.addEventListener("keydown", e => { if (e.key === "Escape" && !ses.hidden) { ses.hidden = true; document.body.classList.remove("ses-open"); render(); } });
 
+  // ---------- end-of-day card: after 21:00 on a trading day, shown once per day on each phone/computer ----------
+  const LS_EOD = "diario-fimdia";
+  const eod = document.createElement("div"); eod.className = "dlg"; eod.id = "eoddlg"; eod.hidden = true; document.body.appendChild(eod);
+  function maybeEod(force) {
+    const n = new Date(), wd = n.getDay(), id = iso(n);
+    if (!force) {
+      if (wd === 0 || wd === 6 || n.getHours() < DAY_END) return;
+      try { if (localStorage.getItem(LS_EOD) === id) return; } catch (_) { return; }
+      if (document.getElementById("splash") || document.querySelector(".dlg:not([hidden])") || !ses.hidden) return;
+    }
+    if (!SERIES.some(s => traded(s.key, id))) return;   // nothing registered (or not loaded yet): try again later
+    try { localStorage.setItem(LS_EOD, id); } catch (_) {}
+    const row = s => { const e = entry(s.key, id), p = pctOf(e), t = traded(s.key, id);
+      return '<div class="eod-r"><span class="eod-n">' + (s.acct ? s.label : s.full) + '</span>' + (e.off ? '<span class="eod-x">Sem operar</span>' : '<span class="eod-tp">' + e.tp + ' TP</span><span class="eod-sl">' + e.sl + ' SL</span><b class="eod-p ' + (t ? cls(p) : "zero") + '">' + fmt(t ? p : 0) + '</b>') + '</div>'; };
+    const acc = SERIES.filter(s => s.acct || traded(s.key, id)).sort((a, b) => b.acct - a.acct), best = Math.max(...acc.map(s => traded(s.key, id) ? pctOf(entry(s.key, id)) : -1e9));
+    const msg = best >= 10 ? "Que dia! Mereces descansar ✨" : best > 0 ? "Dia positivo. Bom trabalho ✨" : best === 0 ? "Dia equilibrado. Amanhã há mais ✨" : best > -1e9 ? "Dias assim também ensinam. Trust the process ✨" : "Bom descanso ✨";
+    eod.innerHTML = '<div class="dlg-card eod-card" role="dialog" aria-modal="true" aria-labelledby="eodT"><i class="eod-s s1"></i><i class="eod-s s2"></i><i class="eod-s s3"></i>' +
+      '<div class="eod-h"><div class="sub">Fim do dia de trading</div><h3 id="eodT">' + DOWL[n.getDay()] + ', ' + n.getDate() + ' de ' + MONTHS[n.getMonth()] + '</h3></div>' +
+      '<div class="eod-rows">' + acc.map(row).join("") + '</div>' +
+      '<p class="eod-m">' + msg + '</p><div class="dlg-actions"><button type="button" class="btn primary" id="eodClose">Fechar</button></div></div>';
+    eod.hidden = false;
+    $("eodClose").onclick = () => { eod.hidden = true; };
+  }
+  eod.addEventListener("click", e => { if (e.target === eod) eod.hidden = true; });
+  document.addEventListener("keydown", e => { if (e.key === "Escape" && !eod.hidden) eod.hidden = true; });
+  setTimeout(() => { maybeEod(); setInterval(maybeEod, 20000); }, 4000);
+  try { if (new URLSearchParams(location.search).has("fimdia")) setTimeout(() => maybeEod(true), 3000); } catch (_) {}
+
   // ---------- search in the notes ----------
   const norm0 = t => String(t || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
   function searchNotes(q) {
     const nq = norm0(q.trim()); if (nq.length < 2) return [];
     const out = [];
     for (const s of SERIES) for (const [id, e] of store[s.key]) if (e.note && norm0(e.note).includes(nq)) out.push({ k: "d", key: s.key, id, label: s.full, text: e.note });
-    for (const a of ["fusion", "prop"]) for (const [id, e] of cstore[a]) if (e.nota && norm0(e.nota).includes(nq)) out.push({ k: "c", key: a, id, label: "Conta · " + AC[a], text: e.nota });
+    for (const a of ACC_ALL()) for (const [id, e] of cstore[a]) if (e.nota && norm0(e.nota).includes(nq)) out.push({ k: "c", key: a, id, label: "Conta · " + acName(a), text: e.nota });
     return out.sort((a, b) => b.id.localeCompare(a.id)).slice(0, 80);
   }
   function hl(text, q) {
@@ -2831,7 +3132,7 @@ body.night .st, body.night .chc, body.night .achip, body.night .rank, body.night
     a.href = url; a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(url); a.remove(); }, 500);
   }
   function backupJson() {
-    const o = { exportado: new Date().toISOString(), site: "Diário de Trading", dias: {}, contas: { fusion: Object.fromEntries(cstore.fusion), prop: Object.fromEntries(cstore.prop) }, humor: Object.fromEntries(moods), pagamentos: pays };
+    const o = { exportado: new Date().toISOString(), site: "Diário de Trading", dias: {}, contas: Object.fromEntries(Object.keys(cstore).map(a => [a, Object.fromEntries(cstore[a])])), props, humor: Object.fromEntries(moods), pagamentos: pays };
     for (const k of ALLKEYS) o.dias[k] = Object.fromEntries(store[k]);
     download("diario-trading-copia-" + iso(new Date()) + ".json", JSON.stringify(o, null, 2), "application/json");
   }
@@ -2840,7 +3141,7 @@ body.night .st, body.night .chc, body.night .achip, body.night .rank, body.night
     let csv = "﻿" + ["Tabela", "Dia", "TP", "SL", "Resultado %", "Risco €", "Resultado €", "Sem operar", "Humor", "Nota"].join(";") + "\n";
     for (const s of SERIES) for (const id of [...store[s.key].keys()].sort()) { const e = store[s.key].get(id); csv += [q(s.full), id, e.tp, e.sl, pctOf(e), n2(e.risk || ""), e.risk ? n2(euroOf(e)) : "", e.off ? "sim" : "", q(moods.get(id) ? MOOD[moods.get(id)][2] : ""), q(e.note)].join(";") + "\n"; }
     csv += "\n" + ["Conta", "Dia", "Início €", "Fim €", "Lucro €", "Risco €", "Depósito €", "Levantamento €", "", "Nota"].join(";") + "\n";
-    for (const a of ["fusion", "prop"]) { const C = acCompute(a); for (const id of C.ids) { const r = C.rows.get(id); csv += [q(AC[a]), id, n2(r.start), n2(r.fim), n2(r.profit), n2(r.risk), n2(r.dep), n2(r.lev), "", q(r.nota)].join(";") + "\n"; } }
+    for (const a of ACC_ALL()) { const C = acCompute(a); for (const id of C.ids) { const r = C.rows.get(id); csv += [q(acName(a)), id, n2(r.start), n2(r.fim), n2(r.profit), n2(r.risk), n2(r.dep), n2(r.lev), "", q(r.nota)].join(";") + "\n"; } }
     download("diario-trading-" + iso(new Date()) + ".csv", csv, "text/csv;charset=utf-8");
   }
 
@@ -2898,7 +3199,23 @@ body.night .st, body.night .chc, body.night .achip, body.night .rank, body.night
     document.querySelectorAll(".ftab[data-ac]").forEach(b => b.setAttribute("aria-selected", String(b.dataset.ac === acView)));
   }
   const saveShown = () => { try { localStorage.setItem(LS_VIEW, String(side)); localStorage.setItem(LS_GRP, grp); } catch (_) {} };
-  function setGrp(g, quiet) { if (g !== "fusion" && g !== "prop") return; grp = g; saveShown(); if (!quiet) render(); }
+  function setGrp(g, quiet) { if (g !== "fusion" && g !== "prop") return; grp = g; saveShown(); updGbar(); if (!quiet) render(); }
+  // small bar at the bottom: shows whether you are on Fusion or Prop; tap a side, or slide the finger along it, to change
+  const gbar = document.createElement("div"); gbar.className = "gbar"; gbar.setAttribute("role", "group"); gbar.setAttribute("aria-label", "Escolher Fusion ou Prop");
+  gbar.innerHTML = '<i class="gthumb"></i><button type="button" data-g="fusion">Fusion</button><button type="button" data-g="prop">Prop</button>';
+  document.body.appendChild(gbar);
+  function updGbar() {
+    const b = document.querySelector(".gbar"); if (!b) return;
+    b.classList.toggle("prop", grp === "prop");
+    b.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", String(x.dataset.g === grp)));
+  }
+  updGbar();
+  let gx = null, gmoved = false;
+  const gPick = g => { if (g === grp) return; setGrp(g); try { haptic(); } catch (_) {} };
+  gbar.addEventListener("pointerdown", e => { gx = e.clientX; gmoved = false; });
+  gbar.addEventListener("pointermove", e => { if (gx == null) return; const dx = e.clientX - gx; if (Math.abs(dx) > 16) { gmoved = true; gPick(dx > 0 ? "prop" : "fusion"); gx = e.clientX; } });
+  ["pointerup", "pointercancel", "pointerleave"].forEach(t => gbar.addEventListener(t, () => { gx = null; }));
+  gbar.addEventListener("click", e => { if (gmoved) { gmoved = false; return; } const b = e.target.closest("button[data-g]"); gPick(b ? b.dataset.g : grp === "fusion" ? "prop" : "fusion"); });
   // statistics: "0" / "1" = the two tables, "y2026"… = the year calendar
   let stab = "s";
   function yearsWithData() {
@@ -2934,10 +3251,12 @@ body.night .st, body.night .chc, body.night .achip, body.night .rank, body.night
         $("view").innerHTML = '<div class="tabbed">' + tabsH + '<div class="slides">' + GS().map(s => '<div class="slide" data-role="' + s.role + '">' + (tab === "cal" ? '<div class="calwrap">' + calHtml(s) + '</div>' : statsHtml(s)) + '</div>').join("") + '</div></div>';
         slideCtl = slider($("view").querySelector(".slides"), side, i => { side = i; saveShown(); markSwitch(); });
       }
+    } else if (tab === "acct" && !pinOk) {
+      $("view").innerHTML = pinHtml(false);
     } else if (tab === "acct") {
       const pagB = '<button type="button" class="pagbtn' + (acMode === "pag" ? " on" : "") + '" data-pag>' + (acMode === "pag" ? '<span aria-hidden="true">←</span> Voltar à conta' : '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1.8" y="4" width="12.4" height="8.4" rx="1.6"/><circle cx="8" cy="8.2" r="1.8"/><path d="M4.2 6.2v.01M11.8 10.2v.01" stroke-width="1.8"/></svg>Pagamentos') + '</button>';
-      $("view").innerHTML = '<div class="tabbed"><div class="tabrow">' + ftabs([["fusion", "Fusion Markets"], ["prop", "Prop Firm"]], acView, "data-ac", "Escolher conta") + pagB + '</div><div class="slides">' + ["fusion", "prop"].map(a => '<div class="slide" data-ac="' + a + '">' + (acMode === "pag" ? pagHtml(a) : acHtml(a)) + '</div>').join("") + '</div></div>';
-      slideCtl = slider($("view").querySelector(".slides"), acView === "prop" ? 1 : 0, i => { acView = i ? "prop" : "fusion"; try { localStorage.setItem(LS_AC, acView); } catch (_) {} markSwitch(); });
+      $("view").innerHTML = '<div class="tabbed"><div class="tabrow">' + ftabs([["fusion", "Fusion"], ["prop", "Prop"], ["tudo", "Tudo"]], acView, "data-ac", "Escolher conta") + pagB + '</div><div class="slides">' + AC_VIEWS.map(a => { if (a === "tudo") return '<div class="slide" data-ac="tudo">' + tudoHtml() + '</div>'; const k = a === "prop" ? propSel : a; return '<div class="slide" data-ac="' + a + '">' + (a === "prop" ? propBar() : "") + (acMode === "pag" ? pagHtml(k) : acHtml(k)) + '</div>'; }).join("") + '</div></div>';
+      slideCtl = slider($("view").querySelector(".slides"), Math.max(0, AC_VIEWS.indexOf(acView)), i => { acView = AC_VIEWS[i] || "fusion"; try { localStorage.setItem(LS_AC, acView); } catch (_) {} markSwitch(); });
     } else {
       const nn = nextNewsHtml();
       $("view").innerHTML = '<div class="nextnews" id="nextnews"' + (nn ? '' : ' hidden') + ' role="status">' + nn + '</div><div class="dots" aria-hidden="true"><i></i><i></i></div><div class="panels">' + GS().map(s => '<section class="panel" data-key="' + s.role + '" aria-label="' + s.full + '">' + panelHtml(s, days) + '</section>').join("") + '</div>';
@@ -3039,7 +3358,7 @@ body.night .st, body.night .chc, body.night .achip, body.night .rank, body.night
   function openAcDay(a, id) {
     const [y, m, dd] = id.split("-").map(Number), d = new Date(y, m - 1, dd), e = centry(a, id);
     acKey = { a, id }; acFocus = document.activeElement;
-    $("acSub").textContent = AC[a];
+    $("acSub").textContent = acName(a);
     $("acTitle").textContent = DOWL[d.getDay()] + ", " + d.getDate() + " de " + MONTHS[d.getMonth()];
     $("acDep").value = e.dep ? inVal(e.dep) : ""; $("acLev").value = e.lev ? inVal(e.lev) : ""; $("acNote").value = e.nota || "";
     acdlg.hidden = false; setTimeout(() => $("acDep").focus(), 30);
@@ -3047,11 +3366,11 @@ body.night .st, body.night .chc, body.night .achip, body.night .rank, body.night
   function closeAc() { acdlg.hidden = true; acKey = null; render(); if (acFocus && document.contains(acFocus)) acFocus.focus({ preventScroll: true }); }
   $("acForm").addEventListener("submit", ev => {
     ev.preventDefault(); if (!acKey) return;
-    { const a0 = acKey.a, id0 = acKey.id, p0 = { ...centry(a0, id0) }; pushUndo(AC[a0] + ", " + dayName(id0) + " guardado", () => { setC(a0, id0, p0); render(); }); }
+    { const a0 = acKey.a, id0 = acKey.id, p0 = { ...centry(a0, id0) }; pushUndo(acName(a0) + ", " + dayName(id0) + " guardado", () => { setC(a0, id0, p0); render(); }); }
     setC(acKey.a, acKey.id, { dep: Math.max(0, parseNum($("acDep").value) || 0), lev: Math.max(0, parseNum($("acLev").value) || 0), nota: $("acNote").value.trim().slice(0, 4000) });
     closeAc();
   });
-  $("acClear").addEventListener("click", () => { if (!acKey) return; const a0 = acKey.a, id0 = acKey.id, p0 = { ...centry(a0, id0) }; setC(a0, id0, { ...CEMPTY }); pushUndo(AC[a0] + ", " + dayName(id0) + " apagado", () => { setC(a0, id0, p0); render(); }); closeAc(); });
+  $("acClear").addEventListener("click", () => { if (!acKey) return; const a0 = acKey.a, id0 = acKey.id, p0 = { ...centry(a0, id0) }; setC(a0, id0, { ...CEMPTY }); pushUndo(acName(a0) + ", " + dayName(id0) + " apagado", () => { setC(a0, id0, p0); render(); }); closeAc(); });
   $("acCancel").addEventListener("click", closeAc);
   acdlg.addEventListener("click", e => { if (e.target === acdlg) closeAc(); });
   document.addEventListener("keydown", e => { if (e.key === "Escape" && !acdlg.hidden) closeAc(); });
@@ -3063,7 +3382,7 @@ body.night .st, body.night .chc, body.night .achip, body.night .rank, body.night
     if (centry(a, id)[f] === v) return;
     const prevC = { ...centry(a, id) };
     setC(a, id, { [f]: v });
-    pushUndo(AC[a] + ", " + dayName(id) + " alterado", () => { setC(a, id, prevC); render(); });
+    pushUndo(acName(a) + ", " + dayName(id) + " alterado", () => { setC(a, id, prevC); render(); });
     setTimeout(render, 0);
   });
   $("view").addEventListener("focusin", e => { const i = e.target.closest("input[data-cin]"); if (i) setTimeout(() => { try { i.select(); } catch (_) {} }, 0); });
@@ -3158,7 +3477,7 @@ body.night .st, body.night .chc, body.night .achip, body.night .rank, body.night
     const row = i.closest(".lrow"), e1 = entry(s, id), p = pctOf(e1), res = row && row.querySelector(".res"), to = row && row.querySelector(".to");
     i.classList.toggle("z", !v);
     if (to) { to.lastChild.textContent = e1.tp + e1.sl; to.classList.toggle("z", !(e1.tp + e1.sl)); }
-    if (row) { row.classList.remove("d-pos", "d-neg", "d-zero"); if (traded(s, id)) row.classList.add("d-" + cls(p)); }
+    if (row) { row.classList.remove("d-pos", "d-neg", "d-zero"); row.classList.toggle("vazio", !traded(s, id)); if (traded(s, id)) row.classList.add("d-" + cls(p)); }
     if (res) { const eu = res.querySelector(".eur"); res.className = "res " + cls(p); res.firstChild.nodeValue = fmt(p); if (eu) eu.textContent = eur(euroOf(e1)); }
     dirtyView = true;
   });
@@ -3180,7 +3499,7 @@ body.night .st, body.night .chc, body.night .achip, body.night .rank, body.night
     const i = e.target.closest("input[data-in]"); if (!i) return;
     if (e.key === "Enter") { e.preventDefault(); const all = [...document.querySelectorAll('input[data-in]')]; const n = all[all.indexOf(i) + 1]; if (n) n.focus(); else i.blur(); }
   });
-  $("view").addEventListener("focusout", e => { const i = e.target.closest("input[data-in]"); if (i && i.value === "") i.value = "0"; });
+  $("view").addEventListener("focusout", e => { const i = e.target.closest("input[data-in]"); if (i && i.value === "" && !i.placeholder) i.value = "0"; });
 
   // ---------- events ----------
   $("view").addEventListener("click", e => {
@@ -3278,7 +3597,7 @@ body.night .st, body.night .chc, body.night .achip, body.night .rank, body.night
       markSwitch(); slideCtl.go(side, true);
     } else {
       acView = b.dataset.ac; try { localStorage.setItem(LS_AC, acView); } catch (_) {}
-      markSwitch(); if (slideCtl) slideCtl.go(acView === "prop" ? 1 : 0, true); else render();
+      markSwitch(); if (slideCtl) slideCtl.go(Math.max(0, AC_VIEWS.indexOf(acView)), true); else render();
     }
   });
   $("prev").addEventListener("click", () => { view.m--; if (view.m < 0) { view.m = 11; view.y--; } render(); });
