@@ -1165,7 +1165,7 @@ body.ses-open .gbar { display: none !important; }
       <div class="wrapc">
         <div id="view"></div>
       </div>
-      <div class="endcar" aria-hidden="true"><img class="ec-l" src="pin-stacks.png" alt=""><img class="ec-c" src="pin-chanel.png" alt=""><img class="ec-r" src="pin-car.png" alt=""></div>
+      <div class="endcar" aria-hidden="true"><img class="ec-l" src="pin-stacks.png" alt=""><img class="ec-r" src="pin-car.png" alt=""></div>
       <div class="tools" role="group" aria-label="Ferramentas">
         <button type="button" id="bkJson"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2v8M4.8 7 8 10.2 11.2 7M3 12.5h10"/></svg>Cópia de segurança</button>
         <button type="button" id="bkCsv"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="2.5" width="11" height="11" rx="1.5"/><path d="M2.5 6.2h11M2.5 9.8h11M6.2 2.5v11"/></svg>Exportar para Excel</button>
@@ -1411,7 +1411,7 @@ body.ses-open .gbar { display: none !important; }
     { k: "pin-fan", w: 110, a: .92, m: "m-money", s: "r" },
     { k: "pin-amex", w: 124, a: .71, m: "m-card", s: "l" },
     { k: "pin-martini", w: 82, a: 1.6, mh: 1 }, { k: "pin-legs", w: 96, a: 1.44 }, { k: "pin-glasses", w: 134, a: .36 },
-    { k: "pin-ball", w: 70, a: 1, mh: 1 }, { k: "pin-chanel", w: 80, a: 1.22 }, { k: "pin-car", w: 168, a: .31, mh: 1 },
+    { k: "pin-ball", w: 70, a: 1, mh: 1 }, { k: "pin-chanel", w: 80, a: 1.22, hide: 1 }, { k: "pin-car", w: 168, a: .31, mh: 1 },
     { k: "pin-stars", w: 74, a: 1.7 }, { k: "pin-liberty", w: 106, a: 1.54 }, { k: "pin-777", w: 92, a: .99, mh: 1 },
     { k: "pin-lighter", w: 46, a: 2.66 }, { k: "pin-gwagon", w: 146, a: .63 }, { k: "pin-kiss", w: 104, a: .81, mh: 1 },
     { k: "pin-watch", w: 60, a: 1.86, m: "m-watch" }, { k: "pin-moet", w: 42, a: 3.05 }, { k: "pin-headphones", w: 84, a: 1.12, mh: 1 },
@@ -1553,6 +1553,7 @@ body.ses-open .gbar { display: none !important; }
       yAt[side] = y + ht + 40 + rnd() * 210;
       // in a festive season, some stickers swap for festive ones (same place, so nothing overlaps)
       const swap = art && !s.m && s.a >= .9 && (n++ % 2 === 0);
+      if (s.hide) continue;   // removed sticker: keeps its place in the layout so the others do not move
       if (swap) {
         const w = Math.round(Math.min(s.w, s.w * s.a) * .95);
         h += '<div class="sk fest ' + side + (s.mh ? " mh" : "") + '" style="--w0:' + w + 'px;--f:' + f + ';top:' + y + 'px;transform:rotate(' + rot + 'deg)"><img src="' + art[si++ % art.length] + '" alt=""></div>';
