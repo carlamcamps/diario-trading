@@ -13,6 +13,7 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="manifest" href="manifest.webmanifest">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.4/dist/umd/supabase.min.js"></script>
+<script src="noticias.js"></script>
 <style>
 :root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
 body { margin: 0; }
@@ -125,6 +126,7 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
 .switch button { border: 0; border-radius: 999px; padding: 7px 20px; background: transparent; cursor: pointer; font-family: var(--display); font-size: 15px; color: var(--gold); }
 .switch button[aria-pressed="true"] { background: var(--champ); color: #2A0A11; }
 .view-cal .switch { display: flex; }
+.view-news .controls, .view-news .switch, .view-news .endcar { display: none !important; }
 
 /* ---------- glass panels ---------- */
 .wrapc { max-width: 980px; margin: 0 auto; }
@@ -349,6 +351,7 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
       <div class="tabs" role="group" aria-label="Vista">
         <button type="button" data-view="diario" aria-pressed="true">Diário</button>
         <button type="button" data-view="cal" aria-pressed="false">Calendário</button>
+        <button type="button" data-view="news" aria-pressed="false">Notícias</button>
       </div>
       <div class="controls">
         <div class="monthnav">
@@ -561,7 +564,7 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
   const now = new Date();
   const view = { y: now.getFullYear(), m: now.getMonth() };
   let shown = "estrategia", tab = "diario";
-  try { const v = localStorage.getItem(LS_VIEW); if (v === "conta" || v === "estrategia") shown = v; const t = localStorage.getItem(LS_TAB); if (t === "cal" || t === "diario") tab = t; } catch (_) {}
+  try { const v = localStorage.getItem(LS_VIEW); if (v === "conta" || v === "estrategia") shown = v; const t = localStorage.getItem(LS_TAB); if (t === "cal" || t === "diario" || t === "news") tab = t; } catch (_) {}
   const store = { estrategia: new Map(), conta: new Map() };
   const dirty = new Set(), timers = new Map(), inflight = new Map();
   let mode = "loading", db = null, loadTimer = null, ro = false;
@@ -844,9 +847,12 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
     if (oldPn && oldPn.scrollWidth > oldPn.clientWidth + 2) shown = oldPn.scrollLeft > oldPn.clientWidth / 2 ? "conta" : "estrategia";
     $("mlabel").textContent = cap(MONTHS[view.m]) + " " + view.y;
     document.body.classList.toggle("view-cal", tab === "cal");
+    document.body.classList.toggle("view-news", tab === "news");
     document.querySelectorAll(".tabs button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.view === tab)));
     document.querySelectorAll(".switch button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.show === shown)));
-    if (tab === "cal") {
+    if (tab === "news") {
+      if (!$("view").querySelector(".nw-root")) { $("view").innerHTML = '<div class="nw-root"></div>'; if (window.Noticias) window.Noticias.mount($("view").firstChild); }
+    } else if (tab === "cal") {
       $("view").innerHTML = '<div class="calwrap">' + calHtml(SERIES.find(s => s.key === shown)) + '</div>';
     } else {
       $("view").innerHTML = '<div class="dots" aria-hidden="true"><i></i><i></i></div><div class="panels">' + SERIES.map(s => '<section class="panel" data-key="' + s.key + '" aria-label="' + s.label + '">' + panelHtml(s, days) + '</section>').join("") + '</div>';
