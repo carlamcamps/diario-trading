@@ -92,8 +92,10 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
 @media (max-width: 860px) {
   .endcar { display: flex; justify-content: space-between; align-items: flex-end; width: 100%; margin: -30px 0 34px; position: relative; z-index: 3; }
   .endcar img { display: block; height: auto; filter: var(--die); }
-  .endcar .ec-l { width: min(104px, 27%); transform: rotate(9deg); margin-left: 6px; }
-  .endcar .ec-r { width: min(190px, 46%); transform: rotate(-4deg); margin-right: -6px; }
+  .endcar .ec-l { width: min(112px, 30%); transform: translateX(-48%) rotate(9deg); }
+  .endcar .ec-r { width: min(200px, 50%); transform: translateX(42%) rotate(-4deg); }
+  .endcar .ec-c { position: absolute; left: 21%; top: -46px; width: min(62px, 17%); transform: rotate(-14deg); }
+  #front .sk.m-watch { left: auto !important; right: -12px !important; top: 640px !important; }
   #front .sk.m-money { --w: 66px; right: 4px !important; top: 150px !important; }
 }
 /* read-only viewers */
@@ -1163,7 +1165,7 @@ body.ses-open .gbar { display: none !important; }
       <div class="wrapc">
         <div id="view"></div>
       </div>
-      <div class="endcar" aria-hidden="true"><img class="ec-l" src="pin-stacks.png" alt=""><img class="ec-r" src="pin-car.png" alt=""></div>
+      <div class="endcar" aria-hidden="true"><img class="ec-l" src="pin-stacks.png" alt=""><img class="ec-c" src="pin-chanel.png" alt=""><img class="ec-r" src="pin-car.png" alt=""></div>
       <div class="tools" role="group" aria-label="Ferramentas">
         <button type="button" id="bkJson"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2v8M4.8 7 8 10.2 11.2 7M3 12.5h10"/></svg>Cópia de segurança</button>
         <button type="button" id="bkCsv"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="2.5" width="11" height="11" rx="1.5"/><path d="M2.5 6.2h11M2.5 9.8h11M6.2 2.5v11"/></svg>Exportar para Excel</button>
@@ -1412,7 +1414,7 @@ body.ses-open .gbar { display: none !important; }
     { k: "pin-ball", w: 70, a: 1, mh: 1 }, { k: "pin-chanel", w: 80, a: 1.22 }, { k: "pin-car", w: 168, a: .31, mh: 1 },
     { k: "pin-stars", w: 74, a: 1.7 }, { k: "pin-liberty", w: 106, a: 1.54 }, { k: "pin-777", w: 92, a: .99, mh: 1 },
     { k: "pin-lighter", w: 46, a: 2.66 }, { k: "pin-gwagon", w: 146, a: .63 }, { k: "pin-kiss", w: 104, a: .81, mh: 1 },
-    { k: "pin-watch", w: 60, a: 1.86 }, { k: "pin-moet", w: 42, a: 3.05 }, { k: "pin-headphones", w: 84, a: 1.12, mh: 1 },
+    { k: "pin-watch", w: 60, a: 1.86, m: "m-watch" }, { k: "pin-moet", w: 42, a: 3.05 }, { k: "pin-headphones", w: 84, a: 1.12, mh: 1 },
     { k: "pin-stacks", w: 104, a: 1.06 }, { k: "pin-ysl", w: 58, a: 2.25 }, { k: "pin-wallet", w: 102, a: .74, mh: 1 },
     { k: "pin-mouth", w: 88, a: .96 }, { k: "pin-leopard", w: 92, a: 1.2 }, { k: "pin-money", w: 136, a: .48, mh: 1 },
     { k: "pin-bracelet", w: 74, a: 1 }, { k: "pin-love", w: 62, a: 1.48, mh: 1 }, { k: "pin-airpods", w: 100, a: .77 },
