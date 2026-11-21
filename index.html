@@ -86,7 +86,7 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
 }
 /* phone: black card and money sit fully in view beside the title, clear of the text */
 @media (max-width: 600px) {
-  #front .sk.m-card { --w: 62px; left: 6px !important; top: 196px !important; }
+  #front .sk.m-card { --w: 58px; left: 4px !important; top: 236px !important; }
 }
 .endcar { display: none; }
 @media (max-width: 860px) {
@@ -115,6 +115,16 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
 .tabs { display: inline-flex; gap: 4px; padding: 4px; border-radius: 999px; background: rgba(0, 0, 0, .25); border: 1px solid var(--line); margin-top: 6px; }
 .tabs button { border: 0; border-radius: 999px; padding: 8px 24px; background: transparent; cursor: pointer; font-family: var(--display); font-size: 16px; color: var(--champ); opacity: .78; }
 .tabs button[aria-pressed="true"] { background: var(--champ); color: #2A0A11; opacity: 1; }
+/* account groups: Fusion Markets / Prop Firms */
+.grp { display: inline-flex; gap: 0; margin-top: 12px; border-bottom: 1px solid rgba(205, 167, 94, .3); }
+.grp button { position: relative; border: 0; background: transparent; cursor: pointer; padding: 8px 18px 10px; font: 500 13px/1 var(--sans); letter-spacing: .08em; text-transform: uppercase; color: var(--soft); }
+.grp button::after { content: ""; position: absolute; left: 14px; right: 14px; bottom: -1px; height: 2px; border-radius: 2px; background: var(--gold); transform: scaleX(0); transition: transform .25s ease; }
+.grp button[aria-pressed="true"] { color: var(--gold); }
+.grp button[aria-pressed="true"]::after { transform: scaleX(1); }
+.grp button:hover { color: var(--champ); }
+.view-news .grp { display: none; }
+@media (max-width: 400px) { .grp button { padding: 8px 12px 10px; font-size: 12px; } }
+@media (prefers-reduced-motion: reduce) { .grp button::after { transition: none; } }
 .controls { display: flex; align-items: center; justify-content: center; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
 .monthnav { display: inline-flex; align-items: center; gap: 2px; border: 1px solid var(--line); border-radius: 999px; padding: 3px; background: rgba(0, 0, 0, .18); }
 .monthnav .ml { min-width: 160px; text-align: center; font-family: var(--display); font-size: 18px; color: var(--champ); }
@@ -353,6 +363,10 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
         <button type="button" data-view="cal" aria-pressed="false">Calendário</button>
         <button type="button" data-view="news" aria-pressed="false">Notícias</button>
       </div>
+      <div class="grp" role="group" aria-label="Conta de trading">
+        <button type="button" data-grp="fusion" aria-pressed="true">Fusion Markets</button>
+        <button type="button" data-grp="prop" aria-pressed="false">Prop Firms</button>
+      </div>
       <div class="controls">
         <div class="monthnav">
           <button class="circ" id="prev" aria-label="Mês anterior">‹</button>
@@ -553,7 +567,15 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
 
   // ---------- data ----------
   const TP_PCT = 2, SL_PCT = 1;
-  const SERIES = [{ key: "estrategia", label: "Estratégia" }, { key: "conta", label: "Conta" }];
+  // two trading accounts (groups), each with its own Estratégia + Conta; Fusion Markets keeps the original keys
+  const ALLKEYS = ["estrategia", "conta", "prop_estrategia", "prop_conta"];
+  const GROUPS = { fusion: "Fusion Markets", prop: "Prop Firms" };
+  let grp = "fusion";
+  try { const g = localStorage.getItem("diario-trading-grupo"); if (g === "fusion" || g === "prop") grp = g; } catch (_) {}
+  const K = role => (grp === "prop" ? "prop_" : "") + role;
+  let SERIES = [];
+  function setSeries() { SERIES = [{ key: K("estrategia"), role: "estrategia", label: "Estratégia" }, { key: K("conta"), role: "conta", label: "Conta" }]; }
+  setSeries();
   const MONTHS = ["janeiro","fevereiro","março","abril","maio","junho","julho","agosto","setembro","outubro","novembro","dezembro"];
   const MON3 = ["jan","fev","mar","abr","mai","jun","jul","ago","set","out","nov","dez"];
   const DOW = ["dom","seg","ter","qua","qui","sex","sáb"];
@@ -565,7 +587,7 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
   const view = { y: now.getFullYear(), m: now.getMonth() };
   let shown = "estrategia", tab = "diario";
   try { const v = localStorage.getItem(LS_VIEW); if (v === "conta" || v === "estrategia") shown = v; const t = localStorage.getItem(LS_TAB); if (t === "cal" || t === "diario" || t === "news") tab = t; } catch (_) {}
-  const store = { estrategia: new Map(), conta: new Map() };
+  const store = { estrategia: new Map(), conta: new Map(), prop_estrategia: new Map(), prop_conta: new Map() };
   const dirty = new Set(), timers = new Map(), inflight = new Map();
   let mode = "loading", db = null, loadTimer = null, ro = false;
   const confirmed = { estrategia: false, conta: false };
@@ -614,11 +636,11 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
     try {
       const raw = localStorage.getItem(LS_KEY); if (!raw) return;
       const o = JSON.parse(raw);
-      for (const s of SERIES) for (const [id, e] of Object.entries(o[s.key] || {})) { const n = norm(e); if (!isEmpty(n)) store[s.key].set(id, n); }
+      for (const key of ALLKEYS) for (const [id, e] of Object.entries(o[key] || {})) { const n = norm(e); if (!isEmpty(n)) store[key].set(id, n); }
     } catch (_) {}
   }
   function saveLocal() {
-    try { const o = {}; for (const s of SERIES) o[s.key] = Object.fromEntries(store[s.key]); localStorage.setItem(LS_KEY, JSON.stringify(o)); } catch (_) {}
+    try { const o = {}; for (const key of ALLKEYS) o[key] = Object.fromEntries(store[key]); localStorage.setItem(LS_KEY, JSON.stringify(o)); } catch (_) {}
   }
   function setEntry(s, id, patch) {
     const e = { ...entry(s, id), ...patch };
@@ -659,7 +681,7 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
   async function loadRemote() {
     const { data, error } = await sb.from("dias").select("serie,dia,tp,sl,nota,sem_operar,risco").limit(10000);
     if (error) throw error;
-    const maps = { estrategia: new Map(), conta: new Map() };
+    const maps = { estrategia: new Map(), conta: new Map(), prop_estrategia: new Map(), prop_conta: new Map() };
     for (const r of data || []) {
       if (!maps[r.serie]) continue;
       const n = norm({ tp: r.tp, sl: r.sl, note: r.nota || "", off: r.sem_operar === true, risk: r.risco });
@@ -669,7 +691,7 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
       const i = k.indexOf("/"), s = k.slice(0, i), id = k.slice(i + 1), local = store[s].get(id);
       if (local) maps[s].set(id, local); else maps[s].delete(id);
     }
-    store.estrategia = maps.estrategia; store.conta = maps.conta;
+    for (const key of ALLKEYS) store[key] = maps[key];
     if (dlg.hidden && document.getElementById("calc").hidden) render();
   }
   function setAuth(session) {
@@ -766,8 +788,8 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
     return '<button type="button" class="nb' + (e.note ? " has" : "") + '" data-note="' + s + '|' + id + '" aria-label="Nota de ' + d.getDate() + ' de ' + MONTHS[d.getMonth()] + (e.note ? " (tem nota)" : "") + '"' + (e.note ? ' data-tip="note" data-tv="' + esc(e.note.slice(0, 600)) + '"' : ' data-tip="empty" data-tv="Adicionar observação"') + '>' + PEN + '</button>';
   }
   function panelHtml(s, days) {
-    const ids = days.map(iso), t = sum(s.key, ids), notes = s.key === "conta";
-    let h = '<div class="ptab">' + s.label + '</div><div class="pbody glass g-' + s.key + '">';
+    const ids = days.map(iso), t = sum(s.key, ids), notes = s.role === "conta";
+    let h = '<div class="ptab">' + s.label + '</div><div class="pbody glass g-' + s.role + '">';
     h += '<div class="phead"><div><h2>' + cap(MONTHS[view.m]) + ' <em>' + view.y + '</em></h2>' +
       '<div class="stats"><b>' + t.tp + '</b> TP, <b>' + t.sl + '</b> SL</div></div>' +
       '<div class="big ' + cls(t.pct) + '">' + fmt(t.pct) + '</div></div>';
@@ -802,8 +824,8 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
   function calHtml(s) {
     const days = weekdays(view.y, view.m), ids = days.map(iso), t = sum(s.key, ids);
     const tradedDays = ids.filter(id => traded(s.key, id)).length;
-    let h = '<div class="cal glass g-' + s.key + '">';
-    h += '<div class="cal-head"><div><div class="kind">' + s.label + '</div><h2>' + cap(MONTHS[view.m]) + ' <em>' + view.y + '</em></h2>' +
+    let h = '<div class="cal glass g-' + s.role + '">';
+    h += '<div class="cal-head"><div><div class="kind">' + GROUPS[grp] + ' · ' + s.label + '</div><h2>' + cap(MONTHS[view.m]) + ' <em>' + view.y + '</em></h2>' +
       '<div class="stats"><b>' + tradedDays + '</b> dias registados, <b>' + t.tp + '</b> TP, <b>' + t.sl + '</b> SL</div></div>' +
       '<div class="big ' + cls(t.pct) + '">' + fmt(t.pct) + '</div></div>';
     h += '<div class="cal-grid">';
@@ -824,7 +846,7 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
           let inner = '<span class="cn">' + d.getDate() + '</span>';
           if (e.note) inner += '<svg class="cnote" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.8 2.6l2.6 2.6L6 12.6 2.8 13.2l.6-3.2z"/></svg>';
           if (e.off) inner += '<span class="coff">Sem operar</span>';
-          else if (has) inner += '<span class="cr ' + cls(p) + '">' + fmt(p) + '</span><span class="cx">' + (s.key === "conta" && e.risk ? eur(euroOf(e)) : e.tp + ' TP, ' + e.sl + ' SL') + '</span>';
+          else if (has) inner += '<span class="cr ' + cls(p) + '">' + fmt(p) + '</span><span class="cx">' + (s.role === "conta" && e.risk ? eur(euroOf(e)) : e.tp + ' TP, ' + e.sl + ' SL') + '</span>';
           h += '<button type="button" class="cd' + c + '" data-go="' + s.key + '|' + id + '"' + (e.note ? ' data-tip="note" data-tv="' + esc(e.note.slice(0, 600)) + '"' : "") + ' aria-label="' + d.getDate() + ' de ' + MONTHS[view.m] + (e.off ? ", sem operar" : has ? ", " + fmt(p) : ", sem registo") + (e.note ? ", tem nota" : "") + '">' + inner + '</button>';
         }
         d.setDate(d.getDate() + 1);
@@ -836,7 +858,7 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
     h += '</div>';
     h += '<div class="cal-foot"><div class="legend"><span><i style="background:var(--d-pos)"></i>Positivo</span><span><i style="background:var(--d-neg)"></i>Negativo</span><span><i style="background:var(--d-zero)"></i>0%</span><span><i style="background:repeating-linear-gradient(135deg, rgba(205,167,94,.6) 0 2px, transparent 2px 5px)"></i>Sem operar</span></div>' + monthTotal(s, t, days) + '</div>';
     h += '</div>';
-    h += '<div class="calyr glass g-' + s.key + '">' + yearBox(s) + '</div>';
+    h += '<div class="calyr glass g-' + s.role + '">' + yearBox(s) + '</div>';
     return h;
   }
 
@@ -850,12 +872,13 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
     document.body.classList.toggle("view-news", tab === "news");
     document.querySelectorAll(".tabs button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.view === tab)));
     document.querySelectorAll(".switch button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.show === shown)));
+    document.querySelectorAll(".grp button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.grp === grp)));
     if (tab === "news") {
       if (!$("view").querySelector(".nw-root")) { $("view").innerHTML = '<div class="nw-root"></div>'; if (window.Noticias) window.Noticias.mount($("view").firstChild); }
     } else if (tab === "cal") {
-      $("view").innerHTML = '<div class="calwrap">' + calHtml(SERIES.find(s => s.key === shown)) + '</div>';
+      $("view").innerHTML = '<div class="calwrap">' + calHtml(SERIES.find(s => s.role === shown)) + '</div>';
     } else {
-      $("view").innerHTML = '<div class="dots" aria-hidden="true"><i></i><i></i></div><div class="panels">' + SERIES.map(s => '<section class="panel" data-key="' + s.key + '" aria-label="' + s.label + '">' + panelHtml(s, days) + '</section>').join("") + '</div>';
+      $("view").innerHTML = '<div class="dots" aria-hidden="true"><i></i><i></i></div><div class="panels">' + SERIES.map(s => '<section class="panel" data-key="' + s.role + '" aria-label="' + GROUPS[grp] + ', ' + s.label + '">' + panelHtml(s, days) + '</section>').join("") + '</div>';
       setupSwipe();
       drawSparks(days);
     }
@@ -891,7 +914,7 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
     $("dlgSub").textContent = SERIES.find(x => x.key === s).label;
     $("dlgTitle").textContent = DOWL[d.getDay()] + ", " + d.getDate() + " de " + MONTHS[d.getMonth()];
     $("noteText").value = e.note || "";
-    $("offCheck").checked = !!(entry("estrategia", id).off || entry("conta", id).off);
+    $("offCheck").checked = !!(entry(K("estrategia"), id).off || entry(K("conta"), id).off);
     $("noteText").readOnly = ro; $("offCheck").disabled = ro;
     $("dlgForm").querySelector(".primary").hidden = ro;
     $("dlgCancel").textContent = ro ? "Fechar" : "Cancelar";
@@ -904,7 +927,7 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
     ev.preventDefault(); if (!dlgKey || ro) return;
     const { s, id } = dlgKey, note = $("noteText").value.trim().slice(0, 4000), off = $("offCheck").checked;
     setEntry(s, id, { note, off });
-    const other = s === "estrategia" ? "conta" : "estrategia";
+    const other = s === K("estrategia") ? K("conta") : K("estrategia");
     if (entry(other, id).off !== off) setEntry(other, id, { off });
     closeDay();
   });
@@ -916,13 +939,13 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
   const calc = $("calc"), LS_RISK = "diario-trading-risk";
   let calcId = null, calcFocus = null;
   function calcUpdate() {
-    const e = entry("conta", calcId), p = pctOf(e), r = Math.max(0, parseFloat(String($("riskIn").value).replace(",", ".")) || 0);
+    const e = entry(K("conta"), calcId), p = pctOf(e), r = Math.max(0, parseFloat(String($("riskIn").value).replace(",", ".")) || 0);
     $("calcOut").textContent = r ? eur(p * r) : "—";
     $("calcOut").className = "v " + (r ? cls(p) : "zero");
     $("calcHow").textContent = r ? fmt(p).replace("%", "") + " × " + EUR.format(r) : "Escreve o risco para calcular";
   }
   function openCalc(id) {
-    const [y, m, dd] = id.split("-").map(Number), d = new Date(y, m - 1, dd), e = entry("conta", id), p = pctOf(e);
+    const [y, m, dd] = id.split("-").map(Number), d = new Date(y, m - 1, dd), e = entry(K("conta"), id), p = pctOf(e);
     calcId = id; calcFocus = document.activeElement;
     $("calcTitle").textContent = DOWL[d.getDay()] + ", " + d.getDate() + " de " + MONTHS[d.getMonth()];
     $("calcDay").innerHTML = "Resultado do dia (" + e.tp + " TP, " + e.sl + " SL) <b class=\"" + cls(p) + "\">" + fmt(p) + "</b>";
@@ -940,11 +963,11 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
   $("calcForm").addEventListener("submit", ev => {
     ev.preventDefault(); if (!calcId || ro) return;
     const r = Math.max(0, Math.min(1e7, parseFloat(String($("riskIn").value).replace(",", ".")) || 0));
-    setEntry("conta", calcId, { risk: r });
+    setEntry(K("conta"), calcId, { risk: r });
     if (r) { try { localStorage.setItem(LS_RISK, String(r)); } catch (_) {} }
     closeCalc();
   });
-  $("calcClear").addEventListener("click", () => { if (!calcId || ro) return; setEntry("conta", calcId, { risk: 0 }); closeCalc(); });
+  $("calcClear").addEventListener("click", () => { if (!calcId || ro) return; setEntry(K("conta"), calcId, { risk: 0 }); closeCalc(); });
   $("calcCancel").addEventListener("click", closeCalc);
   calc.addEventListener("click", e => { if (e.target === calc) closeCalc(); });
 
@@ -996,12 +1019,18 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
     const go = e.target.closest("button[data-go]");
     if (go) {
       const [s, id] = go.dataset.go.split("|");
-      shown = s; setTab("diario");
+      shown = s.replace("prop_", ""); setTab("diario");
       const row = document.querySelector('[data-row="' + s + '|' + id + '"]');
       if (row) { row.scrollIntoView({ block: "center", behavior: "smooth" }); row.classList.add("flash"); }
     }
   });
   document.querySelector(".tabs").addEventListener("click", e => { const b = e.target.closest("button[data-view]"); if (b) setTab(b.dataset.view); });
+  document.querySelector(".grp").addEventListener("click", e => {
+    const b = e.target.closest("button[data-grp]"); if (!b || b.dataset.grp === grp) return;
+    const pn = document.querySelector(".panels"); if (pn && pn.scrollWidth > pn.clientWidth + 2) shown = pn.scrollLeft > pn.clientWidth / 2 ? "conta" : "estrategia";
+    grp = b.dataset.grp; try { localStorage.setItem("diario-trading-grupo", grp); } catch (_) {}
+    setSeries(); render();
+  });
   document.querySelector(".switch").addEventListener("click", e => {
     const b = e.target.closest("button[data-show]"); if (!b) return;
     shown = b.dataset.show; try { localStorage.setItem(LS_VIEW, shown); } catch (_) {}
