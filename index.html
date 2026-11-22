@@ -3920,7 +3920,7 @@ body.ses-open .sesbtn { display: none !important; }
   if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) navigator.serviceWorker.register("sw.js").catch(() => {});
   // ---------- notifications on the phone (news of the day at 5:50, 30 min before each strong news) ----------
   (function () {
-    const VAPID = "BM6LCJYK2ZJjTadMYAT7sVMKyUcKtioB2Mt6GGNQ6Jfboq4-f6_R1eII5zyuGzCvxy3jbNnbSbRmuXoEyDD4FVg", btn = document.getElementById("pushBtn"); if (!btn) return;
+    let VAPID = "BM6LCJYK2ZJjTadMYAT7sVMKyUcKtioB2Mt6GGNQ6Jfboq4-f6_R1eII5zyuGzCvxy3jbNnbSbRmuXoEyDD4FVg", btn = document.getElementById("pushBtn"); if (!btn) return;
     const lab = t => { btn.querySelector("span").textContent = t; };
     const ok = "serviceWorker" in navigator && "PushManager" in window && "Notification" in window;
     const b64 = s => { const p = "=".repeat((4 - s.length % 4) % 4), r = atob((s + p).replace(/-/g, "+").replace(/_/g, "/")); return Uint8Array.from([...r].map(c => c.charCodeAt(0))); };
@@ -3928,17 +3928,30 @@ body.ses-open .sesbtn { display: none !important; }
       const j = sub.toJSON(); if (!sb) throw new Error("sem ligação");
       const r = await sb.from("push_subs").upsert({ endpoint: j.endpoint, sub: j }); if (r.error) throw r.error;
     }
+    // the key the sender really uses (written by the GitHub task); the phone must sign up with that one
+    const keyP = fetch("notificacoes/chave-publica.txt?t=" + Date.now(), { cache: "no-store" }).then(r => r.ok ? r.text() : "").then(t => { t = t.trim(); if (/^[A-Za-z0-9_-]{80,90}$/.test(t)) VAPID = t; }).catch(() => {});
+    const sameKey = sub => { try { const a = new Uint8Array(sub.options.applicationServerKey || []), b = b64(VAPID); return a.length === b.length && a.every((x, i) => x === b[i]); } catch (_) { return true; } };
     async function state() {
       if (!ok) { lab("Notificações: abre a app do ecrã principal"); return; }
-      try { const reg = await navigator.serviceWorker.ready, sub = await reg.pushManager.getSubscription(); if (sub && Notification.permission === "granted") { lab("Notificações ligadas ✓"); btn.classList.add("on"); try { await save(sub); } catch (_) {} } } catch (_) {}
+      await keyP;
+      try {
+        const reg = await navigator.serviceWorker.ready, sub = await reg.pushManager.getSubscription();
+        if (sub && Notification.permission === "granted") {
+          if (!sameKey(sub)) { lab("Toca aqui para atualizar as notificações"); btn.classList.remove("on"); return; }
+          lab("Notificações ligadas ✓"); btn.classList.add("on"); try { await save(sub); } catch (_) {}
+        }
+      } catch (_) {}
     }
     btn.addEventListener("click", async () => {
       if (!ok) { alert("No iPhone, as notificações só funcionam com o Diário adicionado ao ecrã principal (Partilhar → Adicionar ao ecrã principal) e aberto a partir daí."); return; }
       try {
         const perm = await Notification.requestPermission();
         if (perm !== "granted") { lab("Notificações bloqueadas"); alert("As notificações foram recusadas. Podes ligá-las em Definições → Notificações → Diário de Trading."); return; }
+        await keyP;
         const reg = await navigator.serviceWorker.ready;
-        const sub = (await reg.pushManager.getSubscription()) || (await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: b64(VAPID) }));
+        let sub = await reg.pushManager.getSubscription();
+        if (sub && !sameKey(sub)) { const old = sub.endpoint; await sub.unsubscribe(); sub = null; try { if (sb) await sb.from("push_subs").delete().eq("endpoint", old); } catch (_) {} }
+        if (!sub) sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: b64(VAPID) });
         await save(sub); lab("Notificações ligadas ✓"); btn.classList.add("on");
       } catch (e) { lab("Não deu, tenta outra vez"); }
     });
