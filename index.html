@@ -111,7 +111,7 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
 .status[data-s="saving"] i { background: var(--gold); opacity: 1; }
 .status[data-s="err"] { color: var(--neg); } .status[data-s="err"] i { background: var(--neg); opacity: 1; }
 .mast h1 { margin: 0; font-family: "DM Serif Display", "Didot", var(--display); font-weight: 400; color: var(--champ); font-size: clamp(46px, 8.6vw, 112px); line-height: 1; letter-spacing: -.005em; text-wrap: balance;
-  background: linear-gradient(110deg, var(--champ) 42%, #FFF7DE 49%, #F1D592 51%, var(--champ) 58%) 100% 0 / 320% 100%; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 2px 10px rgba(0, 0, 0, .35)); animation: titleShine 10s ease-in-out 2s infinite; }
+  background: linear-gradient(110deg, var(--champ) 42%, #FFF7DE 49%, #F1D592 51%, var(--champ) 58%) 100% 0 / 320% 100%; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 2px 10px rgba(0, 0, 0, .35)); animation: titleShine 4s ease-in-out 1s infinite; }
 .mast h1 em { -webkit-text-fill-color: var(--gold); }
 @keyframes titleShine { 0%, 72% { background-position: 100% 0; } 100% { background-position: 0 0; } }
 @media (prefers-reduced-motion: reduce) { .mast h1 { animation: none; } }
@@ -270,6 +270,24 @@ body.loading .pbody::after, body.loading .tabbed .slide::after { content: ""; po
 .nw-godi small { display: block; font-size: 11.5px; color: var(--soft); } .nw-godi b { font-family: var(--display); font-size: 20px; color: var(--champ); } .nw-godi b.pos { color: #8FD4A8; } .nw-godi b.neg { color: #F29AAE; } .nw-godi b span { font: 500 12px var(--sans); color: var(--soft); }
 .nw-gobtn { flex: none; border: 0; border-radius: 999px; padding: 10px 14px; background: linear-gradient(135deg, #CDA75E, #A8833F); color: #2A0A11; font: 600 13px/1 var(--sans); cursor: pointer; }
 .lrow.flash { animation: rowFlash 2.2s ease-out; }
+/* big days (+30% or more): the number gets a soft gold reflection that passes now and then */
+.lrow .res.hi { background: linear-gradient(110deg, #164A2E 40%, #E9C46A 48%, #FFF3C4 50%, #E9C46A 52%, #164A2E 60%) 100% 0 / 300% 100%; -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; animation: resShine 4.5s ease-in-out infinite; }
+.lrow .res.hi .eur, .lrow .res.hi i { -webkit-text-fill-color: initial; }
+@keyframes resShine { 0%, 65% { background-position: 100% 0; } 100% { background-position: 0 0; } }
+@media (prefers-reduced-motion: reduce) { .lrow .res.hi { animation: none; -webkit-text-fill-color: #164A2E; } }
+/* the trading week as a thin line with a gold dot on today */
+.wkline { position: relative; z-index: 2; max-width: 520px; margin: 0 auto 14px; padding: 10px 18px 8px; }
+.wkl-t { position: relative; height: 2px; margin: 9px 6px 0; background: rgba(205, 167, 94, .25); border-radius: 2px; }
+.wkl-f { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 2px; background: linear-gradient(90deg, rgba(205, 167, 94, .35), #E3BD6A); width: var(--f); transition: width .8s ease; }
+.wkl-d { position: absolute; top: 50%; width: 9px; height: 9px; margin: -4.5px 0 0 -4.5px; border-radius: 50%; background: #3A0C17; border: 1.5px solid rgba(205, 167, 94, .55); }
+.wkl-d.done { background: #CDA75E; border-color: #CDA75E; }
+.wkl-d.now { width: 13px; height: 13px; margin: -6.5px 0 0 -6.5px; background: #F3D98E; border-color: #FFF3C4; box-shadow: 0 0 0 4px rgba(227, 189, 106, .25), 0 0 14px 3px rgba(227, 189, 106, .6); animation: wkPulse 2.4s ease-in-out infinite; }
+@keyframes wkPulse { 50% { box-shadow: 0 0 0 7px rgba(227, 189, 106, .12), 0 0 20px 5px rgba(227, 189, 106, .75); } }
+.wkl-l { position: relative; height: 12px; margin: 0 6px; }
+.wkl-l span { position: absolute; top: 0; transform: translateX(-50%); white-space: nowrap; font: 500 11px/1 var(--sans); color: var(--soft); letter-spacing: .04em; }
+.wkl-l span.now { color: var(--gold); font-weight: 700; }
+.wkl-n { text-align: center; margin-top: 8px; font: italic 12px var(--display); color: var(--soft); }
+@media (prefers-reduced-motion: reduce) { .wkl-d.now { animation: none; } }
 @keyframes rowFlash { 0%, 30% { box-shadow: 0 0 0 3px #E3BD6A, 0 0 22px 4px rgba(227, 189, 106, .7); } 100% { box-shadow: 0 0 0 0 rgba(227, 189, 106, 0); } }
 .nt-c[data-nwday] { cursor: pointer; border-radius: 6px; } .nt-c[data-nwday]:hover { background: rgba(205, 167, 94, .15); }
 .lrow.today { box-shadow: inset 0 0 0 1.5px var(--gold); animation: todayGlow 3s ease-in-out infinite; position: relative; }
@@ -719,6 +737,7 @@ body.night .st, body.night .chc, body.night .achip, body.night .rank, body.night
 .tools button { display: inline-flex; align-items: center; gap: 7px; border: 1px solid var(--line); background: rgba(0, 0, 0, .2); color: var(--gold); border-radius: 999px; padding: 7px 14px; font: 500 12.5px/1 var(--sans); letter-spacing: .02em; cursor: pointer; }
 .tools button:hover { background: rgba(205, 167, 94, .12); }
 .tools svg { width: 14px; height: 14px; }
+#pushBtn.on { background: rgba(205, 167, 94, .18); border-color: rgba(205, 167, 94, .6); }
 .srch-card { width: min(560px, 100%); max-height: min(80vh, 720px); }
 .srch-in { width: 100%; border-radius: 12px; border: 1px solid rgba(205, 167, 94, .35); background: rgba(0, 0, 0, .25); color: var(--champ); padding: 12px 14px; font: 15px/1.4 var(--sans); }
 .srch-in:focus { outline: 1.5px solid var(--gold); outline-offset: 1px; }
@@ -1122,6 +1141,17 @@ body.ses-open .gbar { display: none !important; }
 .sesbtn { display: none; }
 body.view-diario .sesbtn { position: fixed; z-index: 15; right: 16px; bottom: max(18px, env(safe-area-inset-bottom, 0px)); display: inline-flex; align-items: center; gap: 6px; border: 1px solid rgba(205, 167, 94, .6); background: linear-gradient(135deg, #CDA75E, #A8833F); color: #2A0A11; border-radius: 999px; padding: 11px 16px 11px 13px; font: 600 14px/1 var(--sans); box-shadow: 0 12px 26px -8px rgba(0, 0, 0, .75); cursor: pointer; }
 .sesbtn svg { width: 18px; height: 18px; }
+body.view-diario .sesbtn { overflow: hidden; }
+.sesbtn::after { content: ""; position: absolute; top: -20%; bottom: -20%; width: 40%; left: -60%; background: linear-gradient(100deg, transparent, rgba(255, 250, 230, .75), transparent); transform: skewX(-18deg); animation: sesShine 4s ease-in-out 1.5s infinite; pointer-events: none; }
+@keyframes sesShine { 0%, 70% { left: -60%; } 100% { left: 130%; } }
+@media (prefers-reduced-motion: reduce) { .sesbtn::after { display: none; } }
+/* computer: a sticker lifts a little under the mouse */
+@media (hover: hover) and (pointer: fine) {
+  #front .sk { pointer-events: auto; transition: scale .3s cubic-bezier(.2, 1.4, .4, 1), filter .3s ease; }
+  #front .sk:hover { scale: 1.1; filter: var(--die) drop-shadow(0 16px 18px rgba(0, 0, 0, .55)); z-index: 3; }
+}
+.ses-news { margin-top: 8px; padding: 6px 12px; border-radius: 999px; background: rgba(205, 167, 94, .12); border: 1px solid rgba(205, 167, 94, .35); color: var(--champ); font: 500 12.5px/1.3 var(--sans); text-align: center; max-width: 92%; }
+.ses-news b { color: var(--gold); font-weight: 600; }
 body.ses-open .sesbtn { display: none !important; }
 @media (min-width: 861px) { body.view-diario .sesbtn { right: 28px; bottom: 28px; padding: 13px 20px 13px 16px; font-size: 15px; } }
 .ses { position: fixed; inset: 0; z-index: 35; background: radial-gradient(120% 70% at 50% 0%, #4A0E1E, #170307 70%); color: var(--champ); display: flex; flex-direction: column; align-items: center; padding: max(16px, env(safe-area-inset-top, 0px)) 16px max(18px, env(safe-area-inset-bottom, 0px)); overflow-y: auto; }
@@ -1297,6 +1327,7 @@ body.ses-open .sesbtn { display: none !important; }
       <div class="tools" role="group" aria-label="Ferramentas">
         <button type="button" id="bkJson"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2v8M4.8 7 8 10.2 11.2 7M3 12.5h10"/></svg>Cópia de segurança</button>
         <button type="button" id="bkCsv"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="2.5" width="11" height="11" rx="1.5"/><path d="M2.5 6.2h11M2.5 9.8h11M6.2 2.5v11"/></svg>Exportar para Excel</button>
+        <button type="button" id="pushBtn"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11.2V7.4a4 4 0 0 1 8 0v3.8l1.2 1.4H2.8z"/><path d="M6.6 13.6a1.5 1.5 0 0 0 2.8 0"/></svg><span>Ativar notificações</span></button>
         <button type="button" id="nightBtn"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13.2 10.4A5.6 5.6 0 0 1 5.6 2.8a5.6 5.6 0 1 0 7.6 7.6z"/></svg>Modo noite: automático</button>
       </div>
       <div class="endcar" aria-hidden="true"><img class="ec-l" src="pin-stacks.png" alt=""><img class="ec-r" src="pin-car.png" alt=""></div>
@@ -2212,7 +2243,7 @@ body.ses-open .sesbtn { display: none !important; }
           h += '<div class="lrow' + ex + base + (traded(s.key, id) ? " d-" + cls(p) : " vazio") + (star ? " star" : "") + '" data-row="' + s.key + '|' + id + '"' + (star ? ' title="Dia acima de +' + BIG_DAY + '%"' : '') + '>' + dateHtml +
             stepper(s.key, id, "tp", e.tp, !traded(s.key, id)) + stepper(s.key, id, "sl", e.sl, !traded(s.key, id)) +
             '<span class="to' + (e.tp + e.sl ? "" : " z") + '" data-tip="plain" data-tv="Total de oportunidades (TP + SL)"><span class="lb">TO</span><b>' + (e.tp + e.sl || (traded(s.key, id) ? 0 : "—")) + '</b></span>' +
-            '<span class="res ' + cls(p) + '">' + (traded(s.key, id) ? fmt(p) : "—") + eurHtml + (star ? '<i class="st3"></i>' : '') + '</span>' + nbHtml + cbHtml + '</div>';
+            '<span class="res ' + cls(p) + (traded(s.key, id) && p >= 30 ? " hi" : "") + '">' + (traded(s.key, id) ? fmt(p) : "—") + eurHtml + (star ? '<i class="st3"></i>' : '') + '</span>' + nbHtml + cbHtml + '</div>';
         }
       }
       // the week always counts its 5 real days, also the ones in the month before / after
@@ -3179,6 +3210,7 @@ body.ses-open .sesbtn { display: none !important; }
       const one = '<span>' + c.txt + '</span>' + nn + '<span>✦ Trust the process ✦</span>';
       run.innerHTML = one + one;   // twice, so the strip loops without a gap
       const sc = document.getElementById("sesClock"); if (sc) sc.textContent = c.short;
+      const sn = document.getElementById("sesNews"); if (sn) { const t = sesNewsTxt(); sn.hidden = !t; if (t) sn.innerHTML = t; }
     };
     tick(); setInterval(tick, 1000);
   })();
@@ -3210,7 +3242,7 @@ body.ses-open .sesbtn { display: none !important; }
     const d = new Date(), id = iso(d), s = byRole(sesRole), e = entry(s.key, id), p = pctOf(e), we = d.getDay() === 0 || d.getDay() === 6;
     ses.dataset.res = !we && !e.off && traded(s.key, id) ? cls(p) : "";   // soft green / yellow / red glow behind the keys
     ses.innerHTML = '<div class="ses-top"><div class="ses-tabs">' + SES().map(x => '<button type="button" data-sesr="' + x.role + '" aria-pressed="' + (x.role === sesRole) + '">' + x.label + '</button>').join("") + '</div><button type="button" class="ses-x" data-ses="close" aria-label="Fechar">✕</button></div>' +
-      '<div class="ses-date">' + DOWL[d.getDay()] + ', ' + d.getDate() + ' de ' + MONTHS[d.getMonth()] + '</div><div class="ses-clock" id="sesClock">' + dayClock().short + '</div>' +
+      '<div class="ses-date">' + DOWL[d.getDay()] + ', ' + d.getDate() + ' de ' + MONTHS[d.getMonth()] + '</div><div class="ses-clock" id="sesClock">' + dayClock().short + '</div><div class="ses-news" id="sesNews"' + (sesNewsTxt() ? '' : ' hidden') + '>' + sesNewsTxt() + '</div>' +
       (we ? '<p class="ses-we">Hoje é fim de semana. O Diário só tem dias úteis.</p>' : e.off ? '<p class="ses-we">Este dia está marcado como "sem operar".</p>' :
         '<div class="ses-res ' + cls(p) + '">' + fmt(p) + '</div><div class="ses-cnt">' + e.tp + ' TP · ' + e.sl + ' SL' + (s.acct && e.risk ? ' · ' + eur(euroOf(e)) : '') + '</div>' +
         '<div class="ses-btns"><button type="button" class="key ses-tp" data-ses="tp" aria-label="Mais um TP"><span class="cap"><b>TP</b><small>Take profit</small><span class="cnt">' + e.tp + '</span></span></button><button type="button" class="key ses-sl" data-ses="sl" aria-label="Mais um SL"><span class="cap"><b>SL</b><small>Stop loss</small><span class="cnt">' + e.sl + '</span></span></button></div>' +
@@ -3428,7 +3460,7 @@ body.ses-open .sesbtn { display: none !important; }
       slideCtl = slider($("view").querySelector(".slides"), Math.max(0, AC_VIEWS.indexOf(acView)), i => { acView = AC_VIEWS[i] || "fusion"; try { localStorage.setItem(LS_AC, acView); } catch (_) {} markSwitch(); });
     } else {
       const nn = nextNewsHtml();
-      $("view").innerHTML = moodBarHtml() + '<div class="nextnews" id="nextnews"' + (nn ? '' : ' hidden') + ' role="status">' + nn + '</div><div class="dots" aria-hidden="true"><i></i><i></i></div><div class="panels">' + GS().map(s => '<section class="panel" data-key="' + s.role + '" aria-label="' + s.full + '">' + panelHtml(s, days) + '</section>').join("") + '</div>';
+      $("view").innerHTML = moodBarHtml() + weekLineHtml() + '<div class="nextnews" id="nextnews"' + (nn ? '' : ' hidden') + ' role="status">' + nn + '</div><div class="dots" aria-hidden="true"><i></i><i></i></div><div class="panels">' + GS().map(s => '<section class="panel" data-key="' + s.role + '" aria-label="' + s.full + '">' + panelHtml(s, days) + '</section>').join("") + '</div>';
       setupSwipe();
       drawSparks(days);
     }
@@ -3493,7 +3525,20 @@ body.ses-open .sesbtn { display: none !important; }
     if (r.best) t += "O melhor dia foi <b>" + dShort(r.best.d) + "</b> (" + fmt(r.best.p) + ")" + (r.worst && r.worst.p < 0 ? " e o pior <b>" + dShort(r.worst.d) + "</b> (" + fmt(r.worst.p) + ")" : "") + ".";
     return '<div class="story"><span class="story-k">Em poucas palavras</span><p>' + t + '</p></div>';
   }
-  const hint = t => '<p class="hint">' + t + '</p>';  // a soft entrance when the tab / month changes, and the big totals count up from 0
+  const hint = t => '<p class="hint">' + t + '</p>';  // the trading week (Monday to Friday) as a thin line, with a gold dot on today
+  function weekLineHtml() {
+    const n = new Date(), wd = n.getDay(), we = wd === 0 || wd === 6, idx = we ? 5 : wd - 1;
+    const L = ["Seg", "Ter", "Qua", "Qui", "Sex"], pos = i => (i * 25) + "%";
+    const fill = we ? "0%" : (idx * 25) + "%";
+    let dots = ""; if (!we) for (let i = 0; i < 5; i++) dots += '<i class="wkl-d' + (i < idx ? " done" : i === idx ? " now" : "") + '" style="left:' + pos(i) + '"></i>';
+    const note = we ? "Fim de semana · a semana de trading recomeça na segunda" : idx === 4 ? "Último dia da semana" : "Faltam " + (4 - idx) + (4 - idx === 1 ? " dia" : " dias") + " para o fim da semana";
+    return '<div class="wkline" aria-label="Semana de trading: ' + (we ? "fim de semana" : L[idx]) + '"><div class="wkl-l">' + L.map((l, i) => '<span style="left:' + pos(i) + '"' + (i === idx ? ' class="now"' : '') + '>' + l + '</span>').join("") + '</div><div class="wkl-t"><span class="wkl-f" style="--f:' + fill + '"></span>' + dots + '</div></div>';
+  }  // Sessão: the next strong news of the day, with the minutes left
+  function sesNewsTxt() {
+    const N = window.Noticias && window.Noticias.nextToday ? window.Noticias.nextToday() : null; if (!N) return "";
+    const m = Math.max(0, Math.round((N.d - Date.now()) / 60000)), hh = Math.floor(m / 60);
+    return '📰 <b>' + esc(N.title) + '</b> às ' + esc(N.time) + ' · ' + (m <= 1 ? "a sair agora" : "faltam " + (hh ? hh + " h " : "") + (m % 60) + " min");
+  }  // a soft entrance when the tab / month changes, and the big totals count up from 0
   let lastViewKey = "";
   function viewEnter() {
     const k = [tab, view.y, view.m, grp, acView, SERIES.some(x => store[x.key].size > 0)].join("|");
@@ -3873,6 +3918,32 @@ body.ses-open .sesbtn { display: none !important; }
   init();
   // keep a copy of the site on the phone so it opens without internet
   if ("serviceWorker" in navigator && (location.protocol === "https:" || location.hostname === "localhost")) navigator.serviceWorker.register("sw.js").catch(() => {});
+  // ---------- notifications on the phone (news of the day at 5:50, 30 min before each strong news) ----------
+  (function () {
+    const VAPID = "BM6LCJYK2ZJjTadMYAT7sVMKyUcKtioB2Mt6GGNQ6Jfboq4-f6_R1eII5zyuGzCvxy3jbNnbSbRmuXoEyDD4FVg", btn = document.getElementById("pushBtn"); if (!btn) return;
+    const lab = t => { btn.querySelector("span").textContent = t; };
+    const ok = "serviceWorker" in navigator && "PushManager" in window && "Notification" in window;
+    const b64 = s => { const p = "=".repeat((4 - s.length % 4) % 4), r = atob((s + p).replace(/-/g, "+").replace(/_/g, "/")); return Uint8Array.from([...r].map(c => c.charCodeAt(0))); };
+    async function save(sub) {
+      const j = sub.toJSON(); if (!sb) throw new Error("sem ligação");
+      const r = await sb.from("push_subs").upsert({ endpoint: j.endpoint, sub: j }); if (r.error) throw r.error;
+    }
+    async function state() {
+      if (!ok) { lab("Notificações: abre a app do ecrã principal"); return; }
+      try { const reg = await navigator.serviceWorker.ready, sub = await reg.pushManager.getSubscription(); if (sub && Notification.permission === "granted") { lab("Notificações ligadas ✓"); btn.classList.add("on"); try { await save(sub); } catch (_) {} } } catch (_) {}
+    }
+    btn.addEventListener("click", async () => {
+      if (!ok) { alert("No iPhone, as notificações só funcionam com o Diário adicionado ao ecrã principal (Partilhar → Adicionar ao ecrã principal) e aberto a partir daí."); return; }
+      try {
+        const perm = await Notification.requestPermission();
+        if (perm !== "granted") { lab("Notificações bloqueadas"); alert("As notificações foram recusadas. Podes ligá-las em Definições → Notificações → Diário de Trading."); return; }
+        const reg = await navigator.serviceWorker.ready;
+        const sub = (await reg.pushManager.getSubscription()) || (await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: b64(VAPID) }));
+        await save(sub); lab("Notificações ligadas ✓"); btn.classList.add("on");
+      } catch (e) { lab("Não deu, tenta outra vez"); }
+    });
+    setTimeout(state, 2500);
+  })();
   // phone: pull the page down from the very top to refresh the data
   (function () {
     const ind = document.createElement("div"); ind.className = "ptr"; ind.setAttribute("aria-hidden", "true");
