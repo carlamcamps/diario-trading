@@ -1321,6 +1321,83 @@ body.ses-open .sesbtn { display: none !important; }
   .tabs button { padding: 7px 18px; font-size: 15px; }
 }
 @media (prefers-reduced-motion: reduce) { .lrow.flash { animation: none; } }
+
+/* ---------- little luxury touches ---------- */
+/* DT monogram next to the title */
+.mast h1 .mono { width: .62em; height: .62em; vertical-align: -.03em; margin-right: .2em; filter: drop-shadow(0 2px 6px rgba(0, 0, 0, .45)); }
+/* the chosen tab has a soft gold outline */
+.tabs button[aria-pressed="true"] { box-shadow: 0 0 0 1px rgba(227, 189, 106, .95), 0 0 14px rgba(227, 189, 106, .45); }
+.tabs button[aria-pressed="true"] .ti { filter: drop-shadow(0 0 3px rgba(205, 167, 94, .9)); }
+/* gold dust floating up slowly (daytime) */
+#dust { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+body.night #dust { display: none; }
+#dust i { position: absolute; bottom: -10px; border-radius: 50%; background: radial-gradient(circle, #FFF3C4, rgba(227, 189, 106, .6) 50%, transparent 72%); opacity: 0; animation: dustUp linear infinite; }
+@keyframes dustUp { 0% { transform: translate(0, 0); opacity: 0; } 10% { opacity: .55; } 85% { opacity: .35; } 100% { transform: translate(var(--x), -105vh); opacity: 0; } }
+/* splash: gold sparks rising while the icon draws */
+.sp-icon { overflow: visible; }
+.sp-spk path { opacity: 0; transform-box: fill-box; transform-origin: center; }
+.splash.in .sp-spk path { animation: spSpk 1.7s ease-out forwards; }
+.splash.in .sp-spk path:nth-child(1) { animation-delay: .3s; } .splash.in .sp-spk path:nth-child(2) { animation-delay: .5s; } .splash.in .sp-spk path:nth-child(3) { animation-delay: .7s; }
+.splash.in .sp-spk path:nth-child(4) { animation-delay: 1s; } .splash.in .sp-spk path:nth-child(5) { animation-delay: .6s; } .splash.in .sp-spk path:nth-child(6) { animation-delay: 1.15s; }
+@keyframes spSpk { 0% { opacity: 0; transform: translateY(0) scale(.4); } 25% { opacity: 1; transform: translateY(-8px) scale(1.1); } 100% { opacity: 0; transform: translateY(-50px) scale(.5) rotate(90deg); } }
+/* the month name is written as if by a pen */
+.phead h2.pen { animation: penWrite 1.3s cubic-bezier(.45, .1, .25, 1) both; }
+@keyframes penWrite { from { clip-path: inset(-20% 100% -30% 0); } to { clip-path: inset(-20% -6% -30% 0); } }
+/* signature at the end of the page */
+.sign { position: relative; z-index: 2; text-align: center; padding: 30px 0 8px; }
+.sign .orn-rule { justify-content: center; margin: 0 auto 8px; }
+.sg-m { margin: 0; font-family: var(--script); font-size: clamp(32px, 7vw, 46px); line-height: 1.15; color: transparent; background: linear-gradient(100deg, #B8893A, #F3D98E 45%, #CDA75E 60%, #A8833F); -webkit-background-clip: text; background-clip: text; }
+.sg-n { margin: 6px 0 0; font-family: var(--script); font-size: clamp(27px, 6.4vw, 36px); line-height: 1.3; color: #EBD3A0; display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap; }
+.sg-bar { display: inline-block; width: 1.5px; height: 1.05em; background: linear-gradient(180deg, transparent, var(--gold) 25%, var(--gold) 75%, transparent); }
+/* gold filigree in the corners of the Diário boxes */
+.fili { position: absolute; inset: 5px; z-index: 1; pointer-events: none; opacity: .85;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40' fill='none' stroke='%23D9B66C' stroke-width='1.2' stroke-linecap='round'%3E%3Cpath d='M2 32V10Q2 2 10 2h22'/%3E%3Cpath d='M6 20v-6q0-8 8-8h6' opacity='.6'/%3E%3Cpath d='M2 10q4.5 0 4.5 4.5M10 2q0 4.5 4.5 4.5' opacity='.6'/%3E%3Ccircle cx='32' cy='2' r='1.3' fill='%23D9B66C' stroke='none'/%3E%3Ccircle cx='2' cy='32' r='1.3' fill='%23D9B66C' stroke='none'/%3E%3C/svg%3E") top left / 36px no-repeat,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40' fill='none' stroke='%23D9B66C' stroke-width='1.2' stroke-linecap='round'%3E%3Cg transform='matrix(-1 0 0 1 40 0)'%3E%3Cpath d='M2 32V10Q2 2 10 2h22'/%3E%3Cpath d='M6 20v-6q0-8 8-8h6' opacity='.6'/%3E%3Cpath d='M2 10q4.5 0 4.5 4.5M10 2q0 4.5 4.5 4.5' opacity='.6'/%3E%3Ccircle cx='32' cy='2' r='1.3' fill='%23D9B66C' stroke='none'/%3E%3Ccircle cx='2' cy='32' r='1.3' fill='%23D9B66C' stroke='none'/%3E%3C/g%3E%3C/svg%3E") top right / 36px no-repeat,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40' fill='none' stroke='%23D9B66C' stroke-width='1.2' stroke-linecap='round'%3E%3Cg transform='matrix(1 0 0 -1 0 40)'%3E%3Cpath d='M2 32V10Q2 2 10 2h22'/%3E%3Cpath d='M6 20v-6q0-8 8-8h6' opacity='.6'/%3E%3Cpath d='M2 10q4.5 0 4.5 4.5M10 2q0 4.5 4.5 4.5' opacity='.6'/%3E%3Ccircle cx='32' cy='2' r='1.3' fill='%23D9B66C' stroke='none'/%3E%3Ccircle cx='2' cy='32' r='1.3' fill='%23D9B66C' stroke='none'/%3E%3C/g%3E%3C/svg%3E") bottom left / 36px no-repeat,
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40' fill='none' stroke='%23D9B66C' stroke-width='1.2' stroke-linecap='round'%3E%3Cg transform='matrix(-1 0 0 -1 40 40)'%3E%3Cpath d='M2 32V10Q2 2 10 2h22'/%3E%3Cpath d='M6 20v-6q0-8 8-8h6' opacity='.6'/%3E%3Cpath d='M2 10q4.5 0 4.5 4.5M10 2q0 4.5 4.5 4.5' opacity='.6'/%3E%3Ccircle cx='32' cy='2' r='1.3' fill='%23D9B66C' stroke='none'/%3E%3Ccircle cx='2' cy='32' r='1.3' fill='%23D9B66C' stroke='none'/%3E%3C/g%3E%3C/svg%3E") bottom right / 36px no-repeat; }
+/* gold buttons with a brushed-metal look: Sessão, Guardar, Hoje */
+.btn.primary, body.view-diario .sesbtn, #today { background: repeating-linear-gradient(90deg, rgba(255, 250, 230, .1) 0 1px, transparent 1px 3px), linear-gradient(135deg, #EED39A, #CDA75E 38%, #A8833F 68%, #D9B76E); color: #2A0A11; border-color: rgba(246, 224, 164, .85); font-weight: 600; }
+.btn.primary, #today { box-shadow: inset 0 1px 0 rgba(255, 250, 230, .6), inset 0 -1px 0 rgba(90, 60, 20, .4), 0 6px 14px -6px rgba(0, 0, 0, .6); }
+#today:hover, .btn.primary:hover { filter: brightness(1.07); }
+/* mood faces jump and shine when chosen */
+.mp-r button.pick .mp-i, .mb-f button.pick .mb-i, .mb-i.pick { animation: moodPick .5s cubic-bezier(.3, 1.6, .5, 1) both; filter: drop-shadow(0 0 8px rgba(243, 217, 142, .95)); }
+@keyframes moodPick { 0% { transform: scale(1); } 45% { transform: translateY(-9px) scale(1.32) rotate(-8deg); } 100% { transform: scale(1.12); } }
+.moodbar.done .mb-i { display: inline-block; width: 28px; height: 28px; vertical-align: middle; margin-right: 4px; }
+/* days with a note: the pencil is filled with gold */
+.nb.has[data-note] svg, .nb.has[data-offday] svg { fill: #E9C46A; filter: drop-shadow(0 0 2.5px rgba(227, 189, 106, .85)); }
+.nb.has[data-note], .nb.has[data-offday] { color: #7A5418; }
+.nb.has[data-note]::after, .nb.has[data-offday]::after { display: none; }
+/* thin gold scrollbar on the computer, gold text selection */
+@media (hover: hover) and (pointer: fine) { html { scrollbar-width: thin; scrollbar-color: #B8913F rgba(0, 0, 0, .3); } }
+::selection { background: rgba(227, 189, 106, .85); color: #2A0A11; }
+/* Estatísticas: metallic donuts with a reflection */
+.dnut svg { filter: drop-shadow(0 3px 4px rgba(58, 16, 24, .25)); }
+.dsheen { pointer-events: none; animation: dshIn .9s ease 1.1s both; }
+@keyframes dshIn { from { opacity: 0; } }
+/* calculator: chunky quick keys */
+.ckeys { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 7px; margin-top: 10px; }
+.ckeys button { height: 44px; border-radius: 13px; border: 1px solid rgba(205, 167, 94, .5); background: linear-gradient(180deg, #4E1525, #2A0811); color: #F3D98E; font: 600 14px/1 var(--sans); cursor: pointer; box-shadow: 0 4px 0 #12030A, 0 7px 10px -4px rgba(0, 0, 0, .7), inset 0 1px 0 rgba(255, 236, 190, .22); -webkit-tap-highlight-color: transparent; }
+.ckeys button:active, .ckeys button.hit { animation: ckHit .2s ease; }
+@keyframes ckHit { 50% { transform: translateY(3px); box-shadow: 0 1px 0 #12030A, inset 0 1px 0 rgba(255, 236, 190, .22); } }
+#calc .dlg-card { box-shadow: inset 0 0 0 1px rgba(205, 167, 94, .25), 0 30px 60px -20px rgba(0, 0, 0, .9); }
+/* the current week is a little lighter, with a gold line on the left */
+.lrow.wk-now { background-image: linear-gradient(90deg, rgba(255, 250, 235, .45), rgba(255, 250, 235, .1)); box-shadow: inset 3px 0 0 var(--gold); }
+/* "+1" floating up when a TP / SL goes up */
+.plus1 { position: fixed; z-index: 61; font: 700 15px/1 var(--sans); pointer-events: none; animation: plusUp .95s ease-out forwards; text-shadow: 0 1px 2px rgba(255, 255, 255, .6); }
+.plus1.tp { color: #23885A; } .plus1.sl { color: #B8304F; }
+@keyframes plusUp { 0% { opacity: 0; transform: translate(-50%, 4px) scale(.7); } 20% { opacity: 1; transform: translate(-50%, -6px) scale(1.2); } 100% { opacity: 0; transform: translate(-50%, -34px) scale(1); } }
+/* night mode: a gold moon */
+#nightsky .moon { position: absolute; top: 96px; right: 8%; width: 46px; height: 46px; border-radius: 50%; background: none; box-shadow: inset -12px 5px 0 0 #EBCB7C; filter: drop-shadow(0 0 12px rgba(235, 203, 124, .6)); transform: rotate(-12deg); opacity: .95; animation: none; }
+@media (max-width: 860px) { #nightsky .moon { right: auto; left: 12px; top: 44px; width: 36px; height: 36px; box-shadow: inset -9px 4px 0 0 #EBCB7C; } }
+/* no internet: an elegant banner */
+.netbar { position: fixed; z-index: 90; left: 50%; top: max(10px, env(safe-area-inset-top, 0px)); transform: translate(-50%, -180%); display: flex; align-items: center; gap: 10px; width: max-content; max-width: calc(100% - 32px); padding: 10px 16px; border-radius: 999px; background: linear-gradient(135deg, #3E0D1A, #22060D); border: 1px solid rgba(205, 167, 94, .65); color: #EFDCC6; font: 13px/1.3 var(--sans); box-shadow: 0 14px 30px -10px rgba(0, 0, 0, .85); transition: transform .5s cubic-bezier(.2, .9, .2, 1); pointer-events: none; }
+body.offline .netbar { transform: translate(-50%, 0); }
+.netbar svg { width: 18px; height: 18px; flex: 0 0 auto; fill: none; stroke: var(--gold); stroke-width: 1.6; stroke-linecap: round; }
+.netbar svg circle { fill: var(--gold); stroke: none; }
+.netbar b { color: var(--gold); font-weight: 600; }
+/* Estatísticas: a faint gold Diário icon as a watermark */
+.stp-card .wm { position: absolute; right: 16px; bottom: 18px; width: 150px; height: 150px; fill: none; stroke: #CDA75E; stroke-width: .9; stroke-linecap: round; stroke-linejoin: round; opacity: .09; pointer-events: none; }
+@media (prefers-reduced-motion: reduce) { #dust, .sp-spk { display: none; } .phead h2.pen, .mb-i.pick, .mp-i, .plus1 { animation: none !important; } }
 </style>
 
 <!-- opening screen: the icon, the title and the quote of the day (once per visit) -->
@@ -1340,6 +1417,7 @@ body.ses-open .sesbtn { display: none !important; }
     <g class="spc"><rect x="44" y="72" width="5" height="12" rx="1" fill="#2F7D55"/><rect x="53" y="66" width="5" height="13" rx="1" fill="#2F7D55"/><rect x="62" y="70" width="5" height="8" rx="1" fill="#8E2A40"/><rect x="71" y="58" width="5" height="13" rx="1" fill="#2F7D55"/><rect x="80" y="48" width="5" height="14" rx="1" fill="#2F7D55"/></g>
     <polyline class="sp-chart" pathLength="1" points="40,86 51,77 60,80 70,67 84,50" fill="none" stroke="#CDA75E" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
     <circle class="sp-dot" cx="84" cy="50" r="3.4" fill="#CDA75E"/>
+    <g class="sp-spk" fill="#F3D98E"><path d="M44 80l1.2 3 3 1.2-3 1.2-1.2 3-1.2-3-3-1.2 3-1.2z"/><path d="M62 74l1 2.4 2.4 1-2.4 1-1 2.4-1-2.4-2.4-1 2.4-1z"/><path d="M76 62l1.3 3.2 3.2 1.3-3.2 1.3-1.3 3.2-1.3-3.2-3.2-1.3 3.2-1.3z"/><path d="M86 48l1 2.4 2.4 1-2.4 1-1 2.4-1-2.4-2.4-1 2.4-1z"/><path d="M53 70l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/><path d="M90 58l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/></g>
   </svg>
   <div class="sp-title">Diário <em>de</em> Trading</div>
   <div class="sp-line"><span></span><i></i><span></span></div>
@@ -1356,7 +1434,7 @@ body.ses-open .sesbtn { display: none !important; }
     <button type="button" class="authbtn" id="authBtn" hidden>Entrar</button>
     <span class="status" id="status" data-s="load"><i></i><span>A ligar…</span></span>
     <header class="mast gut">
-      <h1>Diário <em>de</em> Trading</h1>
+      <h1><svg class="mono" viewBox="0 0 64 64" aria-hidden="true"><defs><linearGradient id="mng" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F6E0A4"/><stop offset=".5" stop-color="#CDA75E"/><stop offset="1" stop-color="#9C7330"/></linearGradient></defs><circle cx="32" cy="32" r="29.5" fill="rgba(20,4,9,.55)" stroke="url(#mng)" stroke-width="2"/><circle cx="32" cy="32" r="25" fill="none" stroke="url(#mng)" stroke-width=".8" stroke-dasharray="1.5 2.5"/><text x="32" y="41.5" text-anchor="middle" font-family="DM Serif Display, Didot, serif" font-size="26" fill="url(#mng)">DT</text></svg>Diário <em>de</em> Trading</h1>
       <p class="motto">Trust the process</p>
       <p class="quote" id="quote"></p>
       <div class="orn-rule" aria-hidden="true"><span></span><i></i><span></span></div>
@@ -1388,6 +1466,11 @@ body.ses-open .sesbtn { display: none !important; }
         <button type="button" id="pushBtn"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11.2V7.4a4 4 0 0 1 8 0v3.8l1.2 1.4H2.8z"/><path d="M6.6 13.6a1.5 1.5 0 0 0 2.8 0"/></svg><span>Ativar notificações</span></button>
         <button type="button" id="nightBtn"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13.2 10.4A5.6 5.6 0 0 1 5.6 2.8a5.6 5.6 0 1 0 7.6 7.6z"/></svg>Modo noite: automático</button>
       </div>
+      <div class="sign">
+        <div class="orn-rule" aria-hidden="true"><span></span><i></i><span></span></div>
+        <p class="sg-m">Trust the process</p>
+        <p class="sg-n">Carla Campos<span class="sg-bar" aria-hidden="true"></span>Miguel Marques</p>
+      </div>
       <div class="endcar" aria-hidden="true"><img class="ec-l" src="pin-stacks.png" alt=""><img class="ec-r" src="pin-car.png" alt=""></div>
       <p class="foot" id="foot"></p>
     </main>
@@ -1406,6 +1489,7 @@ body.ses-open .sesbtn { display: none !important; }
     <div>
       <label for="riskIn">Risco por trade (valor de 1%)</label>
       <div class="calc-in"><input id="riskIn" type="number" inputmode="decimal" min="0" step="any" placeholder="50"><span>€</span></div>
+      <div class="ckeys" role="group" aria-label="Valores rápidos"><button type="button" data-rk="25">25 €</button><button type="button" data-rk="50">50 €</button><button type="button" data-rk="100">100 €</button><button type="button" data-rk="200">200 €</button><button type="button" data-rk="500">500 €</button></div>
     </div>
     <div class="calc-out"><div><small id="calcHow">3 × 50 €</small><small>Resultado em euros</small></div><span class="v" id="calcOut">+150,00 €</span></div>
     <div class="dlg-actions">
@@ -2275,7 +2359,8 @@ body.ses-open .sesbtn { display: none !important; }
   }
   function panelHtml(s, days) {
     const ids = days.map(iso), t = sum(s.key, ids), notes = s.acct;
-    let h = ptabHtml(s) + '<div class="pbody glass g-' + s.role + '">' + (SEASON_NOW === "natal" ? tableLights(s.role) : "");
+    let h = ptabHtml(s) + '<div class="pbody glass g-' + s.role + '"><i class="fili" aria-hidden="true"></i>' + (SEASON_NOW === "natal" ? tableLights(s.role) : "");
+    const wkNow = isoWeek(now);
     const isCur = view.y === now.getFullYear() && view.m === now.getMonth();
     h += '<div class="phead"><div><h2' + (isCur ? ' class="cur"' : '') + '>' + cap(MONTHS[view.m]) + ' <em>' + view.y + '</em></h2>' +
       '<div class="stats"><b>' + t.tp + '</b> TP, <b>' + t.sl + '</b> SL</div></div>' +
@@ -2289,7 +2374,7 @@ body.ses-open .sesbtn { display: none !important; }
       if (bd) h += '<div class="bdw">' + bdConf();
       for (const d of g.days) {
         const id = iso(d), e = entry(s.key, id), p = pctOf(e);
-        const base = (id === todayId ? " today" : id > todayId ? " future" : "");
+        const base = (id === todayId ? " today" : id > todayId ? " future" : "") + (g.w === wkNow && id !== todayId && Math.abs(d - now) < 8 * 864e5 ? " wk-now" : "");
         const dateHtml = '<div class="date"><span class="dn">' + d.getDate() + '</span><span class="dw">' + DOW[d.getDay()] + '</span>' + (s.acct ? "" : newsMark(id)) + '</div>';
         const nbHtml = notes ? noteBtn(s.key, id, e, d) : "", ex = notes ? " cta" : " estr";
         const cbHtml = notes ? '<button type="button" class="nb' + (e.risk ? " has" : "") + '" data-calc="' + s.key + '|' + id + '" aria-label="Calculadora de ' + d.getDate() + ' de ' + MONTHS[d.getMonth()] + '"' + (e.risk ? ' data-tip="calc" data-risk="' + EUR.format(e.risk) + '" data-pct="' + fmt(p) + '" data-eur="' + eur(euroOf(e)) + '" data-cls="' + cls(p) + '"' : ' data-tip="empty" data-tv="Calcular em euros"') + '>' + CALC + '</button>' : "";
@@ -2450,7 +2535,7 @@ body.ses-open .sesbtn { display: none !important; }
       segs += '<circle r="' + R + '" cx="50" cy="50" fill="none" stroke="' + p.c + '" stroke-width="12" stroke-dasharray="' + Math.max(0, len - gap).toFixed(2) + ' ' + C.toFixed(2) + '" stroke-dashoffset="' + (-off).toFixed(2) + '" class="dseg" style="--c:' + C.toFixed(2) + ';animation-delay:' + (i * .35) + 's"/>';
       off += len;
     });
-    return '<div class="dnut"><svg viewBox="0 0 100 100" role="img" aria-label="' + esc(small + ": " + big) + '"><circle r="' + R + '" cx="50" cy="50" fill="none" stroke="rgba(58,16,24,.08)" stroke-width="12"/><g transform="rotate(-90 50 50)">' + segs + '</g><text x="50" y="50" text-anchor="middle" class="dbig">' + esc(big) + '</text><text x="50" y="64" text-anchor="middle" class="dsm">' + esc(small) + '</text></svg>' +
+    return '<div class="dnut"><svg viewBox="0 0 100 100" role="img" aria-label="' + esc(small + ": " + big) + '"><defs><linearGradient id="dsh" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".6"/><stop offset=".35" stop-color="#fff" stop-opacity=".08"/><stop offset=".6" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".22"/></linearGradient></defs><circle r="' + R + '" cx="50" cy="50" fill="none" stroke="rgba(58,16,24,.08)" stroke-width="12"/><g transform="rotate(-90 50 50)">' + segs + '</g>' + (tot ? '<g class="dsheen"><circle r="' + R + '" cx="50" cy="50" fill="none" stroke="url(#dsh)" stroke-width="12"/><circle r="' + (R + 6) + '" cx="50" cy="50" fill="none" stroke="rgba(255,248,225,.5)" stroke-width=".7"/><circle r="' + (R - 6) + '" cx="50" cy="50" fill="none" stroke="rgba(255,248,225,.35)" stroke-width=".6"/></g>' : '') + '<text x="50" y="50" text-anchor="middle" class="dbig">' + esc(big) + '</text><text x="50" y="64" text-anchor="middle" class="dsm">' + esc(small) + '</text></svg>' +
       '<div class="dleg">' + parts.map(p => '<span><i style="background:' + p.c + '"></i>' + p.v + ' ' + esc(p.l) + '</span>').join("") + '</div></div>';
   }
 
@@ -2499,7 +2584,7 @@ body.ses-open .sesbtn { display: none !important; }
   function statsHtml(s) {
     const days = periodDays(s), r = statsOf(s, days);
     const plabel = per === "m" ? cap(MONTHS[view.m]) + " " + view.y : per === "y" ? "Ano " + view.y : "Desde o início";
-    let h = '<div class="stw"><section class="stp-card glass g-' + s.role + '">';
+    let h = '<div class="stw"><section class="stp-card glass g-' + s.role + '"><svg class="wm" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4.5A1.5 1.5 0 0 1 6.5 3H19v15H6.5A1.5 1.5 0 0 0 5 19.5z"/><path d="M5 19.5A1.5 1.5 0 0 0 6.5 21H19v-3"/><path d="M9 7.5h6M9 11h4"/></svg>';
     h += '<div class="st-head"><div><div class="kind">Estatísticas</div><h2>' + plabel + '</h2></div>' +
       '<div class="st-hr"><button type="button" class="sumbtn" data-sum="' + s.role + '">✦ Resumo de ' + MONTHS[view.m] + '</button><div class="per" role="group" aria-label="Período">' + [["m", "Mês"], ["y", "Ano"], ["all", "Tudo"]].map(([k, l]) => '<button type="button" data-per="' + k + '" aria-pressed="' + (per === k) + '">' + l + '</button>').join("") + '</div></div></div>';
     // no days yet: still show the NFP / CPI / FOMC table of the year (handy for backtesting)
@@ -3042,7 +3127,10 @@ body.ses-open .sesbtn { display: none !important; }
     moodPop.style.top = (r.bottom + h + 8 > window.innerHeight ? Math.max(8, r.top - h - 8) : r.bottom + 8) + "px";
   }
   const closeMood = () => { moodPop.hidden = true; moodFor = null; };
-  moodPop.addEventListener("click", e => { const b = e.target.closest("[data-mset]"); if (!b || !moodFor) return; const id = moodFor; closeMood(); setMood(id, b.dataset.mset); render(); });
+  moodPop.addEventListener("click", e => { const b = e.target.closest("[data-mset]"); if (!b || !moodFor || moodPop.classList.contains("busy")) return; const id = moodFor, v = b.dataset.mset;
+    const go = () => { moodPop.classList.remove("busy"); closeMood(); setMood(id, v); render(); };
+    if (!v) return go();
+    moodPop.classList.add("busy"); b.classList.add("pick"); setTimeout(go, 480); });
   document.addEventListener("click", e => { if (!moodPop.hidden && !moodPop.contains(e.target) && !e.target.closest(".cmood")) closeMood(); });
   document.addEventListener("keydown", e => { if (e.key === "Escape" && !moodPop.hidden) closeMood(); });
   window.addEventListener("scroll", () => { if (!moodPop.hidden) closeMood(); }, { passive: true });
@@ -3558,8 +3646,9 @@ body.ses-open .sesbtn { display: none !important; }
   }
   document.addEventListener("click", async e => {
     const b = e.target.closest("[data-mbar]"); if (!b) return;
-    const bar = b.closest(".moodbar"); await setMood(iso(new Date()), b.dataset.mbar);
-    if (bar) { bar.classList.add("done"); bar.innerHTML = '<span>Guardado ✓</span>'; }
+    const bar = b.closest(".moodbar"), pick = b.dataset.mbar;
+    b.classList.add("pick"); await new Promise(r => setTimeout(r, 450)); await setMood(iso(new Date()), pick);
+    if (bar) { bar.classList.add("done"); bar.innerHTML = '<span>' + moodImg(pick, "mb-i pick") + ' Guardado ✓</span>'; }
     setTimeout(() => { if (typeof ses !== "undefined" && !ses.hidden) drawSes(); else render(); }, 1300);
   });
   let lastMW = moodWindow();
@@ -3627,6 +3716,36 @@ body.ses-open .sesbtn { display: none !important; }
     window.addEventListener("mousemove", e => { mx = e.clientX; my = e.clientY; if (!tk) tk = requestAnimationFrame(check); }, { passive: true });
     window.addEventListener("scroll", () => { if (!tk) tk = requestAnimationFrame(check); }, { passive: true });
   })();  // a soft entrance when the tab / month changes, and the big totals count up from 0
+  // "+1" floating up when a TP or SL goes up
+  function plusAt(el, n, field) {
+    if (!el || (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches)) return;
+    const r = el.getBoundingClientRect(), p = document.createElement("b");
+    p.className = "plus1 " + (field === "sl" ? "sl" : "tp"); p.textContent = "+" + n;
+    p.style.left = (r.left + r.width / 2) + "px"; p.style.top = (r.top - 4) + "px";
+    document.body.appendChild(p); setTimeout(() => p.remove(), 1000);
+  }
+  // calculator: chunky quick keys for the risk value
+  document.getElementById("calc").addEventListener("click", e => {
+    const k = e.target.closest("[data-rk]"); if (!k) return; const inp = $("riskIn"); if (inp.readOnly) return;
+    inp.value = k.dataset.rk; calcUpdate();
+    k.classList.remove("hit"); void k.offsetWidth; k.classList.add("hit");
+  });
+  // gold dust floating slowly in the background (daytime only)
+  (function () {
+    if (document.getElementById("dust")) return;
+    const d = document.createElement("div"); d.id = "dust"; d.setAttribute("aria-hidden", "true");
+    let sd = 11, h = ""; const rnd = () => { sd = (sd * 9301 + 49297) % 233280; return sd / 233280; };
+    for (let i = 0; i < 22; i++) { const z = 2 + rnd() * 3; h += '<i style="left:' + (rnd() * 100).toFixed(1) + '%;width:' + z.toFixed(1) + 'px;height:' + z.toFixed(1) + 'px;animation-delay:-' + (rnd() * 30).toFixed(1) + 's;animation-duration:' + (22 + rnd() * 18).toFixed(1) + 's;--x:' + ((rnd() - .5) * 80).toFixed(0) + 'px"></i>'; }
+    d.innerHTML = h; document.body.prepend(d);
+  })();
+  // no internet: an elegant banner at the top
+  (function () {
+    const b = document.createElement("div"); b.className = "netbar"; b.setAttribute("role", "status");
+    b.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 8.8a15 15 0 0 1 20 0M5.2 12.3a10.4 10.4 0 0 1 13.6 0M8.5 15.8a5.6 5.6 0 0 1 7 0"/><circle cx="12" cy="19.2" r="1.2"/><path d="M3 3l18 18"/></svg><span><b>Sem internet</b> · fica tudo guardado</span>';
+    document.body.appendChild(b);
+    const upd = () => document.body.classList.toggle("offline", navigator.onLine === false);
+    window.addEventListener("online", upd); window.addEventListener("offline", upd); upd();
+  })();
   let lastViewKey = "";
   function viewEnter() {
     const k = [tab, view.y, view.m, grp, acView, SERIES.some(x => store[x.key].size > 0)].join("|");
@@ -3634,6 +3753,7 @@ body.ses-open .sesbtn { display: none !important; }
     if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const v = $("view"); v.classList.remove("enter"); void v.offsetWidth; v.classList.add("enter");
     v.querySelectorAll(".big, .mtotal .mp").forEach(countUp);
+    v.querySelectorAll(".phead h2").forEach(h => h.classList.add("pen"));
   }
   function countUp(el) {
     const m = el.textContent.trim().match(/^([+−-]?)(\d+(?:,\d+)?)%$/); if (!m) return;
@@ -3851,6 +3971,7 @@ body.ses-open .sesbtn { display: none !important; }
     if (v === e0[field]) return;
     setEntry(s, id, { [field]: v });
     if (field === "tp" && v > e0.tp) sparkAt(i);
+    if (v > e0[field]) plusAt(i, v - e0[field], field);
     // update just this row while typing; the totals refresh when you leave the box
     const row = i.closest(".lrow"), e1 = entry(s, id), p = pctOf(e1), res = row && row.querySelector(".res"), to = row && row.querySelector(".to");
     i.classList.toggle("z", !v);
@@ -4084,7 +4205,7 @@ body.ses-open .sesbtn { display: none !important; }
       const sky = document.createElement("div"); sky.id = "nightsky"; sky.setAttribute("aria-hidden", "true");
       let sd = 7, st = ""; const rnd = () => { sd = (sd * 9301 + 49297) % 233280; return sd / 233280; };
       for (let i = 0; i < 46; i++) { const z = 1 + Math.round(rnd() * 2); st += '<i style="left:' + (rnd() * 100).toFixed(1) + '%;top:' + (rnd() * 100).toFixed(1) + '%;width:' + z + 'px;height:' + z + 'px;animation-delay:' + (rnd() * 6).toFixed(1) + 's;animation-duration:' + (3 + rnd() * 4).toFixed(1) + 's"></i>'; }
-      sky.innerHTML = st; document.body.prepend(sky);
+      sky.innerHTML = st + '<b class="moon"></b>'; document.body.prepend(sky);
     }
     const apply = () => { const h = new Date().getHours(), on = nm === "on" || (nm === "auto" && (h >= 22 || h < 6)); document.body.classList.toggle("night", on); if (btn) btn.lastChild.textContent = L[nm]; };
     if (btn) btn.addEventListener("click", () => { nm = nm === "auto" ? "on" : nm === "on" ? "off" : "auto"; try { localStorage.setItem(LS_N, nm); } catch (_) {} apply(); });

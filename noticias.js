@@ -202,6 +202,8 @@
     vote: '<rect x="4" y="11" width="16" height="9" rx="1.5"/><path d="M8 11 10 4h5l-1.5 7"/><path d="M9.5 15.5h5"/>',
     other: '<path d="M13 3 5 13.5h6L10 21l8-10.5h-6z"/>'
   };
+  // small American flag on the holiday days of the calendar
+  const US_FLAG = '<svg class="nw-flag" viewBox="0 0 19 13" aria-hidden="true"><rect width="19" height="13" fill="#B22234"/><path d="M0 1.5h19M0 3.5h19M0 5.5h19M0 7.5h19M0 9.5h19M0 11.5h19" stroke="#fff" stroke-width="1"/><rect width="8" height="7" fill="#3C3B6E"/><g fill="#fff"><circle cx="1.6" cy="1.4" r=".45"/><circle cx="4" cy="1.4" r=".45"/><circle cx="6.4" cy="1.4" r=".45"/><circle cx="2.8" cy="3.5" r=".45"/><circle cx="5.2" cy="3.5" r=".45"/><circle cx="1.6" cy="5.6" r=".45"/><circle cx="4" cy="5.6" r=".45"/><circle cx="6.4" cy="5.6" r=".45"/></g></svg>';
   const KIND_NAME = { infl: "Inflação e preços", jobs: "Emprego", bank: "Juros e banco central", talk: "Discursos", shop: "Consumo e vendas", gdp: "Crescimento (PIB)", pmi: "Empresas", mood: "Confiança", hol: "Feriado", vote: "Eleições", other: "Outras" };
   function kind(e) {
     const t = e.title || "";
@@ -354,6 +356,7 @@
 .nw-d.past { background: #EFE3DE; }
 .nw-d.past .ics { opacity: .7; }
 .nw-d.hol { background: #CFCACB; color: #4E4648; }
+.nw-flag { display: block; width: 22px; height: 15px; border-radius: 2.5px; box-shadow: 0 1px 3px rgba(0,0,0,.35); }
 .nw-d.today { box-shadow: inset 0 0 0 2px #C9A55E; }
 .nw-d.sel { box-shadow: inset 0 0 0 2px #3A1018; }
 .nw-d .dn { font-family: var(--display); font-size: 19px; font-weight: 600; line-height: 1; display: flex; justify-content: space-between; align-items: baseline; }
@@ -470,11 +473,12 @@
       const cls = (i % 7 >= 5 ? " we" : "") + (k < todayK ? " past" : "") + (hol ? " hol" : "") + (k === todayK ? " today" : "") + (sel === k ? " sel" : "");
       const kinds = [...new Set(list.map(e => e.k))];
       h += '<button type="button" class="nw-d' + cls + '" data-day="' + k + '" aria-label="' + dnum + ' de ' + MONTHS[vm] + (list.length ? ", " + (hol ? "feriado" : strong.length + " notícias fortes") : ", sem notícias") + '"><span class="dn">' + dnum + (strong.length ? '<em>' + strong.length + '</em>' : '') + '</span>';
-      if (kinds.length) h += '<span class="ics">' + kinds.slice(0, 3).map(kk => '<span class="chip" title="' + KIND_NAME[kk] + '">' + icon(kk) + '</span>').join("") + (kinds.length > 3 ? '<span class="more">+' + (kinds.length - 3) + '</span>' : '') + '</span>';
+      if (hol) h += '<span class="ics">' + US_FLAG + '</span>';
+      else if (kinds.length) h += '<span class="ics">' + kinds.slice(0, 3).map(kk => '<span class="chip" title="' + KIND_NAME[kk] + '">' + icon(kk) + '</span>').join("") + (kinds.length > 3 ? '<span class="more">+' + (kinds.length - 3) + '</span>' : '') + '</span>';
       if (list.length) { const hi = hol ? holidayInfo(list[0]) : null; h += '<span class="lbl">' + esc(hol ? (hi ? hi.en : "Holiday") : strong[0].title) + '</span>'; }
       h += '</button>';
     }
-    h += '</div><div class="nw-legend">' + ["infl", "jobs", "bank", "talk", "shop", "gdp", "pmi"].map(kk => '<span><span class="chip">' + icon(kk) + '</span>' + KIND_NAME[kk] + '</span>').join("") + '<span><span class="chip g">' + icon("hol") + '</span>Feriado</span></div></section>';
+    h += '</div><div class="nw-legend">' + ["infl", "jobs", "bank", "talk", "shop", "gdp", "pmi"].map(kk => '<span><span class="chip">' + icon(kk) + '</span>' + KIND_NAME[kk] + '</span>').join("") + '<span>' + US_FLAG + 'Feriado</span></div></section>';
     h = '<div class="nw">' + heroH + h.slice('<div class="nw">'.length) + srchH + '</div>';
     root.innerHTML = h;
     drawSearch();
