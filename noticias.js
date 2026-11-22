@@ -444,7 +444,10 @@
     h += '<section class="nw-hero"><svg class="bg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=".6">' + IC.talk + '</svg>' +
       '<div class="k"><svg class="globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9.2"/><path d="M2.8 12h18.4M12 2.8c2.6 2.6 3.9 5.7 3.9 9.2s-1.3 6.6-3.9 9.2c-2.6-2.6-3.9-5.7-3.9-9.2S9.4 5.4 12 2.8z"/><path d="M4.4 7.2h15.2M4.4 16.8h15.2"/></svg>Notícias</div><h2>O que vem aí</h2><p>As notícias de alto impacto dos Estados Unidos, com os nomes do Forex Factory e em horas de Portugal. Toca numa para veres a explicação e o resultado.</p>';
     if (next.length) {
-      h += '<div class="nw-next">' + next.map(e => '<button type="button" class="nw-card" data-ev="' + e.i + '"><span class="top"><span class="bubble">' + icon(e.k) + '</span><span class="when">' + esc(until(e.d)) + '</span></span><b>' + esc(e.title) + '</b><small>' + esc(cap(fmtShort.format(e.d))) + ', ' + esc(timeOf(e)) + '</small></button>').join("") + '</div>';
+      const e0 = next[0];
+      // the next one, big and highlighted; then the ones after it
+      h += '<button type="button" class="nw-first" data-ev="' + e0.i + '"><span class="nf-tag">✦ A próxima</span><span class="nf-row"><span class="bubble">' + icon(e0.k) + '</span><span class="nf-t"><b>' + esc(e0.title) + '</b><small>' + esc(explain(e0).name || "") + '</small></span></span><span class="nf-when"><b>' + esc(until(e0.d)) + '</b><small>' + esc(cap(fmtShort.format(e0.d))) + ', ' + esc(timeOf(e0)) + '</small></span></button>';
+      if (next.length > 1) h += '<div class="nf-after">Depois</div><div class="nw-next">' + next.slice(1).map(e => '<button type="button" class="nw-card" data-ev="' + e.i + '"><span class="top"><span class="bubble">' + icon(e.k) + '</span><span class="when">' + esc(until(e.d)) + '</span></span><b>' + esc(e.title) + '</b><small>' + esc(cap(fmtShort.format(e.d))) + ', ' + esc(timeOf(e)) + '</small></button>').join("") + '</div>';
     } else h += '<p style="margin-top:12px">Não há notícias fortes marcadas para os próximos dias.</p>';
     h += '</section>';
     const heroH = h.slice('<div class="nw">'.length); h = '<div class="nw">';

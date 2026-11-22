@@ -218,7 +218,8 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
 .calc-out .v { font-family: var(--display); font-weight: 600; font-size: 32px; line-height: 1; }
 .btn.ghost { margin-right: auto; border-color: transparent; color: var(--soft); }
 /* hover card for notes and calculator */
-.tip { position: fixed; z-index: 30; max-width: 280px; min-width: 170px; background: #2A0711; border: 1px solid rgba(205, 167, 94, .5); border-radius: 12px; padding: 10px 12px; box-shadow: 0 16px 34px -12px rgba(0, 0, 0, .75); pointer-events: none; color: var(--champ); font-size: 12.5px; line-height: 1.45; }
+.tip { position: fixed; z-index: 30; max-width: 280px; min-width: 170px; background: radial-gradient(120% 90% at 0% 0%, rgba(205, 167, 94, .16), transparent 55%), linear-gradient(160deg, #3A0C17, #1E050C); border: 1px solid rgba(205, 167, 94, .65); border-radius: 14px; padding: 11px 13px; box-shadow: 0 18px 36px -12px rgba(0, 0, 0, .8), inset 0 0 0 3px rgba(23, 3, 7, .6), inset 0 0 0 4px rgba(205, 167, 94, .25); pointer-events: none; color: var(--champ); font-size: 12.5px; line-height: 1.5; animation: tipIn .18s ease-out; }
+@keyframes tipIn { from { opacity: 0; transform: translateY(4px) scale(.98); } }
 .tip[hidden] { display: none !important; }
 .tip .tt { font-family: var(--display); color: var(--gold); font-size: 14px; margin-bottom: 6px; padding-bottom: 6px; border-bottom: 1px solid rgba(205, 167, 94, .25); }
 .tip .tx { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 180px; overflow: hidden; }
@@ -264,6 +265,17 @@ body.loading .pbody::after, body.loading .tabbed .slide::after { content: ""; po
 @media (prefers-reduced-motion: reduce) { .spk-pulse { animation: none; opacity: 0; } }
 /* Notícias: search every strong news, and the "open in the Diário" box */
 .nw-srch + .nw-hero { margin-top: 16px; }
+/* Notícias: the next one in the spotlight */
+.nw-first { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 12px; width: 100%; margin-top: 14px; padding: 16px 16px 14px; border-radius: 18px; text-align: left; cursor: pointer; font: inherit; color: var(--champ);
+  background: radial-gradient(120% 140% at 0% 0%, rgba(227, 189, 106, .22), transparent 55%), linear-gradient(135deg, rgba(74, 16, 32, .95), rgba(30, 6, 12, .95)); border: 1.5px solid rgba(227, 189, 106, .75); box-shadow: 0 0 0 4px rgba(227, 189, 106, .12), 0 14px 30px -14px rgba(0, 0, 0, .8); animation: nfGlow 3s ease-in-out infinite; }
+@keyframes nfGlow { 50% { box-shadow: 0 0 0 6px rgba(227, 189, 106, .18), 0 0 26px 2px rgba(227, 189, 106, .35), 0 14px 30px -14px rgba(0, 0, 0, .8); } }
+.nf-tag { position: absolute; top: -11px; left: 14px; padding: 3px 10px; border-radius: 999px; background: linear-gradient(135deg, #E3BD6A, #B8893A); color: #2A0A11; font: 700 11px/1.2 var(--sans); letter-spacing: .08em; text-transform: uppercase; }
+.nf-row { display: flex; align-items: center; gap: 12px; min-width: 0; }
+.nf-t { min-width: 0; } .nf-t b { display: block; font: 600 18px/1.2 var(--display); } .nf-t small { display: block; color: var(--soft); font-size: 12.5px; margin-top: 2px; }
+.nf-when { text-align: right; } .nf-when b { display: block; font: 600 16px/1.1 var(--display); color: var(--gold); white-space: nowrap; } .nf-when small { display: block; color: var(--soft); font-size: 11.5px; white-space: nowrap; }
+.nf-after { margin: 14px 2px 6px; font: italic 15px var(--display); color: var(--soft); }
+@media (max-width: 520px) { .nw-first { grid-template-columns: minmax(0, 1fr); } .nf-when { text-align: left; } }
+@media (prefers-reduced-motion: reduce) { .nw-first { animation: none; } }
 .nw-srch { margin: 14px 0 6px; padding: 16px; border-radius: 20px; background: rgba(23, 3, 7, .5); border: 1px solid rgba(205, 167, 94, .3); }
 .nw-sh { display: flex; align-items: baseline; gap: 10px; margin-bottom: 10px; } .nw-sh b { font-family: var(--display); font-size: 19px; color: var(--champ); font-weight: 500; } .nw-sh small { color: var(--soft); font-size: 12px; }
 #nwQ { width: 100%; box-sizing: border-box; height: 44px; border-radius: 14px; border: 1px solid rgba(205, 167, 94, .4); background: rgba(251, 243, 238, .96); color: var(--ink); padding: 0 14px; font: 15px var(--sans); color-scheme: light; }
@@ -387,7 +399,10 @@ button, .cd, .nw-card, .tdr, .lrow { transition: transform .12s ease; }
 .cd { position: relative; border: 0; border-radius: 12px; background: var(--row); min-height: 92px; padding: 8px 9px; display: flex; flex-direction: column; justify-content: space-between; text-align: left; cursor: pointer; min-width: 0; color: var(--champ); }
 .cd:hover { box-shadow: inset 0 0 0 1px rgba(58, 16, 24, .3); }
 .cd.d-pos { background: var(--d-pos); } .cd.d-neg { background: var(--d-neg); } .cd.d-zero { background: var(--d-zero); }
-.cd.today { box-shadow: inset 0 0 0 1.5px var(--gold); }
+.cd.today { box-shadow: inset 0 0 0 1.5px var(--gold); animation: cdGlow 3s ease-in-out infinite; }
+@keyframes cdGlow { 50% { box-shadow: inset 0 0 0 1.5px var(--gold), 0 0 0 3px rgba(227, 189, 106, .25), 0 0 18px 3px rgba(227, 189, 106, .55); } }
+.cd.d-pos { background: linear-gradient(160deg, #A7D7B4 10%, #8CC79E 55%, #D8C98E 120%) !important; }
+@media (prefers-reduced-motion: reduce) { .cd.today { animation: none; } }
 .cd.future { background: var(--row-future); }
 .cd .cn { font-family: var(--display); font-size: 20px; font-weight: 500; line-height: 1; }
 .cd.future .cn { color: var(--soft); }
@@ -465,6 +480,20 @@ button, .cd, .nw-card, .tdr, .lrow { transition: transform .12s ease; }
 .per button { border: 0; border-radius: 999px; padding: 6px 16px; background: transparent; cursor: pointer; color: var(--gold); font-family: var(--display); font-size: 14.5px; }
 .per button[aria-pressed="true"] { background: var(--champ); color: #2A0A11; }
 .ac-now { text-align: right; position: relative; z-index: 1; }
+/* Conta: the balance as a metal bank card (gold for Fusion, purple for Prop) */
+.bank { position: relative; z-index: 1; width: min(250px, 58%); aspect-ratio: 1.586; border-radius: 14px; padding: 12px 14px; display: flex; flex-direction: column; justify-content: flex-end; gap: 1px; overflow: hidden; color: #2A1406; box-shadow: 0 14px 26px -12px rgba(0, 0, 0, .8), inset 0 1px 0 rgba(255, 255, 255, .5); flex: none; }
+.bank.b-fusion { background: linear-gradient(135deg, #8E6A2B, #E7C98A 28%, #B8893A 50%, #F6E2AE 72%, #9C7A35); }
+.bank.b-prop { background: linear-gradient(135deg, #4E2D6E, #B99AD8 28%, #6E4B92 50%, #D9C2EE 72%, #4A2C66); color: #1E0B2C; }
+.bank::after { content: ""; position: absolute; top: -40%; bottom: -40%; width: 35%; left: -60%; background: linear-gradient(100deg, transparent, rgba(255, 255, 255, .55), transparent); transform: skewX(-20deg); animation: bankShine 5s ease-in-out 1s infinite; }
+@keyframes bankShine { 0%, 70% { left: -60%; } 100% { left: 130%; } }
+.bank .bk-n { position: absolute; top: 10px; left: 14px; font: 600 13px var(--display); letter-spacing: .04em; }
+.bank .bk-logo { position: absolute; top: 11px; right: 12px; font: italic 11px var(--display); opacity: .7; }
+.bank .bk-chip { position: absolute; top: 34%; left: 14px; width: 30px; height: 22px; border-radius: 5px; background: linear-gradient(135deg, #F3DFA6, #B8913F); box-shadow: inset 0 0 0 1px rgba(80, 50, 10, .35); }
+.bank .bk-chip::before { content: ""; position: absolute; inset: 5px 4px; border: 1px solid rgba(80, 50, 10, .35); border-radius: 3px; }
+.bank small { font-size: 10px; letter-spacing: .1em; text-transform: uppercase; opacity: .75; }
+.bank b { font: 600 clamp(20px, 3vw, 26px)/1.05 var(--display); font-variant-numeric: tabular-nums; }
+.bank .bk-dots { font: 500 10px var(--sans); letter-spacing: .18em; opacity: .6; margin-top: 2px; }
+@media (prefers-reduced-motion: reduce) { .bank::after { display: none; } }
 .ac-now small { display: block; font-size: 12px; color: var(--soft); }
 .ac-now b { font-family: var(--display); font-weight: 600; font-size: clamp(28px, 4vw, 40px); color: var(--champ); line-height: 1.05; font-variant-numeric: tabular-nums; }
 .tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; position: relative; z-index: 1; }
@@ -563,7 +592,7 @@ button, .cd, .nw-card, .tdr, .lrow { transition: transform .12s ease; }
 .chc .dt { fill: #3A1018; }
 .chc .gd { stroke: rgba(58, 16, 24, .35); }
 .chc .hv { fill: #6B1A2C; stroke: var(--row); stroke-width: 2; }
-.chc .b.bp { fill: #3C7859; } .chc .b.bn { fill: #B03F55; }
+.chc .b.bp { fill: url(#gbp); } .chc .b.bn { fill: url(#gbn); }
 .chc .bv { fill: #3A1018; font: 600 11px var(--sans); }
 .ch-empty { color: #8C6168; font-size: 12.5px; text-align: center; padding: 26px 10px; }
 .big-empty { background: var(--row); border-radius: 14px; position: relative; z-index: 1; }
@@ -655,7 +684,9 @@ button, .cd, .nw-card, .tdr, .lrow { transition: transform .12s ease; }
 /* ---------- phone: a thin ticker with the time left in the trading day ---------- */
 .ticker { display: none; }
 @media (max-width: 860px) {
-  .ticker { display: block; position: relative; z-index: 5; height: 22px; overflow: hidden; background: linear-gradient(90deg, rgba(205, 167, 94, .05), rgba(205, 167, 94, .14), rgba(205, 167, 94, .05)); border-bottom: 1px solid rgba(205, 167, 94, .28); }
+  .ticker { display: block; position: relative; z-index: 5; height: 22px; overflow: hidden; background: linear-gradient(180deg, rgba(255, 220, 220, .10), transparent 45%, rgba(0, 0, 0, .25)), linear-gradient(90deg, #3A0A17, #5A1426 30%, #3A0A17 50%, #5A1426 75%, #3A0A17); border-bottom: 1px solid rgba(205, 167, 94, .4); box-shadow: 0 2px 8px -2px rgba(0, 0, 0, .6); }
+  .ticker::after { content: ""; position: absolute; top: 0; bottom: 0; width: 30%; left: -40%; background: linear-gradient(100deg, transparent, rgba(255, 240, 230, .18), transparent); animation: satin 6s ease-in-out infinite; pointer-events: none; }
+  @keyframes satin { 0%, 55% { left: -40%; } 100% { left: 120%; } }
   .ticker .tk-run { position: absolute; top: 0; left: 0; white-space: nowrap; display: flex; animation: tick 26s linear infinite; }
   .ticker .tk-run span { padding: 0 28px; font: 500 11.5px/22px var(--sans); letter-spacing: .04em; color: var(--gold); font-variant-numeric: tabular-nums; }
   .ticker .tk-run span b { color: var(--champ); font-weight: 600; }
@@ -2394,7 +2425,7 @@ body.ses-open .sesbtn { display: none !important; }
     const y = v => pt + (H - pt - pb) * (1 - (v - lo) / (hi - lo)), slot = W / items.length, bw = Math.max(4, Math.min(34, slot * .62));
     // values on the bars only when there is room; the axis names thin out on narrow screens
     const showV = slot >= 34, axEvery = slot >= 22 ? 1 : Math.ceil(22 / slot);
-    let g = '<line x1="0" x2="' + W + '" y1="' + y(0).toFixed(1) + '" y2="' + y(0).toFixed(1) + '" class="bl"/>';
+    let g = '<defs><linearGradient id="gbp" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#2F6B4B"/><stop offset=".7" stop-color="#4E9A6C"/><stop offset="1" stop-color="#D9B45C"/></linearGradient><linearGradient id="gbn" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8E2A40"/><stop offset=".7" stop-color="#B9566B"/><stop offset="1" stop-color="#E9A9A6"/></linearGradient></defs><line x1="0" x2="' + W + '" y1="' + y(0).toFixed(1) + '" y2="' + y(0).toFixed(1) + '" class="bl"/>';
     items.forEach((it, i) => {
       const cx = slot * i + slot / 2, y0 = y(0), y1 = y(it.v), top = Math.min(y0, y1), hgt = Math.max(Math.abs(y1 - y0), it.v ? 2 : 0);
       if (hgt) {
@@ -2697,7 +2728,7 @@ body.ses-open .sesbtn { display: none !important; }
     const curDD = C.peak && C.last != null ? (C.peak - C.last) / C.peak * 100 : 0;
     let h = '<section class="acc-card glass g-' + (isProp(a) ? "prop" : "conta") + '">';
     h += '<div class="st-head"><div><div class="kind">Conta</div><h2>' + cap(MONTHS[view.m]) + ' <em>' + view.y + '</em></h2></div>' +
-      '<div class="ac-now"><small>Saldo atual</small><b>' + (C.last != null ? EUR.format(C.last) : "—") + '</b></div></div>';
+      '<div class="bank ' + (isProp(a) ? "b-prop" : "b-fusion") + '" aria-label="Saldo atual: ' + (C.last != null ? EUR.format(C.last) : "sem registo") + '"><span class="bk-n">' + esc(acName(a)) + '</span><span class="bk-logo">✦ Diário</span><i class="bk-chip" aria-hidden="true"></i><small>Saldo atual</small><b>' + (C.last != null ? EUR.format(C.last) : "—") + '</b><span class="bk-dots" aria-hidden="true">•••• •••• ' + (isProp(a) ? "PROP" : "FUSN") + '</span></div></div>';
     // three headline chips: this month, since the start, money already taken out
     const paid = payTotals(a);
     h += '<div class="achips">' +
