@@ -114,7 +114,7 @@ jobs:
                       print('enviado:', k)
                   except WebPushException as ex:
                       code = ex.response.status_code if ex.response is not None else None
-                      print('falhou:', k, code)
+                      print('falhou:', k, code, (ex.response.text if ex.response is not None else str(ex))[:300])
                       if code in (404, 410):
                           sb('/push_subs?endpoint=eq.' + urllib.parse.quote(s['endpoint'], safe=''), 'DELETE')
               if not k.startswith('teste'):
