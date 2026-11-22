@@ -1151,8 +1151,8 @@ body.view-diario .sesbtn { overflow: hidden; }
 @media (prefers-reduced-motion: reduce) { .sesbtn::after { display: none; } }
 /* computer: a sticker lifts a little under the mouse */
 @media (hover: hover) and (pointer: fine) {
-  #front .sk { pointer-events: auto; transition: scale .3s cubic-bezier(.2, 1.4, .4, 1), filter .3s ease; }
-  #front .sk:hover { scale: 1.1; filter: var(--die) drop-shadow(0 16px 18px rgba(0, 0, 0, .55)); z-index: 3; }
+  #front .sk { transition: scale .35s cubic-bezier(.2, 1.5, .4, 1), filter .35s ease, rotate .35s ease; }
+  #front .sk.lift { scale: 1.12; rotate: -3deg; filter: var(--die) drop-shadow(0 18px 20px rgba(0, 0, 0, .6)); }
 }
 .ses-news { margin-top: 8px; padding: 6px 12px; border-radius: 999px; background: rgba(205, 167, 94, .12); border: 1px solid rgba(205, 167, 94, .35); color: var(--champ); font: 500 12.5px/1.3 var(--sans); text-align: center; max-width: 92%; }
 .ses-news b { color: var(--gold); font-weight: 600; }
@@ -3288,11 +3288,11 @@ body.ses-open .sesbtn { display: none !important; }
       try { if (localStorage.getItem(LS_EOD) === id) return; } catch (_) { return; }
       if (document.getElementById("splash") || document.querySelector(".dlg:not([hidden])") || !ses.hidden) return;
     }
-    if (!SERIES.some(s => traded(s.key, id))) return;   // nothing registered (or not loaded yet): try again later
+    if (!SERIES.some(s => s.acct && traded(s.key, id))) return;   // nothing in Fusion / Prop (or not loaded yet): try again later
     try { localStorage.setItem(LS_EOD, id); } catch (_) {}
     const row = s => { const e = entry(s.key, id), p = pctOf(e), t = traded(s.key, id);
       return '<div class="eod-r"><span class="eod-n">' + (s.acct ? s.label : s.full) + '</span>' + (e.off ? '<span class="eod-x">Sem operar</span>' : '<span class="eod-tp">' + e.tp + ' TP</span><span class="eod-sl">' + e.sl + ' SL</span><b class="eod-p ' + (t ? cls(p) : "zero") + '">' + fmt(t ? p : 0) + '</b>') + '</div>'; };
-    const acc = SERIES.filter(s => s.acct || traded(s.key, id)).sort((a, b) => b.acct - a.acct), best = Math.max(...acc.map(s => traded(s.key, id) ? pctOf(entry(s.key, id)) : -1e9));
+    const acc = SERIES.filter(s => s.acct), best = Math.max(...acc.map(s => traded(s.key, id) ? pctOf(entry(s.key, id)) : -1e9));
     const msg = best >= 10 ? "Que dia! Mereces descansar ✨" : best > 0 ? "Dia positivo. Bom trabalho ✨" : best === 0 ? "Dia equilibrado. Amanhã há mais ✨" : best > -1e9 ? "Dias assim também ensinam. Trust the process ✨" : "Bom descanso ✨";
     const allP = acc.filter(s0 => traded(s0.key, id)).reduce((a, s0) => a + pctOf(entry(s0.key, id)), 0);
     let conf = ''; if (allP > 0) { const C = ['#E3BD6A', '#F6E2AE', '#CDA75E', '#FFF3C4', '#B8893A']; for (let i = 0; i < 34; i++) conf += '<i style="left:' + (Math.random() * 100).toFixed(1) + '%;background:' + C[i % C.length] + ';--fy:' + (260 + Math.random() * 260).toFixed(0) + 'px;--fr:' + (Math.random() * 720 - 360).toFixed(0) + 'deg;animation-duration:' + (1.8 + Math.random() * 1.6).toFixed(2) + 's;animation-delay:' + (Math.random() * .8).toFixed(2) + 's"></i>'; conf = '<div class="eod-conf" aria-hidden="true">' + conf + '</div>'; }
@@ -3554,7 +3554,7 @@ body.ses-open .sesbtn { display: none !important; }
     const link = document.querySelector('link[rel="icon"]'); if (!link) return;
     const base = link.getAttribute("href"); let last = "", img = null;
     function upd() {
-      const id = iso(new Date()), tr = SERIES.filter(x => traded(x.key, id));
+      const id = iso(new Date()), tr = SERIES.filter(x => x.acct && traded(x.key, id));
       const st = tr.length ? (tr.reduce((a, x) => a + pctOf(entry(x.key, id)), 0) > 0 ? "pos" : tr.reduce((a, x) => a + pctOf(entry(x.key, id)), 0) < 0 ? "neg" : "zero") : "";
       if (st === last) return; last = st;
       if (!st) { link.href = base; return; }
@@ -3564,6 +3564,17 @@ body.ses-open .sesbtn { display: none !important; }
       if (img && img.complete) draw(); else { img = new Image(); img.onload = draw; img.src = base; }
     }
     setInterval(upd, 4000); setTimeout(upd, 2500);
+  })();  // computer: a sticker lifts when the mouse goes over it (the stickers sit behind the page, so we check the position ourselves)
+  (function () {
+    if (!(window.matchMedia && window.matchMedia("(hover: hover) and (pointer: fine)").matches)) return;
+    let tk = 0, mx = -1, my = -1, cur = null;
+    const check = () => {
+      tk = 0; let hit = null;
+      for (const sk of document.querySelectorAll("#front .sk")) { const r = sk.getBoundingClientRect(); if (r.width && mx >= r.left && mx <= r.right && my >= r.top && my <= r.bottom) hit = sk; }
+      if (hit === cur) return; if (cur) cur.classList.remove("lift"); cur = hit; if (cur) cur.classList.add("lift");
+    };
+    window.addEventListener("mousemove", e => { mx = e.clientX; my = e.clientY; if (!tk) tk = requestAnimationFrame(check); }, { passive: true });
+    window.addEventListener("scroll", () => { if (!tk) tk = requestAnimationFrame(check); }, { passive: true });
   })();  // a soft entrance when the tab / month changes, and the big totals count up from 0
   let lastViewKey = "";
   function viewEnter() {
@@ -3583,15 +3594,16 @@ body.ses-open .sesbtn { display: none !important; }
   // used by the Notícias tab: the Diário result of a day, and "open this day in the Diário"
   window.DiarioHook = {
     result(id) {
-      const s = GS()[0], e = entry(s.key, id);
-      if (e.off) return { txt: "sem operar", cls: "zero", who: s.full };
-      if (!traded(s.key, id)) return null;
-      const p = pctOf(e); return { txt: fmt(p), cls: cls(p), who: s.full, tp: e.tp, sl: e.sl };
+      // what she really traded: Fusion and Prop (the Estratégias are backtesting)
+      const acc = SERIES.filter(x => x.acct), done = acc.filter(x => traded(x.key, id));
+      if (!done.length) return acc.every(x => entry(x.key, id).off) ? { txt: "sem operar", cls: "zero", who: "Fusion e Prop" } : null;
+      const tot = done.reduce((a, x) => a + pctOf(entry(x.key, id)), 0);
+      return { txt: done.map(x => x.label + " " + fmt(pctOf(entry(x.key, id)))).join(" · "), cls: cls(tot), who: "Fusion e Prop" };
     },
     goDay(id) {
-      const [y, m] = id.split("-").map(Number); view.y = y; view.m = m - 1; side = 0; saveShown(); setTab("diario");
+      const [y, m] = id.split("-").map(Number); view.y = y; view.m = m - 1; side = 1; saveShown(); setTab("diario");
       setTimeout(() => {
-        const s = GS()[0], r = document.querySelector('.lrow[data-row="' + s.key + '|' + id + '"]');
+        const s = GS()[1], r = document.querySelector('.lrow[data-row="' + s.key + '|' + id + '"]');
         if (r) { r.scrollIntoView({ block: "center", behavior: "smooth" }); r.classList.add("flash"); setTimeout(() => r.classList.remove("flash"), 2400); }
       }, 150);
     }
