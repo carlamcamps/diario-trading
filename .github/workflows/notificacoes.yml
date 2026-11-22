@@ -107,13 +107,13 @@ jobs:
               k = 'fim-' + today.isoformat()
               if k not in sent and loc.hour == 20 and loc.minute < 45:
                   msgs.append((k, {'title': 'Oi Carla 💛', 'body': 'Falta 1 hora para terminar o dia de trading (21:00). Último esforço, com calma ✨', 'tag': k}))
-              # the Diário of today / this week (TP = +2%, SL = -1%)
-              NAMES = {'estrategia': 'Estratégia (Fusion)', 'conta': 'Fusion', 'prop_estrategia': 'Estratégia (Prop)', 'prop_conta': 'Prop'}
+              # what she really traded: only the Fusion and Prop tables count (the Estratégias are backtesting). TP = +2%, SL = -1%
+              NAMES = {'conta': 'Fusion', 'prop_conta': 'Prop'}
               def results(d1, d2):
                   rows = json.loads(sb('/dias?select=serie,dia,tp,sl,sem_operar&dia=gte.' + d1 + '&dia=lte.' + d2))
                   out = {}
                   for r in rows:
-                      if r.get('sem_operar') or not ((r.get('tp') or 0) + (r.get('sl') or 0)): continue
+                      if r['serie'] not in NAMES or r.get('sem_operar') or not ((r.get('tp') or 0) + (r.get('sl') or 0)): continue
                       o = out.setdefault(r['serie'], [0, 0, 0]); o[0] += r['tp'] or 0; o[1] += r['sl'] or 0; o[2] += (r['tp'] or 0) * 2 - (r['sl'] or 0)
                   return out
               def pct(v): return ('+' if v > 0 else '') + str(v) + '%'
@@ -121,8 +121,8 @@ jobs:
               if k not in sent and loc.hour == 21 and 5 <= loc.minute < 50:
                   R = results(today.isoformat(), today.isoformat())
                   if R and sum(v[2] for v in R.values()) > 0:
-                      body = ' · '.join(NAMES.get(s0, s0) + ' ' + str(v[0]) + ' TP / ' + str(v[1]) + ' SL ' + pct(v[2]) for s0, v in R.items())
-                      msgs.append((k, {'title': 'Oi Carla 💛 Dia positivo ✨', 'body': 'Hoje: ' + body + '. Bom descanso 🌙', 'tag': k}))
+                      body = ' e '.join('na ' + NAMES[s0] + ' foi ' + pct(v[2]) + ' (' + str(v[0]) + ' TP, ' + str(v[1]) + ' SL)' for s0, v in sorted(R.items()))
+                      msgs.append((k, {'title': 'Oi Carla 💛 Dia positivo ✨', 'body': 'Hoje, ' + body + '. Bom descanso 🌙', 'tag': k}))
                   else:
                       sent.append(k)   # negative or empty day: nothing is sent
               k = 'resumo-semana-' + today.isoformat()
@@ -130,8 +130,8 @@ jobs:
                   mon = today - datetime.timedelta(days=4)
                   R = results(mon.isoformat(), today.isoformat())
                   if R:
-                      body = ' · '.join(NAMES.get(s0, s0) + ' ' + pct(v[2]) for s0, v in R.items())
-                      msgs.append((k, {'title': 'Oi Carla 💛 A tua semana', 'body': 'Esta semana: ' + body + '. Bom fim de semana ☀️', 'tag': k}))
+                      body = ' e '.join('na ' + NAMES[s0] + ' foi ' + pct(v[2]) for s0, v in sorted(R.items()))
+                      msgs.append((k, {'title': 'Oi Carla 💛 A tua semana', 'body': 'Esta semana, ' + body + '. Bom fim de semana ☀️', 'tag': k}))
                   else:
                       sent.append(k)
               for t, g in sorted(slots.items()):
