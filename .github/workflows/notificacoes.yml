@@ -1,0 +1,130 @@
+name: Notificacoes
+
+# De 5 em 5 minutos: as noticias do dia as 5:50 (hora de Portugal) e um aviso 30 min antes de cada noticia forte.
+# Precisa do segredo VAPID_PRIVATE (Settings > Secrets and variables > Actions).
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+    inputs:
+      teste:
+        description: "Enviar uma notificacao de teste agora"
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+
+concurrency:
+  group: notificacoes
+  cancel-in-progress: false
+
+jobs:
+  enviar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Instalar
+        run: pip install --quiet pywebpush
+      - name: Enviar notificacoes
+        env:
+          SB_URL: https://nexskfugwtmtwsexlhos.supabase.co/rest/v1
+          SB_KEY: sb_publishable_-OiT0kTGfY4MmMgD28LrEg_9cQ6kMXW
+          VAPID_PRIVATE: ${{ secrets.VAPID_PRIVATE }}
+          TESTE: ${{ github.event_name == 'workflow_dispatch' && inputs.teste }}
+        run: |
+          python3 - <<'EOF'
+          import json, os, base64, datetime, urllib.request, urllib.parse
+          from zoneinfo import ZoneInfo
+          from pywebpush import webpush, WebPushException
+          from py_vapid import Vapid
+
+          URL, KEY = os.environ['SB_URL'], os.environ['SB_KEY']
+          PRIV = os.environ.get('VAPID_PRIVATE', '').strip()
+          if not PRIV:
+              print('Falta o segredo VAPID_PRIVATE: as notificacoes ainda nao estao ligadas.'); raise SystemExit(0)
+          vapid = Vapid.from_raw(base64.urlsafe_b64decode(PRIV + '=' * (-len(PRIV) % 4)))
+          SITE = 'https://carlamcamps.github.io/diario-trading/'
+
+          def sb(path, method='GET'):
+              req = urllib.request.Request(URL + path, method=method, headers={'apikey': KEY, 'Authorization': 'Bearer ' + KEY})
+              return urllib.request.urlopen(req, timeout=30).read()
+
+          subs = json.loads(sb('/push_subs?select=endpoint,sub'))
+          if not subs:
+              print('Ainda nenhum telemovel ligou as notificacoes.'); raise SystemExit(0)
+
+          LIS = ZoneInfo('Europe/Lisbon')
+          now = datetime.datetime.now(datetime.timezone.utc)
+          loc = now.astimezone(LIS)
+          today = loc.date()
+
+          def when(e):
+              return datetime.datetime.strptime(e['date'], '%Y-%m-%dT%H:%M:%SZ').replace(tzinfo=datetime.timezone.utc)
+
+          ev = [e for e in json.load(open('noticias-arquivo.json')) if e.get('country') == 'USD']
+          day = [e for e in ev if when(e).astimezone(LIS).date() == today]
+          strong = [e for e in day if e.get('impact') == 'High']
+          hol = [e for e in day if e.get('impact') == 'Holiday']
+
+          slots = {}
+          for e in strong:
+              slots.setdefault(when(e).astimezone(LIS).strftime('%H:%M'), []).append(e)
+
+          def short(group):
+              names = [g['title'] for g in group]
+              main = next((n for n in names if not n.startswith('Core')), names[0])
+              return main + (' e mais ' + str(len(names) - 1) if len(names) > 1 else '')
+
+          os.makedirs('notificacoes', exist_ok=True)
+          try:
+              sent = json.load(open('notificacoes/enviadas.json'))
+          except Exception:
+              sent = []
+          msgs = []
+
+          if os.environ.get('TESTE') == 'true':
+              msgs.append(('teste-' + now.strftime('%Y%m%d%H%M%S'), {'title': 'Oi Carla 💛', 'body': 'As notificações do Diário estão a funcionar. Até já ✨', 'tag': 'teste'}))
+
+          if loc.weekday() < 5:
+              k = 'manha-' + today.isoformat()
+              if k not in sent and (loc.hour, loc.minute) >= (5, 50) and loc.hour < 10:
+                  if strong:
+                      body = 'Hoje há notícias fortes: ' + ' · '.join(t + ' ' + short(g) for t, g in sorted(slots.items()))
+                  else:
+                      body = 'Hoje não há notícias fortes. Bom trading! ✨'
+                  if hol:
+                      body = 'Hoje é feriado nos EUA, o mercado costuma estar mais parado. ' + (body if strong else '')
+                  msgs.append((k, {'title': 'Bom dia, Carla ☀️', 'body': body, 'tag': k}))
+              for t, g in sorted(slots.items()):
+                  k = 'aviso-' + today.isoformat() + '-' + t
+                  mins = round((min(when(e) for e in g) - now).total_seconds() / 60)
+                  if k not in sent and 1 <= mins <= 35:
+                      body = 'Faltam ' + str(mins) + ' minutos para ' + short(g) + ' (' + t + '). Respira fundo e segue o plano 💛'
+                      msgs.append((k, {'title': 'Oi Carla 💛', 'body': body, 'tag': k}))
+
+          for k, m in msgs:
+              m['url'] = SITE
+              for s in subs:
+                  try:
+                      webpush(subscription_info=s['sub'], data=json.dumps(m, ensure_ascii=False), vapid_private_key=vapid, vapid_claims={'sub': SITE}, ttl=3600)
+                      print('enviado:', k)
+                  except WebPushException as ex:
+                      code = ex.response.status_code if ex.response is not None else None
+                      print('falhou:', k, code)
+                      if code in (404, 410):
+                          sb('/push_subs?endpoint=eq.' + urllib.parse.quote(s['endpoint'], safe=''), 'DELETE')
+              if not k.startswith('teste'):
+                  sent.append(k)
+
+          json.dump(sent[-300:], open('notificacoes/enviadas.json', 'w'))
+          EOF
+      - name: Guardar o que ja foi enviado
+        run: |
+          git config user.name "notificacoes"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add notificacoes/enviadas.json
+          git diff --cached --quiet || (git commit -m "Notificacoes enviadas" && (git push || (git pull --rebase && git push)))
