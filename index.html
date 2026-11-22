@@ -1383,9 +1383,9 @@ body.night #dust { display: none; }
 /* the current week is a little lighter, with a gold line on the left */
 .lrow.wk-now { background-image: linear-gradient(90deg, rgba(255, 250, 235, .45), rgba(255, 250, 235, .1)); box-shadow: inset 3px 0 0 var(--gold); }
 /* "+1" floating up when a TP / SL goes up */
-.plus1 { position: fixed; z-index: 61; font: 700 15px/1 var(--sans); pointer-events: none; animation: plusUp .95s ease-out forwards; text-shadow: 0 1px 2px rgba(255, 255, 255, .6); }
-.plus1.tp { color: #23885A; } .plus1.sl { color: #B8304F; }
-@keyframes plusUp { 0% { opacity: 0; transform: translate(-50%, 4px) scale(.7); } 20% { opacity: 1; transform: translate(-50%, -6px) scale(1.2); } 100% { opacity: 0; transform: translate(-50%, -34px) scale(1); } }
+.plusd { position: fixed; z-index: 61; font: 700 15px/1 var(--sans); pointer-events: none; animation: plusUpD .95s ease-out forwards; text-shadow: 0 1px 2px rgba(255, 255, 255, .6); }
+.plusd.tp { color: #23885A; } .plusd.sl { color: #B8304F; }
+@keyframes plusUpD { 0% { opacity: 0; transform: translate(-50%, 4px) scale(.7); } 20% { opacity: 1; transform: translate(-50%, -6px) scale(1.2); } 100% { opacity: 0; transform: translate(-50%, -34px) scale(1); } }
 /* night mode: a gold moon */
 #nightsky .moon { position: absolute; top: 96px; right: 8%; width: 46px; height: 46px; border-radius: 50%; background: none; box-shadow: inset -12px 5px 0 0 #EBCB7C; filter: drop-shadow(0 0 12px rgba(235, 203, 124, .6)); transform: rotate(-12deg); opacity: .95; animation: none; }
 @media (max-width: 860px) { #nightsky .moon { right: auto; left: 12px; top: 44px; width: 36px; height: 36px; box-shadow: inset -9px 4px 0 0 #EBCB7C; } }
@@ -1397,7 +1397,7 @@ body.offline .netbar { transform: translate(-50%, 0); }
 .netbar b { color: var(--gold); font-weight: 600; }
 /* Estatísticas: a faint gold Diário icon as a watermark */
 .stp-card .wm { position: absolute; right: 16px; bottom: 18px; width: 150px; height: 150px; fill: none; stroke: #CDA75E; stroke-width: .9; stroke-linecap: round; stroke-linejoin: round; opacity: .09; pointer-events: none; }
-@media (prefers-reduced-motion: reduce) { #dust, .sp-spk { display: none; } .phead h2.pen, .mb-i.pick, .mp-i, .plus1 { animation: none !important; } }
+@media (prefers-reduced-motion: reduce) { #dust, .sp-spk { display: none; } .phead h2.pen, .mb-i.pick, .mp-i, .plusd { animation: none !important; } }
 
 /* ---------- round 2 of beauty ---------- */
 :root {
@@ -1575,6 +1575,35 @@ body.offline .netbar { transform: translate(-50%, 0); }
 .nw-qchips .ic { width: 14px; height: 14px; }
 .nw-qchips .nw-flag { width: 16px; height: 11px; }
 @media (prefers-reduced-motion: reduce) { .nw-first.soon, .flipc .fd i.flp, .spk-run, .lrow.wave, .bank .coins { animation: none !important; } }
+/* ---------- Sessão ---------- */
+.ses::after { content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none; background: repeating-linear-gradient(45deg, rgba(255, 255, 255, .02) 0 1px, transparent 1px 3px), repeating-linear-gradient(-45deg, rgba(0, 0, 0, .06) 0 1px, transparent 1px 3px), radial-gradient(70% 45% at 30% 15%, rgba(255, 220, 230, .07), transparent 70%); }
+.ses[data-res="pos"] { --sesTint: radial-gradient(120% 85% at 50% 60%, rgba(40, 150, 90, .48), rgba(20, 90, 55, .26) 55%, rgba(10, 50, 30, .12) 85%, transparent); }
+.ses[data-res="neg"] { --sesTint: radial-gradient(120% 85% at 50% 60%, rgba(150, 20, 50, .52), rgba(100, 10, 35, .28) 55%, rgba(60, 5, 20, .14) 85%, transparent); }
+.ses-frame { position: fixed; z-index: 0; pointer-events: none; top: max(8px, env(safe-area-inset-top, 0px)); left: 8px; right: 8px; bottom: max(8px, env(safe-area-inset-bottom, 0px)); border: 1px solid rgba(205, 167, 94, .45); border-radius: 24px;
+  background: var(--fc-tl) 5px 5px / 30px no-repeat, var(--fc-tr) calc(100% - 5px) 5px / 30px no-repeat, var(--fc-bl) 5px calc(100% - 5px) / 30px no-repeat, var(--fc-br) calc(100% - 5px) calc(100% - 5px) / 30px no-repeat; box-shadow: inset 0 0 0 4px rgba(23, 3, 7, .3), inset 0 0 0 5px rgba(205, 167, 94, .15); }
+.ses > *:not(.ses-frame):not(.ses-wave) { position: relative; z-index: 1; }
+.ses-watch { margin-top: 14px; width: 54px; height: 54px; filter: drop-shadow(0 4px 8px rgba(0, 0, 0, .6)); }
+.ses-watch svg { width: 100%; height: 100%; display: block; }
+.ses-watch .sw-t line { stroke: #CDA75E; stroke-width: 1.2; stroke-linecap: round; }
+.ses-watch .sw-h { stroke: #F3D98E; stroke-width: 2.4; stroke-linecap: round; }
+.ses-watch .sw-m { stroke: #F3D98E; stroke-width: 1.6; stroke-linecap: round; }
+.ses-watch .sw-s { stroke: #E0566F; stroke-width: .8; stroke-linecap: round; }
+.ses-watch + .ses-date { margin-top: 6px; }
+.ses-res.pos, .ses-res.zero { background: radial-gradient(120% 90% at 30% 20%, rgba(255, 255, 255, .55), transparent 45%), linear-gradient(110deg, #B8893A, #F6E2AE 30%, #CDA75E 55%, #FFF1C9 70%, #A8833F); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 2px 0 rgba(0, 0, 0, .35)); font-size: 84px; }
+.ses-res.neg { background: radial-gradient(120% 90% at 30% 20%, rgba(255, 255, 255, .5), transparent 45%), linear-gradient(110deg, #B7707B, #F4C9C9 30%, #C98A8F 55%, #FBE0DC 70%, #9C5A64); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 2px 0 rgba(0, 0, 0, .35)); font-size: 84px; }
+.ses-ring { position: absolute; top: -8px; left: -8px; right: -8px; bottom: -24px; width: calc(100% + 16px); height: calc(100% + 32px); pointer-events: none; overflow: visible; }
+.ses-ring rect { fill: none; vector-effect: non-scaling-stroke; stroke-width: 3; stroke-linecap: round; }
+.ses-ring .rg-t { stroke: rgba(205, 167, 94, .22); }
+.ses-ring .rg-f { transition: stroke-dasharray .5s cubic-bezier(.3, 1.2, .4, 1); }
+.ses-ring.r-tp .rg-f { stroke: #6FD39B; filter: drop-shadow(0 0 4px rgba(111, 211, 155, .8)); }
+.ses-ring.r-sl .rg-f { stroke: #F08AA0; filter: drop-shadow(0 0 4px rgba(240, 138, 160, .8)); }
+.ses-btns .key { transform-origin: 50% 0; }
+.ses-btns .key:active, .ses-btns .key.hit { transform: translateY(-4px) perspective(520px) rotateX(8deg); }
+.ses-btns .key:active .cap, .ses-btns .key.hit .cap { box-shadow: inset 0 12px 18px rgba(0, 0, 0, .5), inset 0 -1px 0 rgba(255, 255, 255, .12), 0 0 0 1px rgba(0, 0, 0, .3); }
+.ses-wave { position: fixed; z-index: 0; width: 60px; height: 60px; margin: -30px 0 0 -30px; border-radius: 50%; pointer-events: none; animation: sesWave .85s ease-out forwards; }
+.ses-wave.tp { background: radial-gradient(circle, rgba(111, 211, 155, .35), rgba(111, 211, 155, .12) 55%, transparent 70%); box-shadow: 0 0 0 2px rgba(111, 211, 155, .5); }
+.ses-wave.sl { background: radial-gradient(circle, rgba(240, 138, 160, .35), rgba(240, 138, 160, .12) 55%, transparent 70%); box-shadow: 0 0 0 2px rgba(240, 138, 160, .5); }
+@keyframes sesWave { from { transform: scale(.4); opacity: 1; } to { transform: scale(16); opacity: 0; } }
 </style>
 
 <!-- opening screen: the icon, the title and the quote of the day (once per visit) -->
@@ -3651,19 +3680,44 @@ body.offline .netbar { transform: translate(-50%, 0); }
   const SES = () => SERIES.filter(x => x.acct);
   sesRole = "conta";
   try { const r = localStorage.getItem("diario-trading-sessao"); if (SES().some(x => x.role === r)) sesRole = r; } catch (_) {}
+  // a ring around each key that fills with its share of the day's operations
+  function sesRing(n, tot, k) {
+    const f = tot ? n / tot : 0;
+    return '<svg class="ses-ring r-' + k + '" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><rect x="1.5" y="1.5" width="97" height="97" rx="9" ry="9" pathLength="1" class="rg-t"/><rect x="1.5" y="1.5" width="97" height="97" rx="9" ry="9" pathLength="1" class="rg-f" style="stroke-dasharray:' + f.toFixed(3) + ' 1' + (f ? '' : ';opacity:0') + '"/></svg>';
+  }
+  // a small gold watch with the real time
+  function sesWatch() {
+    let t = ""; for (let i = 0; i < 12; i++) { const a = i * 30 * Math.PI / 180, r1 = i % 3 ? 17 : 15.5; t += '<line x1="' + (24 + Math.sin(a) * r1).toFixed(1) + '" y1="' + (24 - Math.cos(a) * r1).toFixed(1) + '" x2="' + (24 + Math.sin(a) * 19).toFixed(1) + '" y2="' + (24 - Math.cos(a) * 19).toFixed(1) + '"/>'; }
+    return '<div class="ses-watch" aria-hidden="true"><svg viewBox="0 0 48 48"><defs><linearGradient id="swg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F6E0A4"/><stop offset=".5" stop-color="#CDA75E"/><stop offset="1" stop-color="#8A6420"/></linearGradient></defs><circle cx="24" cy="24" r="22.5" fill="#1E050C" stroke="url(#swg)" stroke-width="2.4"/><circle cx="24" cy="24" r="20" fill="none" stroke="rgba(205,167,94,.3)" stroke-width=".6"/><g class="sw-t">' + t + '</g><line class="sw-h" x1="24" y1="24" x2="24" y2="14" /><line class="sw-m" x1="24" y1="24" x2="24" y2="8.5"/><line class="sw-s" x1="24" y1="27" x2="24" y2="7"/><circle cx="24" cy="24" r="1.8" fill="url(#swg)"/></svg></div>';
+  }
+  function sesWatchTick() {
+    if (ses.hidden) return; const w = ses.querySelector(".ses-watch"); if (!w) return;
+    const n = new Date(), s = n.getSeconds(), m = n.getMinutes() + s / 60, h = (n.getHours() % 12) + m / 60;
+    [["sw-h", h * 30], ["sw-m", m * 6], ["sw-s", s * 6]].forEach(([c, a]) => { const el = w.querySelector("." + c); if (el) el.setAttribute("transform", "rotate(" + a.toFixed(1) + " 24 24)"); });
+  }
+  setInterval(sesWatchTick, 1000);
+  // a wave of light across the screen on each tap
+  function sesWave(btn, k) {
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const r = btn.getBoundingClientRect(), w = document.createElement("i");
+    w.className = "ses-wave " + k; w.style.left = (r.left + r.width / 2) + "px"; w.style.top = (r.top + r.height / 2) + "px";
+    ses.appendChild(w); setTimeout(() => w.remove(), 900);
+  }
   function drawSes() {
     if (!SES().some(x => x.role === sesRole)) sesRole = "conta";
     const d = new Date(), id = iso(d), s = byRole(sesRole), e = entry(s.key, id), p = pctOf(e), we = d.getDay() === 0 || d.getDay() === 6;
     ses.dataset.res = !we && !e.off && traded(s.key, id) ? cls(p) : "";   // soft green / yellow / red glow behind the keys
     ses.innerHTML = '<div class="ses-top"><div class="ses-tabs">' + SES().map(x => '<button type="button" data-sesr="' + x.role + '" aria-pressed="' + (x.role === sesRole) + '">' + x.label + '</button>').join("") + '</div><button type="button" class="ses-x" data-ses="close" aria-label="Fechar">✕</button></div>' +
+      '<i class="ses-frame" aria-hidden="true"></i>' + sesWatch() +
       '<div class="ses-date">' + DOWL[d.getDay()] + ', ' + d.getDate() + ' de ' + MONTHS[d.getMonth()] + '</div><div class="ses-clock" id="sesClock">' + dayClock().short + '</div><div class="ses-news" id="sesNews"' + (sesNewsTxt() ? '' : ' hidden') + '>' + sesNewsTxt() + '</div>' +
       (we ? '<p class="ses-we">Hoje é fim de semana. O Diário só tem dias úteis.</p>' : e.off ? '<p class="ses-we">Este dia está marcado como "sem operar".</p>' :
         '<div class="ses-res ' + cls(p) + '">' + fmt(p) + '</div><div class="ses-cnt">' + e.tp + ' TP · ' + e.sl + ' SL' + (s.acct && e.risk ? ' · ' + eur(euroOf(e)) : '') + '</div>' +
-        '<div class="ses-btns"><button type="button" class="key ses-tp" data-ses="tp" aria-label="Mais um TP"><span class="cap"><b>TP</b><small>Take profit</small><span class="cnt">' + e.tp + '</span></span></button><button type="button" class="key ses-sl" data-ses="sl" aria-label="Mais um SL"><span class="cap"><b>SL</b><small>Stop loss</small><span class="cnt">' + e.sl + '</span></span></button></div>' +
+        '<div class="ses-btns"><button type="button" class="key ses-tp" data-ses="tp" aria-label="Mais um TP">' + sesRing(e.tp, e.tp + e.sl, "tp") + '<span class="cap"><b>TP</b><small>Take profit</small><span class="cnt">' + e.tp + '</span></span></button><button type="button" class="key ses-sl" data-ses="sl" aria-label="Mais um SL">' + sesRing(e.sl, e.tp + e.sl, "sl") + '<span class="cap"><b>SL</b><small>Stop loss</small><span class="cnt">' + e.sl + '</span></span></button></div>' +
         '<button type="button" class="ses-undo" data-ses="undo"' + (sesHist.length ? '' : ' disabled') + '>↶ Desfazer o último toque</button>') +
       '<p class="ses-help">Toca em cada operação. Fica guardado no Diário de hoje, na ' + s.full + '.</p>' + moodBarHtml();
+    sesWatchTick();
   }
-  sesBtn.addEventListener("click", () => { sesHist = []; drawSes(); ses.hidden = false; document.body.classList.add("ses-open"); ses.classList.remove("enter"); void ses.offsetWidth; ses.classList.add("enter"); setTimeout(() => ses.classList.remove("enter"), 900); });
+  sesBtn.addEventListener("click", () => { sesHist = []; drawSes(); ses.hidden = false; sesWatchTick(); document.body.classList.add("ses-open"); ses.classList.remove("enter"); void ses.offsetWidth; ses.classList.add("enter"); setTimeout(() => ses.classList.remove("enter"), 900); });
   ses.addEventListener("click", e => {
     const r = e.target.closest("[data-sesr]");
     if (r) { sesRole = r.dataset.sesr; sesHist = []; try { localStorage.setItem("diario-trading-sessao", sesRole); } catch (_) {} drawSes(); return; }
@@ -3680,7 +3734,7 @@ body.offline .netbar { transform: translate(-50%, 0); }
     drawSes();
     // the key stays pressed for a moment and a "+1" floats up
     const nb = ses.querySelector('[data-ses="' + a + '"]');
-    if (nb) { nb.classList.add("hit"); setTimeout(() => nb.classList.remove("hit"), 170); nb.insertAdjacentHTML("beforeend", '<i class="plus1">+1</i>'); }
+    if (nb) { nb.classList.add("hit"); setTimeout(() => nb.classList.remove("hit"), 170); nb.insertAdjacentHTML("beforeend", '<i class="plus1">+1</i>'); sesWave(nb, a); }
   });
   document.addEventListener("keydown", e => { if (e.key === "Escape" && !ses.hidden) { ses.hidden = true; document.body.classList.remove("ses-open"); render(); } });
 
@@ -4013,7 +4067,7 @@ body.offline .netbar { transform: translate(-50%, 0); }
   function plusAt(el, n, field) {
     if (!el || (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches)) return;
     const r = el.getBoundingClientRect(), p = document.createElement("b");
-    p.className = "plus1 " + (field === "sl" ? "sl" : "tp"); p.textContent = "+" + n;
+    p.className = "plusd " + (field === "sl" ? "sl" : "tp"); p.textContent = "+" + n;
     p.style.left = (r.left + r.width / 2) + "px"; p.style.top = (r.top - 4) + "px";
     document.body.appendChild(p); setTimeout(() => p.remove(), 1000);
   }
