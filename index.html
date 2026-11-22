@@ -212,7 +212,14 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
 .lrow.d-pos { background: #93CBA4; } .lrow.d-neg { background: #E2909F; } .lrow.d-zero { background: #E2C36E; }
 .lrow.d-pos .res { color: #164A2E; font-weight: 700; } .lrow.d-neg .res { color: #7A1430; font-weight: 700; } .lrow.d-zero .res { color: #5C4210; font-weight: 700; }
 body.night .lrow.d-pos { background: #86BB96; } body.night .lrow.d-neg { background: #D28494; } body.night .lrow.d-zero { background: #D3B565; }
-.lrow.today { box-shadow: inset 0 0 0 1.5px var(--gold); }
+#view.enter { animation: viewIn .4s cubic-bezier(.2, .8, .2, 1); }
+@keyframes viewIn { from { opacity: 0; transform: translateY(12px); } }
+.spk-pulse { transform-box: fill-box; transform-origin: center; animation: spkPulse 2.2s ease-out infinite; }
+@keyframes spkPulse { 0% { transform: scale(1); opacity: .8; } 100% { transform: scale(3.4); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .spk-pulse { animation: none; opacity: 0; } }
+.lrow.today { box-shadow: inset 0 0 0 1.5px var(--gold); animation: todayGlow 3s ease-in-out infinite; position: relative; }
+@keyframes todayGlow { 0%, 100% { box-shadow: inset 0 0 0 1.5px var(--gold), 0 0 0 0 rgba(205, 167, 94, 0); } 50% { box-shadow: inset 0 0 0 1.5px var(--gold), 0 0 16px 2px rgba(225, 190, 110, .55); } }
+@media (prefers-reduced-motion: reduce) { .lrow.today { animation: none; } }
 .lrow.flash { animation: flash 1.6s ease; }
 @keyframes flash { 0%, 45% { box-shadow: inset 0 0 0 2px var(--champ); } }
 .lrow.off { background: repeating-linear-gradient(135deg, rgba(58, 16, 24, .07) 0 6px, transparent 6px 12px), var(--row-future); }
@@ -423,7 +430,9 @@ body.night .lrow.d-pos { background: #86BB96; } body.night .lrow.d-neg { backgro
   .to .lb { font-size: 9px; }
   .lrow.cta .stp input, .lrow.estr .stp input { width: 30px; }
 }
-.nwmark:hover, .nwmark:focus-visible { color: #6B1A2C; }
+.nwmark:hover, .nwmark:focus-visible { filter: brightness(.8); }
+.nwmark.c-nfp { color: #D02C3A; } .nwmark.c-cpi { color: #E07A16; } .nwmark.c-fomc { color: #7A4CC0; } .nwmark.c-outra { color: #9C8B90; }
+.nwmark.hol { display: inline-flex; align-items: flex-start; padding: 2px 3px 0; } .nwmark.hol i { width: 5px; height: 5px; border-radius: 50%; background: #B8923F; display: block; margin-top: 2px; }
 .tip .nwi { display: flex; gap: 8px; padding: 4px 0; border-top: 1px solid rgba(205, 167, 94, .18); }
 .tip .nwi:first-of-type { border-top: 0; }
 .tip .nwi .t { color: var(--gold); font-variant-numeric: tabular-nums; flex: 0 0 auto; min-width: 38px; }
@@ -1931,7 +1940,7 @@ body.ses-open .sesbtn { display: none !important; }
   // phone: open the Diário straight on today's line
   let wentToday = false;
   function goTodayOnce() {
-    if (wentToday || tab !== "diario" || window.innerWidth > 860 || location.hash) return;
+    if (wentToday || tab !== "diario" || location.hash) return;
     wentToday = true;
     if (view.y !== now.getFullYear() || view.m !== now.getMonth()) return;
     const t = document.querySelector('.panel[data-key="' + cur().role + '"] .lrow.today');
@@ -2006,9 +2015,11 @@ body.ses-open .sesbtn { display: none !important; }
     if (hi !== 0 && lo !== 0) g += '<text class="ax" x="' + (pl - 5) + '" y="' + (y(0) + 3.5) + '" text-anchor="end">0%</text>';
     g += '<text class="ax" x="' + x(1) + '" y="' + (H - 3) + '" text-anchor="start">' + days[0].getDate() + ' ' + MON3[view.m] + '</text>';
     g += '<text class="ax" x="' + x(n) + '" y="' + (H - 3) + '" text-anchor="end">' + days[n - 1].getDate() + ' ' + MON3[view.m] + '</text>';
-    g += '<path d="' + area + '" fill="#CDA75E" fill-opacity=".2"/>';
+    const gid = "spg-" + s + "-" + view.y + view.m;
+    g = '<defs><linearGradient id="' + gid + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E3BD6A" stop-opacity=".55"/><stop offset="1" stop-color="#CDA75E" stop-opacity="0"/></linearGradient></defs>' + g;
+    g += '<path d="' + area + '" fill="url(#' + gid + ')"/>';
     g += '<path d="' + line + '" fill="none" stroke="#6B1A2C" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/>';
-    g += '<circle cx="' + x(li) + '" cy="' + y(pts[li]) + '" r="3.5" fill="#3A1018"/>';
+    g += '<circle class="spk-pulse" cx="' + x(li) + '" cy="' + y(pts[li]) + '" r="3.5" fill="#CDA75E"/><circle cx="' + x(li) + '" cy="' + y(pts[li]) + '" r="3.5" fill="#3A1018"/>';
     return '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Resultado acumulado no mês">' + g + '</svg>';
   }
   function yearBox(s) {
@@ -2056,7 +2067,10 @@ body.ses-open .sesbtn { display: none !important; }
   function newsMark(id) {
     const N = window.Noticias && window.Noticias.dayInfo ? window.Noticias.dayInfo(id) : null;
     if (!N || !N.length) return "";
-    return '<button type="button" class="nwmark" data-tip="news" data-day="' + id + '" aria-label="Notícias deste dia">*</button>';
+    const ev = (window.Noticias.dayEvents && window.Noticias.dayEvents(id)) || [];
+    if (!ev.length) return '<button type="button" class="nwmark hol" data-tip="news" data-day="' + id + '" aria-label="Feriado nos EUA"><i></i></button>';
+    const c = ev.some(t => /federal funds rate|fomc statement|fomc press/i.test(t)) ? "fomc" : ev.some(t => /^(?!.*\bADP\b).*non-farm/i.test(t)) ? "nfp" : ev.some(t => /\bCPI\b/.test(t)) ? "cpi" : "outra";
+    return '<button type="button" class="nwmark c-' + c + '" data-tip="news" data-day="' + id + '" aria-label="Notícias deste dia">*</button>';
   }
   // birthday week: soft coloured confetti around the Estratégia box
   function bdConf() {
@@ -3328,6 +3342,7 @@ body.ses-open .sesbtn { display: none !important; }
     drawCharts();
     decorateCards();
     if (Math.abs(window.scrollY - sy) > 2) window.scrollTo(0, sy);
+    viewEnter();
     if (fk) { const el = document.querySelector('[data-k="' + fk + '"], [data-note="' + fk + '"]'); if (el && !el.disabled) el.focus({ preventScroll: true }); }
     if (fin) { const el = document.querySelector('[data-in="' + fin + '"]'); if (el) { skipSel = true; el.focus({ preventScroll: true }); skipSel = false; try { el.select(); } catch (_) {} } }
     if (fcin) { const el = document.querySelector('[data-cin="' + fcin + '"]'); if (el) { el.focus({ preventScroll: true }); try { el.select(); } catch (_) {} } }
@@ -3343,6 +3358,22 @@ body.ses-open .sesbtn { display: none !important; }
   }
   function drawSparks(days) {
     document.querySelectorAll("[data-spark]").forEach(el => { el.innerHTML = spark(el.dataset.spark, days, el.clientWidth || 420); });
+  }
+  // a soft entrance when the tab / month changes, and the big totals count up from 0
+  let lastViewKey = "";
+  function viewEnter() {
+    const k = [tab, view.y, view.m, grp, acView, SERIES.some(x => store[x.key].size > 0)].join("|");
+    if (k === lastViewKey) return; lastViewKey = k;
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const v = $("view"); v.classList.remove("enter"); void v.offsetWidth; v.classList.add("enter");
+    v.querySelectorAll(".big, .mtotal .mp").forEach(countUp);
+  }
+  function countUp(el) {
+    const m = el.textContent.trim().match(/^([+−-]?)(\d+(?:,\d+)?)%$/); if (!m) return;
+    const target = parseFloat(m[2].replace(",", ".")); if (!target) return;
+    const dec = (m[2].split(",")[1] || "").length, t0 = performance.now(), D = 750, final = el.textContent;
+    const step = t => { const q = Math.min(1, (t - t0) / D), e = 1 - Math.pow(1 - q, 3); if (!document.contains(el)) return; el.textContent = m[1] + (target * e).toFixed(dec).replace(".", ",") + "%"; if (q < 1) requestAnimationFrame(step); else el.textContent = final; };
+    requestAnimationFrame(step);
   }
   function setTab(t) { tab = t; try { localStorage.setItem(LS_TAB, t); } catch (_) {} render(); }
 
