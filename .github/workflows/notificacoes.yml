@@ -48,6 +48,9 @@ jobs:
               print('Falta o segredo VAPID_PRIVATE: as notificacoes ainda nao estao ligadas.'); raise SystemExit(0)
           vapid = Vapid.from_raw(base64.urlsafe_b64decode(PRIV + '=' * (-len(PRIV) % 4)))
           SITE = 'https://carlamcamps.github.io/diario-trading/'
+          from cryptography.hazmat.primitives import serialization
+          _pub = vapid.public_key.public_bytes(serialization.Encoding.X962, serialization.PublicFormat.UncompressedPoint)
+          print('chave publica desta chave secreta:', base64.urlsafe_b64encode(_pub).decode().rstrip('='), '| tamanho do segredo:', len(PRIV))
 
           def sb(path, method='GET'):
               req = urllib.request.Request(URL + path, method=method, headers={'apikey': KEY, 'Authorization': 'Bearer ' + KEY})
