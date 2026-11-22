@@ -236,14 +236,21 @@ jobs:
               k = 'fim-' + today.isoformat()
               if k not in sent and loc.hour == 20 and loc.minute < 45:
                   msgs.append((k, {'title': 'Oi Carla 💛', 'body': 'Falta 1 hora para terminar o dia de trading (21:00). Último esforço, com calma ✨', 'tag': k}))
-              # what she really traded: only the Fusion and Prop tables count (the Estratégias are backtesting). TP = +2%, SL = -1%
+              # what she really traded: only the Fusion and Prop tables count (the Estratégias are backtesting). TP = +TPV%, SL = -1%
               NAMES = {'conta': 'Fusion', 'prop_conta': 'Prop'}
+              # how much a TP is worth: set in the site (Configurações), kept in the row serie=config
+              TPV = 2
+              try:
+                  cf = json.loads(sb('/dias?select=tp&serie=eq.config&limit=1'))
+                  if cf and 1 <= int(cf[0]['tp'] or 0) <= 10: TPV = int(cf[0]['tp'])
+              except Exception:
+                  pass
               def results(d1, d2):
                   rows = json.loads(sb('/dias?select=serie,dia,tp,sl,sem_operar&dia=gte.' + d1 + '&dia=lte.' + d2))
                   out = {}
                   for r in rows:
                       if r['serie'] not in NAMES or r.get('sem_operar') or not ((r.get('tp') or 0) + (r.get('sl') or 0)): continue
-                      o = out.setdefault(r['serie'], [0, 0, 0]); o[0] += r['tp'] or 0; o[1] += r['sl'] or 0; o[2] += (r['tp'] or 0) * 2 - (r['sl'] or 0)
+                      o = out.setdefault(r['serie'], [0, 0, 0]); o[0] += r['tp'] or 0; o[1] += r['sl'] or 0; o[2] += (r['tp'] or 0) * TPV - (r['sl'] or 0)
                   return out
               def pct(v): return ('+' if v > 0 else '') + str(v) + '%'
               k = 'resumo-dia-' + today.isoformat()
