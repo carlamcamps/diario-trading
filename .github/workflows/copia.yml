@@ -1,0 +1,46 @@
+name: Copia de seguranca
+
+# Todos os dias, guarda uma copia dos dados do Diario (Supabase) na pasta "copias" deste repositorio.
+# Fica a copia dos ultimos 60 dias.
+on:
+  schedule:
+    - cron: "40 2 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  copia:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Copiar os dados
+        env:
+          SB_URL: https://nexskfugwtmtwsexlhos.supabase.co/rest/v1
+          SB_KEY: sb_publishable_-OiT0kTGfY4MmMgD28LrEg_9cQ6kMXW
+        run: |
+          python3 - <<'EOF'
+          import json, os, datetime, urllib.request, glob
+          url, key = os.environ['SB_URL'], os.environ['SB_KEY']
+          out = {'feito': datetime.datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')}
+          for t in ['dias', 'contas', 'pagamentos', 'humor', 'props']:
+              req = urllib.request.Request(url + '/' + t + '?select=*&limit=100000', headers={'apikey': key, 'Authorization': 'Bearer ' + key})
+              try:
+                  out[t] = json.load(urllib.request.urlopen(req, timeout=60))
+              except Exception as e:
+                  out[t + '_erro'] = str(e)
+          if not out.get('dias'):
+              raise SystemExit('sem dados: nao guardo uma copia vazia')
+          os.makedirs('copias', exist_ok=True)
+          dia = datetime.datetime.utcnow().strftime('%Y-%m-%d')
+          json.dump(out, open('copias/copia-' + dia + '.json', 'w'), ensure_ascii=False, separators=(',', ':'))
+          for f in sorted(glob.glob('copias/copia-*.json'))[:-60]:
+              os.remove(f)
+          EOF
+      - name: Guardar no repositorio
+        run: |
+          git config user.name "copia-de-seguranca"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A copias
+          git diff --cached --quiet || (git commit -m "Copia de seguranca" && (git push || (git pull --rebase && git push)))
