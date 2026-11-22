@@ -204,6 +204,23 @@
   };
   // small American flag on the holiday days of the calendar
   const US_FLAG = '<svg class="nw-flag" viewBox="0 0 19 13" aria-hidden="true"><rect width="19" height="13" fill="#B22234"/><path d="M0 1.5h19M0 3.5h19M0 5.5h19M0 7.5h19M0 9.5h19M0 11.5h19" stroke="#fff" stroke-width="1"/><rect width="8" height="7" fill="#3C3B6E"/><g fill="#fff"><circle cx="1.6" cy="1.4" r=".45"/><circle cx="4" cy="1.4" r=".45"/><circle cx="6.4" cy="1.4" r=".45"/><circle cx="2.8" cy="3.5" r=".45"/><circle cx="5.2" cy="3.5" r=".45"/><circle cx="1.6" cy="5.6" r=".45"/><circle cx="4" cy="5.6" r=".45"/><circle cx="6.4" cy="5.6" r=".45"/></g></svg>';
+  // a colour for each kind of news (the edge of its card), a small clock for the times
+  const KIND_COL = { infl: "#E07A16", jobs: "#D02C3A", bank: "#7A4CC0", talk: "#3F78C2", shop: "#2F8F8A", gdp: "#3C7859", pmi: "#9C7330", mood: "#C25E9A", hol: "#8A8284", vote: "#5C6B7A", other: "#9C8B90" };
+  const kc = k => ' style="--kc:' + (KIND_COL[k] || "#9C8B90") + '"';
+  const CLOCK = '<svg class="nw-clk" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.3"/><path d="M8 4.6V8l2.3 1.5"/></svg>';
+  const QCHIP_IC = { NFP: "jobs", CPI: "infl", FOMC: "bank", PCE: "infl", PPI: "infl", GDP: "gdp", Powell: "talk" };
+  // countdown that flips like an airport board: days · hours · minutes · seconds
+  function flipHtml(d) {
+    const ms = Math.max(0, d - Date.now()), s = Math.floor(ms / 1000), parts = [[Math.floor(s / 86400), "dias"], [Math.floor(s / 3600) % 24, "horas"], [Math.floor(s / 60) % 60, "min"], [s % 60, "seg"]];
+    return '<span class="flipc" data-t="' + d.getTime() + '">' + parts.map(([v, l]) => '<span class="fg"><span class="fd">' + String(v).padStart(2, "0").split("").map(c => '<i>' + c + '</i>').join("") + '</span><small>' + l + '</small></span>').join("") + '</span>';
+  }
+  setInterval(() => {
+    document.querySelectorAll(".flipc").forEach(fc => {
+      const t = +fc.dataset.t, ms = Math.max(0, t - Date.now()), s = Math.floor(ms / 1000), vals = [Math.floor(s / 86400), Math.floor(s / 3600) % 24, Math.floor(s / 60) % 60, s % 60];
+      fc.querySelectorAll(".fd").forEach((fd, gi) => { const txt = String(vals[gi]).padStart(2, "0"); fd.querySelectorAll("i").forEach((el, k) => { if (el.textContent !== txt[k]) { el.textContent = txt[k]; el.classList.remove("flp"); void el.offsetWidth; el.classList.add("flp"); } }); });
+      const first = fc.closest(".nw-first"); if (first) first.classList.toggle("soon", ms > 0 && ms < 30 * 60000);
+    });
+  }, 1000);
   const KIND_NAME = { infl: "Inflação e preços", jobs: "Emprego", bank: "Juros e banco central", talk: "Discursos", shop: "Consumo e vendas", gdp: "Crescimento (PIB)", pmi: "Empresas", mood: "Confiança", hol: "Feriado", vote: "Eleições", other: "Outras" };
   function kind(e) {
     const t = e.title || "";
@@ -449,14 +466,15 @@
     if (next.length) {
       const e0 = next[0];
       // the next one, big and highlighted; then the ones after it
-      h += '<button type="button" class="nw-first" data-ev="' + e0.i + '"><span class="nf-tag">✦ A próxima</span><span class="nf-row"><span class="bubble">' + icon(e0.k) + '</span><span class="nf-t"><b>' + esc(e0.title) + '</b><small>' + esc(explain(e0).name || "") + '</small></span></span><span class="nf-when"><b>' + esc(until(e0.d)) + '</b><small>' + esc(cap(fmtShort.format(e0.d))) + ', ' + esc(timeOf(e0)) + '</small></span></button>';
-      if (next.length > 1) h += '<div class="nf-after">Depois</div><div class="nw-next">' + next.slice(1).map(e => '<button type="button" class="nw-card" data-ev="' + e.i + '"><span class="top"><span class="bubble">' + icon(e.k) + '</span><span class="when">' + esc(until(e.d)) + '</span></span><b>' + esc(e.title) + '</b><small>' + esc(cap(fmtShort.format(e.d))) + ', ' + esc(timeOf(e)) + '</small></button>').join("") + '</div>';
+      const soon = e0.d - now > 0 && e0.d - now < 30 * 60000;
+      h += '<button type="button" class="nw-first' + (soon ? " soon" : "") + '" data-ev="' + e0.i + '"' + kc(e0.k) + '><span class="nf-tag">✦ A próxima</span><span class="nf-row"><span class="bubble">' + icon(e0.k) + '</span><span class="nf-t"><b>' + esc(e0.title) + '</b><small>' + esc(explain(e0).name || "") + '</small></span></span><span class="nf-when">' + (e0.d - now > 0 ? flipHtml(e0.d) : '<b>' + esc(until(e0.d)) + '</b>') + '<small>' + CLOCK + esc(cap(fmtShort.format(e0.d))) + ', ' + esc(timeOf(e0)) + '</small></span></button>';
+      if (next.length > 1) h += '<div class="nf-after">Depois</div><div class="nw-next">' + next.slice(1).map(e => '<button type="button" class="nw-card" data-ev="' + e.i + '"' + kc(e.k) + '><span class="top"><span class="bubble">' + icon(e.k) + '</span><span class="when">' + esc(until(e.d)) + '</span></span><b>' + esc(e.title) + '</b><small>' + CLOCK + esc(cap(fmtShort.format(e.d))) + ', ' + esc(timeOf(e)) + '</small></button>').join("") + '</div>';
     } else h += '<p style="margin-top:12px">Não há notícias fortes marcadas para os próximos dias.</p>';
     h += '</section>';
     const heroH = h.slice('<div class="nw">'.length); h = '<div class="nw">';
     // search every strong news since 2024 (shown under the calendar)
     let srchH = '<section class="nw-srch"><div class="nw-sh"><b>Procurar notícias</b><small>todos os dias desde 2024</small></div><input id="nwQ" type="search" enterkeyhint="search" placeholder="Ex.: NFP, CPI, FOMC, Powell…" value="' + esc(q) + '" autocomplete="off" aria-label="Procurar notícias">' +
-      '<div class="nw-qchips">' + ["NFP", "CPI", "FOMC", "PCE", "PPI", "GDP", "Powell", "Feriados"].map(c => '<button type="button" data-q="' + c + '"' + (q.toLowerCase() === c.toLowerCase() ? ' class="on"' : '') + '>' + c + '</button>').join("") + '</div><div id="nwSR"></div></section>';
+      '<div class="nw-qchips">' + ["NFP", "CPI", "FOMC", "PCE", "PPI", "GDP", "Powell", "Feriados"].map(c => '<button type="button" data-q="' + c + '"' + (q.toLowerCase() === c.toLowerCase() ? ' class="on"' : '') + '>' + (QCHIP_IC[c] ? icon(QCHIP_IC[c]) : c === "Feriados" ? US_FLAG : "") + c + '</button>').join("") + '</div><div id="nwSR"></div></section>';
     // month bar (the calendar comes first)
     h += '<div class="nw-bar"><div class="nw-mnav"><button type="button" data-mv="-1" aria-label="Mês anterior">‹</button><span>' + cap(MONTHS[vm]) + ' ' + vy + '</span><button type="button" data-mv="1" aria-label="Mês seguinte">›</button></div></div>';
     // month grid
@@ -518,7 +536,7 @@
   function ensureSheet() {
     if (sheet) return sheet;
     sheet = document.createElement("div"); sheet.className = "nw-sheet"; sheet.setAttribute("aria-hidden", "true");
-    sheet.innerHTML = '<div class="scrim"></div><div class="panel" role="dialog" aria-modal="true" aria-labelledby="nwPT"><div class="nw-ph"><div><div class="k" id="nwPK">Notícias do dia</div><h3 id="nwPT"></h3></div><button type="button" class="nw-x" aria-label="Fechar">✕</button></div><div class="nw-list" id="nwPL"></div></div>';
+    sheet.innerHTML = '<div class="scrim"></div><div class="panel" role="dialog" aria-modal="true" aria-labelledby="nwPT"><i class="nw-grab" aria-hidden="true"></i><div class="nw-ph"><div><div class="k" id="nwPK">Notícias do dia</div><h3 id="nwPT"></h3></div><button type="button" class="nw-x" aria-label="Fechar">✕</button></div><div class="nw-list" id="nwPL"></div></div>';
     document.body.appendChild(sheet);
     sheet.addEventListener("click", e => {
       if (e.target.classList.contains("scrim") || e.target.closest(".nw-x")) { closeSheet(); return; }
@@ -534,12 +552,12 @@
     if (hi) {
       // holidays, clock change, elections: say what the day is and what it does to the market
       const hol = e.impact === "Holiday" || /holiday/i.test(e.title);
-      return '<article class="nw-ev' + (hol ? " hol" : "") + '" style="animation-delay:' + (n * 60) + 'ms"><div class="row"><span class="bubble">' + icon(e.k) + '</span><div><div class="meta"><b>' + esc(timeOf(e)) + '</b> · ' + esc(hol ? "Feriado nos EUA" : KIND_NAME[e.k]) + '</div><h4>' + esc(hi.en) + '</h4><div class="orig">' + esc(hi.pt) + (hi.moved ? " (calha ao fim de semana, por isso a folga passa para este dia)" : "") + '</div></div></div>' +
+      return '<article class="nw-ev' + (hol ? " hol" : "") + '" style="animation-delay:' + (n * 60) + 'ms;--kc:' + (KIND_COL[e.k] || "#9C8B90") + '"><div class="row"><span class="bubble">' + icon(e.k) + '</span><div><div class="meta">' + CLOCK + '<b>' + esc(timeOf(e)) + '</b> · ' + esc(hol ? "Feriado nos EUA" : KIND_NAME[e.k]) + '</div><h4>' + esc(hi.en) + '</h4><div class="orig">' + esc(hi.pt) + (hi.moved ? " (calha ao fim de semana, por isso a folga passa para este dia)" : "") + '</div></div></div>' +
         '<div class="exp open"><div><h5>O que é</h5><p>' + esc(hi.what) + '</p><h5>O que acontece no mercado</h5><p>' + esc(hi.mkt) + '</p></div></div></article>';
     }
     const x = explain(e), hol = e.impact === "Holiday", fx = x.fx, v = hol ? null : verdict(e);
     const hasNums = !hol && (e.actual || e.forecast || e.previous);
-    let h = '<article class="nw-ev' + (hol ? " hol" : "") + '" style="animation-delay:' + (n * 60) + 'ms"><div class="row"><span class="bubble">' + icon(e.k) + '</span><div><div class="meta"><b>' + esc(timeOf(e)) + '</b> · ' + esc(KIND_NAME[e.k]) + '</div><h4>' + esc(e.title) + '</h4><div class="orig">' + esc(hol ? "Feriado nos Estados Unidos" : x.name) + '</div></div></div>';
+    let h = '<article class="nw-ev' + (hol ? " hol" : "") + '" style="animation-delay:' + (n * 60) + 'ms;--kc:' + (KIND_COL[e.k] || "#9C8B90") + '">' + (e.actual ? '<span class="saiu" aria-hidden="true">Saiu</span>' : '') + '<div class="row"><span class="bubble">' + icon(e.k) + '</span><div><div class="meta">' + CLOCK + '<b>' + esc(timeOf(e)) + '</b> · ' + esc(KIND_NAME[e.k]) + '</div><h4>' + esc(e.title) + '</h4><div class="orig">' + esc(hol ? "Feriado nos Estados Unidos" : x.name) + '</div></div></div>';
     if (hasNums) h += '<div class="nums"><div class="act"><small>Resultado</small><b>' + esc(e.actual || "—") + '</b></div><div><small>Previsto</small><b>' + esc(e.forecast || "—") + '</b></div><div><small>Anterior</small><b>' + esc(e.previous || "—") + '</b></div></div>';
     // what the result means
     if (v && fx) {

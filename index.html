@@ -1398,6 +1398,183 @@ body.offline .netbar { transform: translate(-50%, 0); }
 /* Estatísticas: a faint gold Diário icon as a watermark */
 .stp-card .wm { position: absolute; right: 16px; bottom: 18px; width: 150px; height: 150px; fill: none; stroke: #CDA75E; stroke-width: .9; stroke-linecap: round; stroke-linejoin: round; opacity: .09; pointer-events: none; }
 @media (prefers-reduced-motion: reduce) { #dust, .sp-spk { display: none; } .phead h2.pen, .mb-i.pick, .mp-i, .plus1 { animation: none !important; } }
+
+/* ---------- round 2 of beauty ---------- */
+:root {
+  --fc-tl: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40' fill='none' stroke='%23B08A3E' stroke-width='1.4' stroke-linecap='round'%3E%3Cpath d='M2 30V10Q2 2 10 2h20'/%3E%3Cpath d='M2 10q4.5 0 4.5 4.5M10 2q0 4.5 4.5 4.5' opacity='.7'/%3E%3C/svg%3E");
+  --fc-tr: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40' fill='none' stroke='%23B08A3E' stroke-width='1.4' stroke-linecap='round'%3E%3Cg transform='matrix(-1 0 0 1 40 0)'%3E%3Cpath d='M2 30V10Q2 2 10 2h20'/%3E%3Cpath d='M2 10q4.5 0 4.5 4.5M10 2q0 4.5 4.5 4.5' opacity='.7'/%3E%3C/g%3E%3C/svg%3E");
+  --fc-bl: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40' fill='none' stroke='%23B08A3E' stroke-width='1.4' stroke-linecap='round'%3E%3Cg transform='matrix(1 0 0 -1 0 40)'%3E%3Cpath d='M2 30V10Q2 2 10 2h20'/%3E%3Cpath d='M2 10q4.5 0 4.5 4.5M10 2q0 4.5 4.5 4.5' opacity='.7'/%3E%3C/g%3E%3C/svg%3E");
+  --fc-br: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40' fill='none' stroke='%23B08A3E' stroke-width='1.4' stroke-linecap='round'%3E%3Cg transform='matrix(-1 0 0 -1 40 40)'%3E%3Cpath d='M2 30V10Q2 2 10 2h20'/%3E%3Cpath d='M2 10q4.5 0 4.5 4.5M10 2q0 4.5 4.5 4.5' opacity='.7'/%3E%3C/g%3E%3C/svg%3E");
+}
+/* opening screen */
+.splash { background: none; }
+.splash::before { content: ""; position: absolute; inset: 0; background: radial-gradient(70% 50% at 50% 40%, #3A0B17, #12030A 70%, #070205); transition: opacity .7s ease; }
+.sp-glow { opacity: 0; transform-box: fill-box; transform-origin: center; transform: scale(.5); }
+.splash.in .sp-glow { animation: spGlow 1.3s ease .15s forwards; }
+@keyframes spGlow { to { opacity: 1; transform: none; } }
+.sp-ring { stroke-dasharray: 1; stroke-dashoffset: 1; }
+.sp-ring.r2 { stroke-dashoffset: 0; opacity: 0; }
+.splash.in .sp-ring:not(.r2) { animation: spDraw 1.1s cubic-bezier(.6, 0, .2, 1) .45s forwards; }
+.splash.in .sp-ring.r2 { animation: spFadeIn .8s ease 1.25s forwards; }
+@keyframes spFadeIn { to { opacity: .75; } }
+.splash.in .sp-shine { animation: spShine .9s ease-in-out 1.3s forwards; }
+@keyframes spShine { to { translate: 230px 0; } }
+.splash.in .spc rect { animation-name: spGrowB; animation-duration: .6s; animation-timing-function: ease-out; }
+@keyframes spGrowB { 0% { transform: scaleY(0); } 55% { transform: scaleY(1.28); } 78% { transform: scaleY(.9); } 100% { transform: scaleY(1); } }
+.sp-lines .spl-t { fill: none; stroke: #FFF1C2; stroke-width: 2.6; stroke-linecap: round; vector-effect: non-scaling-stroke; stroke-dasharray: .035 2; stroke-dashoffset: .035; opacity: 0; filter: drop-shadow(0 0 4px #F3D98E); }
+.splash.in .spl-t { animation: spTip 1.3s ease-in-out forwards; } .splash.in .spl-t.s2 { animation-delay: .15s; } .splash.in .spl-t.s3 { animation-delay: .3s; }
+@keyframes spTip { 0% { opacity: 0; stroke-dashoffset: .035; } 8% { opacity: 1; } 88% { opacity: 1; } 100% { opacity: 0; stroke-dashoffset: -.965; } }
+.sp-title .ch { display: inline-block; white-space: pre; opacity: 0; transform: translateY(6px); filter: blur(3px); }
+.splash.in .sp-title .ch, .splash.in .sp-quote .wd { animation: chIn .5s ease forwards; }
+@keyframes chIn { to { opacity: 1; transform: none; filter: none; } }
+.sp-quote .wd { display: inline-block; opacity: 0; transform: translateY(5px); }
+.sp-dust { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.sp-dust i { position: absolute; top: -8px; width: 3px; height: 3px; border-radius: 50%; background: radial-gradient(circle, #FFF3C4, rgba(227, 189, 106, .5) 60%, transparent 72%); opacity: 0; }
+.splash.in .sp-dust i { animation-name: spDust; animation-timing-function: linear; animation-fill-mode: forwards; }
+@keyframes spDust { 0% { opacity: 0; transform: translate(0, 0); } 15% { opacity: .9; } 100% { opacity: 0; transform: translate(var(--sx), 75vh); } }
+.splash.fly::before { opacity: 0; }
+.splash.fly .sp-title, .splash.fly .sp-line, .splash.fly .sp-quote, .splash.fly .sp-lines, .splash.fly .sp-dust, .splash.fly .sp-fest { opacity: 0 !important; transition: opacity .35s ease !important; }
+.splash.fly .sp-glow, .splash.fly .sp-ring { opacity: 0 !important; animation: none !important; transition: opacity .2s; }
+.splash.fly .sp-icon { transform: translate(var(--fx), var(--fy)) scale(var(--fs)) !important; opacity: 0 !important; transition: transform .75s cubic-bezier(.55, 0, .2, 1), opacity .25s ease .55s !important; }
+.splash.fly { pointer-events: none; }
+@media (prefers-reduced-motion: reduce) { .sp-dust, .sp-lines .spl-t { display: none; } .sp-title .ch, .sp-quote .wd { animation: none !important; opacity: 1 !important; transform: none !important; filter: none !important; } }
+/* Diário: rows like paper cards, colour wave, rolling numbers, bookmark on today, gems, result pills */
+.lrow { position: relative; box-shadow: inset 0 1px 0 rgba(255, 255, 255, .35), 0 3px 6px -3px rgba(20, 3, 8, .55); }
+.lrow.wk-now { background-image: linear-gradient(90deg, rgba(255, 250, 235, .4), rgba(255, 250, 235, .08)), var(--paper) !important; background-size: auto, 180px 180px !important; box-shadow: inset 3px 0 0 var(--gold), 0 3px 6px -3px rgba(20, 3, 8, .55); }
+@property --wp { syntax: "<percentage>"; initial-value: 0%; inherits: false; }
+.lrow.wave { background-image: linear-gradient(100deg, transparent calc(var(--wp) - 30%), rgba(255, 255, 255, .7) var(--wp), transparent calc(var(--wp) + 3%)), var(--paper) !important; background-size: auto, 180px 180px !important; animation: rowWave .8s ease-out; }
+@keyframes rowWave { from { --wp: -5%; } to { --wp: 130%; } }
+.stp input.roll { animation: inRoll .35s ease-out; }
+@keyframes inRoll { from { color: transparent; text-shadow: 0 -10px 0 var(--ink); } to { text-shadow: 0 0 0 transparent; } }
+.to b.roll, .res.roll { display: inline-block; animation: numRoll .35s cubic-bezier(.2, 1.4, .4, 1); }
+@keyframes numRoll { from { transform: translateY(-70%); opacity: 0; } }
+.lrow.today::before { content: ""; position: absolute; left: -7px; top: -5px; width: 11px; height: 26px; background: linear-gradient(180deg, #F3D98E, #CDA75E 55%, #A8833F); clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 78%, 0 100%); filter: drop-shadow(0 2px 2px rgba(0, 0, 0, .45)); z-index: 3; }
+.spk-run { stroke-dasharray: .05 1.2; stroke-dashoffset: .05; opacity: .9; animation: spkRun 4.5s ease-in-out 1s infinite; filter: drop-shadow(0 0 3px #F3D98E); }
+@keyframes spkRun { 0% { stroke-dashoffset: .05; opacity: 0; } 10% { opacity: .95; } 60% { stroke-dashoffset: -1; opacity: .95; } 61%, 100% { stroke-dashoffset: -1; opacity: 0; } }
+.nwmark.gem { padding: 1px 3px 0; display: inline-flex; align-items: flex-start; --g: #9C8B90; --gl: #E6DEE0; --gd: #5E5054; }
+.nwmark.gem.c-nfp { --g: #D02C3A; --gl: #FFC2C7; --gd: #7A0F1A; } .nwmark.gem.c-cpi { --g: #E07A16; --gl: #FFE0B0; --gd: #8A4508; } .nwmark.gem.c-fomc { --g: #7A4CC0; --gl: #E2CCFF; --gd: #3E1E70; }
+.nwmark .gm { display: block; width: 9px; height: 11px; margin-top: 1px; clip-path: polygon(50% 0, 100% 34%, 50% 100%, 0 34%); background: linear-gradient(140deg, var(--gl) 0%, var(--g) 40%, var(--gd) 100%); position: relative; filter: drop-shadow(0 1px 1px rgba(0, 0, 0, .3)); }
+.nwmark .gm::after { content: ""; position: absolute; left: 2px; top: 2px; width: 3px; height: 3px; background: rgba(255, 255, 255, .85); clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); }
+.lrow.d-pos .res, .lrow.d-neg .res, .lrow.d-zero .res { padding: 2px 9px; border-radius: 999px; }
+.lrow.d-pos .res { box-shadow: inset 0 0 0 100px rgba(22, 74, 46, .12), inset 0 0 0 1px rgba(22, 74, 46, .25); }
+.lrow.d-neg .res { box-shadow: inset 0 0 0 100px rgba(122, 20, 48, .1), inset 0 0 0 1px rgba(122, 20, 48, .22); }
+.lrow.d-zero .res { box-shadow: inset 0 0 0 100px rgba(92, 66, 16, .1), inset 0 0 0 1px rgba(92, 66, 16, .22); }
+/* Estatísticas */
+.hero-main b.pos, .hero-main b.zero, .stp-card .st b.pos { background: linear-gradient(110deg, #7A5618, #B8893A 30%, #E3BD6A 48%, #9C7330 62%, #6E4C14); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 1px 0 rgba(255, 255, 255, .6)); }
+.hero-main b.neg, .stp-card .st b.neg { background: linear-gradient(110deg, #7A2436, #B9566B 35%, #E1A0A8 50%, #A04459 65%, #6E1E30); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.stp-card .st, .stp-card .chc, .stp-card .hero-main, .stp-card .dnut, .acc-card .st, .acc-card .chc { background-image: var(--fc-tl), var(--fc-tr), var(--fc-bl), var(--fc-br), var(--paper) !important; background-size: 20px 20px, 20px 20px, 20px 20px, 20px 20px, 180px 180px !important; background-position: 4px 4px, calc(100% - 4px) 4px, 4px calc(100% - 4px), calc(100% - 4px) calc(100% - 4px), 0 0; background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, repeat; }
+.st .sl { display: flex; align-items: center; gap: 5px; }
+.st .sti { width: 14px; height: 14px; flex: 0 0 auto; fill: none; stroke: #B08A3E; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.st b .crown { width: 22px; height: 15px; margin-left: 5px; vertical-align: 2px; filter: drop-shadow(0 1px 1px rgba(0, 0, 0, .3)); -webkit-text-fill-color: initial; }
+.chc .b.bs { fill: url(#gbs); pointer-events: none; }
+.chc .bcrown { font-size: 15px; fill: #C9A04A; animation: chFade .5s ease 1s both; }
+.chc .lnr { fill: none; stroke: #CDA75E; stroke-opacity: .4; stroke-width: 4; stroke-linejoin: round; animation: chFade 1.2s ease 1.2s both; }
+.dnut.gauge svg { width: 120px; height: 101px; }
+.gauge .g-arc { animation: gArc 1.4s cubic-bezier(.3, .7, .2, 1) .2s both; }
+@keyframes gArc { from { stroke-dasharray: 0 var(--a); } }
+.gauge .g-ndl { transform-origin: 50px 58px; transform: rotate(var(--ang)); animation: gNdl 1.5s cubic-bezier(.3, 1.4, .4, 1) .2s both; }
+@keyframes gNdl { from { transform: rotate(-90deg); } }
+.gauge .dbig { font-size: 15px; }
+.gauge .g-cap { font-size: 11px; color: #8C6168; }
+.per.pslide { position: relative; }
+.per .per-ind { position: absolute; top: 3px; bottom: 3px; border-radius: 999px; background: var(--champ); transition: left .38s cubic-bezier(.3, 1.2, .4, 1), width .38s ease; z-index: 0; }
+.per.pslide button { position: relative; z-index: 1; }
+.per.sliding button[aria-pressed="true"] { background: transparent; }
+.heat { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 5px; max-width: 420px; margin: 4px auto 2px; }
+.heat .hh { text-align: center; font: 10px var(--sans); color: #8C6168; letter-spacing: .06em; }
+.hq { position: relative; aspect-ratio: 1.5; border-radius: 7px; background: rgba(58, 16, 24, .06); display: grid; place-items: center; animation: chFade .4s ease both; }
+.hq b { font: 600 10.5px var(--sans); color: rgba(58, 16, 24, .55); }
+.hq.pos { background: rgba(60, 120, 89, var(--o, 1)); } .hq.neg { background: rgba(176, 63, 85, var(--o, 1)); } .hq.zero { background: #E2C36E; }
+.hq.pos b, .hq.neg b { color: #fff; } .hq.zero b { color: #5C4210; }
+.hq.off { background: repeating-linear-gradient(135deg, rgba(156, 115, 48, .35) 0 1px, transparent 1px 5px); }
+.hq.out { visibility: hidden; }
+.hq.today { box-shadow: 0 0 0 1.5px var(--gold); }
+.heat-leg { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 14px; margin-top: 8px; font-size: 11px; color: #8C6168; }
+.heat-leg span { display: inline-flex; align-items: center; gap: 5px; } .heat-leg .hq { width: 14px; aspect-ratio: 1; border-radius: 4px; animation: none; }
+/* Calendário */
+.cd.d-neg { background: linear-gradient(160deg, #E9B7C0 10%, #D697A4 55%, #C98E8E 120%) !important; }
+.cm-i { width: 26px; height: 26px; filter: drop-shadow(0 2px 3px rgba(58, 16, 24, .4)); }
+.cmood.set { width: 30px; height: 30px; }
+@media (max-width: 640px) { .cm-i { width: 18px; height: 18px; } .cmood.set { width: 20px; height: 20px; } }
+.cg-h { font-family: var(--script); font-size: 22px; letter-spacing: 0; text-transform: none; color: var(--gold); padding-bottom: 0; }
+@media (max-width: 640px) { .cg-h { font-size: 17px; } }
+.cd.we { background: repeating-linear-gradient(135deg, rgba(205, 167, 94, .1) 0 1px, transparent 1px 7px); border-radius: 12px; }
+.cd.d1 .cn { font-family: "DM Serif Display", var(--display); font-size: 32px; line-height: .9; background: linear-gradient(140deg, #8A6420, #CDA75E 45%, #E9CC86 55%, #9C7330); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; position: relative; padding-bottom: 3px; }
+.cd.d1 .cn::after { content: ""; position: absolute; left: 0; bottom: -1px; width: 26px; height: 6px; background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 6' fill='none' stroke='%23B08A3E' stroke-width='1' stroke-linecap='round'%3E%3Cpath d='M1 3c4-3 7 3 12 0s8-3 12 0'/%3E%3C/svg%3E") no-repeat; }
+.cd.we.d1 .cn { font-size: 24px; opacity: .8; }
+@media (max-width: 640px) { .cd.d1 .cn { font-size: 22px; } .cd.d1 .cn::after { width: 18px; background-size: 18px 5px; } }
+.cal-grid.casc > .cd:not(.out), .cal-grid.casc > .cw { animation: cdIn .45s cubic-bezier(.2, .9, .3, 1) both; animation-delay: var(--dl, 0ms); }
+@keyframes cdIn { from { opacity: 0; transform: translateY(10px) scale(.96); } }
+.cg-sep { grid-column: 1 / -1; height: 1px; margin: 1px 4px; background: linear-gradient(90deg, transparent, rgba(205, 167, 94, .55) 15%, rgba(205, 167, 94, .55) 85%, transparent); }
+.cw { position: relative; border-left: 2px solid rgba(205, 167, 94, .7); border-radius: 4px 12px 12px 4px; }
+.cw .cwp { padding: 3px 9px 2px; border-radius: 999px; background: rgba(0, 0, 0, .22); box-shadow: inset 0 0 0 1px rgba(205, 167, 94, .35); font-size: 19px; }
+@media (max-width: 640px) { .cw .cwp { padding: 2px 5px 1px; font-size: 12.5px; letter-spacing: -.02em; } }
+.cw::before { content: ""; position: absolute; left: -6px; top: 50%; width: 9px; height: 9px; margin-top: -5px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #FFF0B8, #CDA75E 60%, #8A6420); box-shadow: 0 1px 2px rgba(0, 0, 0, .4); }
+.cal { position: relative; }
+@media (prefers-reduced-motion: reduce) { .cal-grid.casc > * { animation: none !important; } }
+/* Conta */
+.bank .bk-nfc { position: absolute; top: 36%; left: 52px; width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.3; stroke-linecap: round; opacity: .55; }
+.bank .bk-num { position: absolute; top: calc(34% + 5px); left: 78px; white-space: nowrap; font: 500 10.5px/1 "Jost", var(--sans); letter-spacing: .1em; opacity: .75; text-shadow: 0 1px 0 rgba(255, 255, 255, .35), 0 -1px 0 rgba(0, 0, 0, .25); }
+.bank::before { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at var(--mx, 30%) var(--my, 20%), rgba(255, 255, 255, .55), transparent 45%); opacity: 0; transition: opacity .3s ease; pointer-events: none; z-index: 1; }
+.bank.lit::before { opacity: 1; }
+.bank .coins { position: absolute; inset: 0; pointer-events: none; z-index: 2; overflow: hidden; border-radius: inherit; }
+.bank .coins i { position: absolute; top: -14px; width: 12px; height: 12px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #FFF3C4, #E3BD6A 45%, #9C7330); box-shadow: inset 0 0 0 1.5px rgba(120, 80, 20, .45), 0 2px 3px rgba(0, 0, 0, .3); animation: coinFall 1.2s cubic-bezier(.5, 0, .8, .6) forwards; }
+@keyframes coinFall { 0% { transform: translateY(0) rotateY(0); opacity: 0; } 12% { opacity: 1; } 100% { transform: translateY(170px) rotateY(var(--r)) rotate(var(--r)); opacity: 0; } }
+.acc-card .chc .ln { stroke: #B8893A; stroke-width: 2.6; filter: drop-shadow(0 1px 3px rgba(184, 137, 58, .55)); }
+.acc-card .chc .dt, .acc-card .chc .hv { fill: #B8893A; }
+.acc-card .chc .lnr { stroke: #E3BD6A; }
+.payrow { position: relative; overflow: hidden; }
+.pago { position: absolute; right: 120px; top: 50%; transform: translateY(-50%) rotate(-14deg); padding: 1px 8px; border: 2px solid rgba(60, 120, 89, .55); border-radius: 6px; color: rgba(60, 120, 89, .6); font: 800 13px/1.3 var(--sans); letter-spacing: .2em; pointer-events: none; mix-blend-mode: multiply; box-shadow: inset 0 0 0 1px rgba(60, 120, 89, .25); }
+@media (max-width: 520px) { .pago { right: 104px; font-size: 11px; padding: 0 6px; } }
+.pinbox.vault .pin-lock { display: flex; justify-content: center; margin-bottom: 4px; }
+.vlt { width: 74px; height: 74px; overflow: visible; filter: drop-shadow(0 6px 10px rgba(0, 0, 0, .6)); }
+.v-wheel { transform-origin: 40px 40px; transition: transform .7s cubic-bezier(.5, 0, .3, 1); }
+.v-door { transform-origin: 4px 40px; transition: transform .55s cubic-bezier(.6, 0, .4, 1) .6s, opacity .4s ease .75s; }
+.pinbox.opening .v-wheel { transform: rotate(270deg); }
+.pinbox.opening .v-door { transform: perspective(200px) rotateY(-75deg); opacity: .15; }
+.pinbox.opening { animation: vaultGlow 1.25s ease; }
+@keyframes vaultGlow { 70% { box-shadow: 0 0 0 1px rgba(227, 189, 106, .9), 0 0 50px rgba(227, 189, 106, .45); } }
+.pin-pad button { border-radius: 50%; width: 64px; height: 64px; justify-self: center; background: radial-gradient(circle at 35% 30%, #FFF0C2, #E3BD6A 35%, #B8893A 70%, #8A6420); border: 1px solid rgba(255, 240, 200, .6); color: #3A1508; font: 600 24px/1 var(--display); box-shadow: 0 4px 0 #5C3C10, 0 8px 14px -6px rgba(0, 0, 0, .7), inset 0 1px 0 rgba(255, 255, 255, .6); text-shadow: 0 1px 0 rgba(255, 255, 255, .45); }
+.pin-pad button:active { background: radial-gradient(circle at 35% 30%, #FFF0C2, #E3BD6A 35%, #B8893A 70%, #8A6420); transform: translateY(3px); box-shadow: 0 1px 0 #5C3C10, inset 0 1px 0 rgba(255, 255, 255, .6); }
+.pin-dots i.on { background: radial-gradient(circle at 35% 30%, #FFF0B8, #CDA75E 55%, #8A6420); box-shadow: 0 0 8px rgba(227, 189, 106, .7); }
+.achip b.pos, .apr.pos b { color: #3F8A63; } .achip b.neg, .apr.neg b { color: #C2566F; }
+.apr b { padding: 1px 7px; border-radius: 999px; } .apr.pos b { background: rgba(63, 138, 99, .12); } .apr.neg b { background: rgba(194, 86, 111, .12); }
+/* Notícias */
+.nw-card, .nw-ev { box-shadow: inset 4px 0 0 var(--kc, transparent); }
+.nw-card:hover { box-shadow: inset 4px 0 0 var(--kc, transparent), 0 10px 22px -10px rgba(0, 0, 0, .6); }
+.nw-ev { position: relative; }
+.nw-card .bubble, .nw-ev .bubble, .nw-first .bubble { background: radial-gradient(circle at 35% 30%, #5A1428, #2A0711 70%) !important; color: #F3D98E !important; box-shadow: 0 0 0 2px #CDA75E, 0 0 0 4px rgba(205, 167, 94, .25), 0 4px 10px -2px rgba(0, 0, 0, .5); }
+.nw-first .bubble { width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; flex: 0 0 auto; }
+.nw-first .bubble .ic { width: 24px; height: 24px; }
+.nw-ev.hol .bubble { background: #7D7476 !important; color: #F1EEEE !important; box-shadow: 0 0 0 2px #B7AFB1; }
+.nw-d .chip { box-shadow: 0 0 0 1.5px #CDA75E; }
+.nw-clk { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; vertical-align: -2px; margin-right: 3px; opacity: .8; flex: 0 0 auto; }
+.nw-ev .meta .nw-clk { margin-right: 0; }
+.flipc { display: inline-flex; gap: 6px; margin-bottom: 4px; }
+.flipc .fg { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.flipc .fd { display: flex; gap: 2px; }
+.flipc .fd i { position: relative; display: block; width: 17px; height: 24px; border-radius: 4px; background: linear-gradient(180deg, #3A0D18 0 49%, #22060D 51% 100%); color: #F3D98E; font: 600 16px/24px var(--sans); font-style: normal; text-align: center; font-variant-numeric: tabular-nums; box-shadow: inset 0 0 0 1px rgba(205, 167, 94, .45), 0 2px 4px rgba(0, 0, 0, .4); }
+.flipc .fd i::after { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 1px; background: rgba(0, 0, 0, .55); }
+.flipc .fd i.flp { animation: flipIt .45s ease; }
+@keyframes flipIt { 0% { transform: perspective(60px) rotateX(0); } 45% { transform: perspective(60px) rotateX(-90deg); } 55% { transform: perspective(60px) rotateX(90deg); } 100% { transform: perspective(60px) rotateX(0); } }
+.flipc .fg small { font-size: 9.5px; letter-spacing: .06em; color: var(--soft); text-transform: uppercase; }
+.nf-when small { display: flex !important; align-items: center; justify-content: flex-end; }
+@media (max-width: 520px) { .nf-when small { justify-content: flex-start; } }
+.nw-first.soon { animation: soonPulse 1.6s ease-in-out infinite; }
+@keyframes soonPulse { 50% { box-shadow: 0 0 0 2px rgba(227, 189, 106, .9), 0 0 30px 6px rgba(227, 189, 106, .45); } }
+.saiu { position: absolute; top: 10px; right: 10px; padding: 2px 8px; border: 1.5px solid rgba(107, 26, 44, .5); border-radius: 5px; color: rgba(107, 26, 44, .7); font: 800 10.5px/1.3 var(--sans); letter-spacing: .18em; text-transform: uppercase; transform: rotate(8deg); }
+.nw-ev .saiu + .row .meta { padding-right: 58px; }
+.nw-ev .res .arr { font-size: 18px; line-height: 1; display: inline-grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: rgba(58, 16, 24, .08); }
+.nw-ev .res.good .arr { background: rgba(60, 120, 89, .18); } .nw-ev .res.bad .arr { background: rgba(176, 63, 85, .16); }
+.nw-sheet .panel { top: auto !important; left: 50% !important; right: auto !important; bottom: 0; width: min(560px, 100%) !important; max-height: 86vh; border-left: 0 !important; border-top: 1px solid rgba(205, 167, 94, .5); border-radius: 24px 24px 0 0; transform: translate(-50%, 104%) !important; transition: transform .45s cubic-bezier(.2, 1.1, .3, 1) !important; background: radial-gradient(120% 50% at 50% 0%, #3E0D1A, #2A0711 60%) !important; box-shadow: 0 -20px 50px -10px rgba(0, 0, 0, .8) !important; }
+.nw-sheet.open .panel { transform: translate(-50%, 0) !important; }
+.nw-grab { display: block; width: 44px; height: 5px; border-radius: 3px; background: rgba(205, 167, 94, .55); margin: -6px auto 12px; flex: 0 0 auto; }
+.nw-d.today::after { content: ""; position: absolute; top: -3px; right: 7px; width: 9px; height: 17px; background: linear-gradient(180deg, #F3D98E, #B8893A); clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 75%, 0 100%); filter: drop-shadow(0 1px 1px rgba(0, 0, 0, .4)); }
+@media (max-width: 700px) { .nw-d.today::after { right: 3px; width: 7px; height: 13px; } }
+.nw-qchips button { display: inline-flex; align-items: center; gap: 5px; }
+.nw-qchips .ic { width: 14px; height: 14px; }
+.nw-qchips .nw-flag { width: 16px; height: 11px; }
+@media (prefers-reduced-motion: reduce) { .nw-first.soon, .flipc .fd i.flp, .spk-run, .lrow.wave, .bank .coins { animation: none !important; } }
 </style>
 
 <!-- opening screen: the icon, the title and the quote of the day (once per visit) -->
@@ -1406,9 +1583,19 @@ body.offline .netbar { transform: translate(-50%, 0); }
     <path class="spl" pathLength="1" d="M-20 180 C90 120 160 300 260 250 S380 160 430 230"/>
     <path class="spl s2" pathLength="1" d="M430 560 C320 520 260 660 160 640 S30 560 -30 640"/>
     <path class="spl s3" pathLength="1" d="M-20 720 C120 680 220 760 430 700"/>
+    <path class="spl-t" pathLength="1" d="M-20 180 C90 120 160 300 260 250 S380 160 430 230"/>
+    <path class="spl-t s2" pathLength="1" d="M430 560 C320 520 260 660 160 640 S30 560 -30 640"/>
+    <path class="spl-t s3" pathLength="1" d="M-20 720 C120 680 220 760 430 700"/>
   </svg>
+  <div class="sp-dust" aria-hidden="true"></div>
   <svg class="sp-icon" viewBox="0 0 120 120">
-    <defs><linearGradient id="spg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F3DDA0"/><stop offset="1" stop-color="#A8833F"/></linearGradient></defs>
+    <defs><linearGradient id="spg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F3DDA0"/><stop offset="1" stop-color="#A8833F"/></linearGradient>
+      <radialGradient id="spglow"><stop offset="0" stop-color="#F3D98E" stop-opacity=".42"/><stop offset=".45" stop-color="#CDA75E" stop-opacity=".14"/><stop offset="1" stop-color="#CDA75E" stop-opacity="0"/></radialGradient>
+      <linearGradient id="spsh" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#FFF6DA" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+      <clipPath id="spclip"><rect x="1.5" y="1.5" width="117" height="117" rx="27"/></clipPath></defs>
+    <circle class="sp-glow" cx="60" cy="60" r="150" fill="url(#spglow)"/>
+    <circle class="sp-ring" cx="60" cy="60" r="76" pathLength="1" fill="none" stroke="url(#spg)" stroke-width="1.3" transform="rotate(-90 60 60)"/>
+    <circle class="sp-ring r2" cx="60" cy="60" r="81" pathLength="1" fill="none" stroke="#CDA75E" stroke-width=".6" stroke-dasharray=".004 .012" transform="rotate(90 60 60)"/>
     <rect x="1.5" y="1.5" width="117" height="117" rx="27" fill="#110D0B" stroke="url(#spg)" stroke-width="1.6"/>
     <rect x="29" y="20" width="64" height="80" rx="6" fill="#2A211B" stroke="#CDA75E" stroke-width="1"/>
     <rect x="35" y="24" width="55" height="72" rx="3" fill="#F7EFE4"/>
@@ -1418,6 +1605,7 @@ body.offline .netbar { transform: translate(-50%, 0); }
     <polyline class="sp-chart" pathLength="1" points="40,86 51,77 60,80 70,67 84,50" fill="none" stroke="#CDA75E" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
     <circle class="sp-dot" cx="84" cy="50" r="3.4" fill="#CDA75E"/>
     <g class="sp-spk" fill="#F3D98E"><path d="M44 80l1.2 3 3 1.2-3 1.2-1.2 3-1.2-3-3-1.2 3-1.2z"/><path d="M62 74l1 2.4 2.4 1-2.4 1-1 2.4-1-2.4-2.4-1 2.4-1z"/><path d="M76 62l1.3 3.2 3.2 1.3-3.2 1.3-1.3 3.2-1.3-3.2-3.2-1.3 3.2-1.3z"/><path d="M86 48l1 2.4 2.4 1-2.4 1-1 2.4-1-2.4-2.4-1 2.4-1z"/><path d="M53 70l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/><path d="M90 58l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/></g>
+    <g clip-path="url(#spclip)"><rect class="sp-shine" x="-60" y="-20" width="46" height="160" fill="url(#spsh)" transform="rotate(20 60 60)"/></g>
   </svg>
   <div class="sp-title">Diário <em>de</em> Trading</div>
   <div class="sp-line"><span></span><i></i><span></span></div>
@@ -1994,9 +2182,25 @@ body.offline .netbar { transform: translate(-50%, 0); }
     const sp = document.getElementById("splash"); if (!sp) return;
     document.getElementById("spQuote").textContent = "“" + txt + "”";
     try { sessionStorage.setItem("diario-splash", "1"); } catch (_) {}
+    // the title appears letter by letter, the quote word by word, gold dust falls
+    const wrapChars = (el, d0, step) => { let i = 0; const walk = n => { [...n.childNodes].forEach(c => { if (c.nodeType === 3) { const f = document.createDocumentFragment(); [...c.textContent].forEach(ch => { const s = document.createElement("span"); s.className = "ch"; s.textContent = ch; s.style.animationDelay = (d0 + i++ * step).toFixed(2) + "s"; f.appendChild(s); }); c.replaceWith(f); } else walk(c); }); }; walk(el); };
+    const tt = sp.querySelector(".sp-title"); if (tt) wrapChars(tt, .45, .05);
+    const qq = document.getElementById("spQuote"); qq.innerHTML = qq.textContent.split(" ").map((w, i) => '<span class="wd" style="animation-delay:' + (1.25 + i * .09).toFixed(2) + 's">' + w.replace(/[&<>]/g, "") + '</span>').join(" ");
+    const du = sp.querySelector(".sp-dust"); if (du) { let h = ""; for (let i = 0; i < 18; i++) h += '<i style="left:' + (4 + Math.random() * 92).toFixed(1) + '%;animation-delay:' + (1.1 + Math.random() * 1.3).toFixed(2) + 's;animation-duration:' + (2.2 + Math.random() * 1.6).toFixed(2) + 's;--sx:' + ((Math.random() - .5) * 60).toFixed(0) + 'px"></i>'; du.innerHTML = h; }
     requestAnimationFrame(() => sp.classList.add("in"));
-    const close = () => { sp.classList.add("out"); setTimeout(() => sp.remove(), 500); };
-    setTimeout(close, 1800); sp.addEventListener("click", close);
+    let closing = false;
+    const close = () => {
+      if (closing) return; closing = true;
+      // the icon flies up to the DT monogram next to the title
+      const ic = sp.querySelector(".sp-icon"), mono = document.querySelector(".mast h1 .mono");
+      const rm = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (ic && mono && !rm) {
+        const a = ic.getBoundingClientRect(), b = mono.getBoundingClientRect();
+        if (b.width && b.bottom > 0) { ic.style.setProperty("--fx", (b.left + b.width / 2 - (a.left + a.width / 2)).toFixed(1) + "px"); ic.style.setProperty("--fy", (b.top + b.height / 2 - (a.top + a.height / 2)).toFixed(1) + "px"); ic.style.setProperty("--fs", (b.width / a.width).toFixed(3)); sp.classList.add("fly"); setTimeout(() => sp.remove(), 800); return; }
+      }
+      sp.classList.add("out"); setTimeout(() => sp.remove(), 500);
+    };
+    setTimeout(close, 2900); sp.addEventListener("click", close);
   })();
 
   // ---------- data ----------
@@ -2282,7 +2486,11 @@ body.offline .netbar { transform: translate(-50%, 0); }
     const gid = "spg-" + s + "-" + view.y + view.m;
     g = '<defs><linearGradient id="' + gid + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E3BD6A" stop-opacity=".55"/><stop offset="1" stop-color="#CDA75E" stop-opacity="0"/></linearGradient></defs>' + g;
     g += '<path d="' + area + '" fill="url(#' + gid + ')"/>';
-    g += '<path d="' + line + '" fill="none" stroke="#6B1A2C" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"/>';
+    // the month line as a thread of gold, with a little light running along it
+    g = g.replace('</linearGradient></defs>', '</linearGradient><linearGradient id="' + gid + 't" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#9C7330"/><stop offset=".5" stop-color="#D9B66C"/><stop offset="1" stop-color="#A8833F"/></linearGradient></defs>');
+    g += '<path d="' + line + '" fill="none" stroke="rgba(107,26,44,.35)" stroke-width="3.6" stroke-linejoin="round" stroke-linecap="round"/>';
+    g += '<path d="' + line + '" fill="none" stroke="url(#' + gid + 't)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>';
+    g += '<path class="spk-run" d="' + line + '" pathLength="1" fill="none" stroke="#FFF6D6" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>';
     g += '<circle class="spk-pulse" cx="' + x(li) + '" cy="' + y(pts[li]) + '" r="3.5" fill="#CDA75E"/><circle cx="' + x(li) + '" cy="' + y(pts[li]) + '" r="3.5" fill="#3A1018"/>';
     return '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Resultado acumulado no mês">' + g + '</svg>';
   }
@@ -2334,7 +2542,7 @@ body.offline .netbar { transform: translate(-50%, 0); }
     const ev = (window.Noticias.dayEvents && window.Noticias.dayEvents(id)) || [];
     if (!ev.length) return '<button type="button" class="nwmark hol" data-tip="news" data-day="' + id + '" aria-label="Feriado nos EUA"><i></i></button>';
     const c = ev.some(t => /federal funds rate|fomc statement|fomc press/i.test(t)) ? "fomc" : ev.some(t => /^(?!.*\bADP\b).*non-farm/i.test(t)) ? "nfp" : ev.some(t => /\bCPI\b/.test(t)) ? "cpi" : "outra";
-    return '<button type="button" class="nwmark c-' + c + '" data-tip="news" data-day="' + id + '" aria-label="Notícias deste dia">*</button>';
+    return '<button type="button" class="nwmark gem c-' + c + '" data-tip="news" data-day="' + id + '" aria-label="Notícias deste dia"><i class="gm"></i></button>';
   }
   // birthday week: soft coloured confetti around the Estratégia box
   function bdConf() {
@@ -2408,7 +2616,7 @@ body.offline .netbar { transform: translate(-50%, 0); }
     if (calMode === "y") return calYearHtml(s);
     const days = weekdays(view.y, view.m), ids = days.map(iso), t = sum(s.key, ids);
     const tradedDays = ids.filter(id => traded(s.key, id)).length;
-    let h = '<div class="cal glass g-' + s.role + '">';
+    let h = '<div class="cal glass g-' + s.role + '"><i class="fili" aria-hidden="true"></i>', ci = 0;
     h += '<div class="cal-head"><div><div class="kind">Calendário</div><h2>' + cap(MONTHS[view.m]) + ' <em>' + view.y + '</em></h2>' +
       '<div class="stats"><b>' + tradedDays + '</b> dias registados, <b>' + t.tp + '</b> TP, <b>' + t.sl + '</b> SL</div></div>' +
       '<div class="cal-hr">' + calModeBtns() + '<div class="big ' + cls(t.pct) + '">' + fmt(t.pct) + '</div></div></div>';
@@ -2419,10 +2627,12 @@ body.offline .netbar { transform: translate(-50%, 0); }
     d.setDate(1 - ((first.getDay() + 6) % 7));
     for (let guard = 0; guard < 7; guard++) {
       const weekIds = [], wk = isoWeek(d), fullIds = fullWeek(d).map(iso);
+      if (guard) h += '<i class="cg-sep" aria-hidden="true"></i>';
       for (let i = 0; i < 7; i++) {
         const id = iso(d), inMonth = d.getMonth() === view.m, wd = d.getDay(), weekend = wd === 0 || wd === 6;
+        const d1 = inMonth && d.getDate() === 1 ? " d1" : "", dl = ' style="--dl:' + (ci++ * 22) + 'ms"';
         if (!inMonth) h += '<div class="cd out' + (weekend ? " we" : "") + '"></div>';
-        else if (weekend) h += '<div class="cd we"><span class="cn">' + d.getDate() + '</span></div>';
+        else if (weekend) h += '<div class="cd we' + d1 + '"' + dl + '><span class="cn">' + d.getDate() + '</span></div>';
         else {
           weekIds.push(id);
           const e = entry(s.key, id), p = pctOf(e), has = traded(s.key, id);
@@ -2432,12 +2642,12 @@ body.offline .netbar { transform: translate(-50%, 0); }
           if (e.note) inner += '<svg class="cnote" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.8 2.6l2.6 2.6L6 12.6 2.8 13.2l.6-3.2z"/></svg>';
           if (e.off) inner += '<span class="coff">Sem operar</span>';
           else if (has) inner += '<span class="cr ' + cls(p) + '">' + fmt(p) + '</span><span class="cx">' + (s.acct && e.risk ? eur(euroOf(e)) : e.tp + ' TP, ' + e.sl + ' SL') + '</span>';
-          h += '<button type="button" class="cd' + c + '" data-go="' + s.key + '|' + id + '"' + (e.note ? ' data-tip="note" data-tv="' + esc(e.note.slice(0, 600)) + '"' : "") + ' aria-label="' + d.getDate() + ' de ' + MONTHS[view.m] + (e.off ? ", sem operar" : has ? ", " + fmt(p) : ", sem registo") + (e.note ? ", tem nota" : "") + '">' + inner + '</button>';
+          h += '<button type="button" class="cd' + c + d1 + '"' + dl + ' data-go="' + s.key + '|' + id + '"' + (e.note ? ' data-tip="note" data-tv="' + esc(e.note.slice(0, 600)) + '"' : "") + ' aria-label="' + d.getDate() + ' de ' + MONTHS[view.m] + (e.off ? ", sem operar" : has ? ", " + fmt(p) : ", sem registo") + (e.note ? ", tem nota" : "") + '">' + inner + '</button>';
         }
         d.setDate(d.getDate() + 1);
       }
       const ws = sum(s.key, fullIds);
-      h += '<div class="cw"><span class="cwl">Sem. ' + wk + '</span>' + (weekIds.length ? '<span class="cwp ' + cls(ws.pct) + '">' + fmt(ws.pct) + '</span><span class="cwx">' + ws.tp + ' TP, ' + ws.sl + ' SL</span>' : '') + '</div>';
+      h += '<div class="cw' + (weekIds.length ? " c-" + cls(ws.pct) : "") + '" style="--dl:' + (ci++ * 22) + 'ms"><span class="cwl">Sem. ' + wk + '</span>' + (weekIds.length ? '<span class="cwp ' + cls(ws.pct) + '">' + fmt(ws.pct) + '</span><span class="cwx">' + ws.tp + ' TP, ' + ws.sl + ' SL</span>' : '') + '</div>';
       if (d.getMonth() !== view.m) break;
     }
     h += '</div>';
@@ -2485,6 +2695,9 @@ body.offline .netbar { transform: translate(-50%, 0); }
     if (o.base != null && o.base > lo && o.base < hi) g += '<line x1="' + pl + '" x2="' + (W - pr) + '" y1="' + by.toFixed(1) + '" y2="' + by.toFixed(1) + '" class="bl"/>';
     g += '<text class="ax" x="' + pl + '" y="' + (H - 6) + '">' + esc(pts[0].l) + '</text><text class="ax" x="' + (W - pr) + '" y="' + (H - 6) + '" text-anchor="end">' + esc(pts[pts.length - 1].l) + '</text>';
     g += '<path d="' + line + ' L' + x(pts.length - 1).toFixed(1) + ' ' + by.toFixed(1) + ' L' + x(0).toFixed(1) + ' ' + by.toFixed(1) + ' Z" class="ar" fill="url(#' + gid + ')"/>';
+    // a soft reflection of the line, just below it
+    g = g.replace("</defs>", '<filter id="' + gid + 'b" x="-5%" y="-30%" width="110%" height="160%"><feGaussianBlur stdDeviation="3"/></filter></defs>');
+    g += '<path d="' + line + '" class="lnr" transform="translate(0 7)" filter="url(#' + gid + 'b)"/>';
     g += '<path d="' + line + '" class="ln" pathLength="1"/>';
     const li = pts.length - 1;
     if (o.labels) {
@@ -2510,14 +2723,17 @@ body.offline .netbar { transform: translate(-50%, 0); }
     const y = v => pt + (H - pt - pb) * (1 - (v - lo) / (hi - lo)), slot = W / items.length, bw = Math.max(4, Math.min(34, slot * .62));
     // values on the bars only when there is room; the axis names thin out on narrow screens
     const showV = slot >= 34, axEvery = slot >= 22 ? 1 : Math.ceil(22 / slot);
-    let g = '<defs><linearGradient id="gbp" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#2F6B4B"/><stop offset=".7" stop-color="#4E9A6C"/><stop offset="1" stop-color="#D9B45C"/></linearGradient><linearGradient id="gbn" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8E2A40"/><stop offset=".7" stop-color="#B9566B"/><stop offset="1" stop-color="#E9A9A6"/></linearGradient></defs><line x1="0" x2="' + W + '" y1="' + y(0).toFixed(1) + '" y2="' + y(0).toFixed(1) + '" class="bl"/>';
+    const u = Math.random().toString(36).slice(2, 7);
+    let g = '<defs><linearGradient id="gbp' + u + '" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#2F6B4B"/><stop offset=".7" stop-color="#4E9A6C"/><stop offset="1" stop-color="#D9B45C"/></linearGradient><linearGradient id="gbn' + u + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8E2A40"/><stop offset=".7" stop-color="#B9566B"/><stop offset="1" stop-color="#E9A9A6"/></linearGradient><linearGradient id="gbs' + u + '" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".22" stop-color="#fff" stop-opacity=".5"/><stop offset=".45" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".12"/></linearGradient></defs><line x1="0" x2="' + W + '" y1="' + y(0).toFixed(1) + '" y2="' + y(0).toFixed(1) + '" class="bl"/>';
     items.forEach((it, i) => {
       const cx = slot * i + slot / 2, y0 = y(0), y1 = y(it.v), top = Math.min(y0, y1), hgt = Math.max(Math.abs(y1 - y0), it.v ? 2 : 0);
       if (hgt) {
-        const r = Math.min(4, hgt), up = it.v >= 0, xL = cx - bw / 2, xR = cx + bw / 2;
+        const r = Math.min(bw / 2, 9, hgt), up = it.v >= 0, xL = cx - bw / 2, xR = cx + bw / 2;
         const d = up ? "M" + xL + " " + y0 + " V" + (top + r) + " Q" + xL + " " + top + " " + (xL + r) + " " + top + " H" + (xR - r) + " Q" + xR + " " + top + " " + xR + " " + (top + r) + " V" + y0 + " Z"
           : "M" + xL + " " + y0 + " V" + (top + hgt - r) + " Q" + xL + " " + (top + hgt) + " " + (xL + r) + " " + (top + hgt) + " H" + (xR - r) + " Q" + xR + " " + (top + hgt) + " " + xR + " " + (top + hgt - r) + " V" + y0 + " Z";
-        g += '<path d="' + d + '" class="b ' + (up ? "bp" : "bn") + '" style="animation-delay:' + (i * Math.min(.05, .6 / items.length)).toFixed(3) + 's"/>';
+        const dl = 'animation-delay:' + (i * Math.min(.05, .6 / items.length)).toFixed(3) + 's';
+        g += '<path d="' + d + '" class="b ' + (up ? "bp" : "bn") + '" style="fill:url(#' + (up ? "gbp" : "gbn") + u + ');' + dl + '"/><path d="' + d + '" class="b bs ' + (up ? "bp" : "bn") + '" style="fill:url(#gbs' + u + ');' + dl + '"/>';
+        if (it.crown) g += '<text class="bcrown" x="' + cx + '" y="' + (top - (showV ? 17 : 5)).toFixed(1) + '" text-anchor="middle">♛</text>';
       }
       if (showV) g += '<text class="bv" x="' + cx + '" y="' + (it.v >= 0 ? top - 5 : top + hgt + 12).toFixed(1) + '" text-anchor="middle">' + (it.n ? esc(o.f(it.v)) : "") + '</text>';
       if (i % axEvery === 0) g += '<text class="ax" x="' + cx + '" y="' + (H - 6) + '" text-anchor="middle">' + esc(it.l) + '</text>';
@@ -2528,14 +2744,14 @@ body.offline .netbar { transform: translate(-50%, 0); }
 
   // a ring split in parts (e.g. green / yellow / red days) with a number in the middle and a small legend
   function donut(parts, big, small) {
-    const tot = parts.reduce((a, p) => a + p.v, 0), R = 38, C = 2 * Math.PI * R;
+    const tot = parts.reduce((a, p) => a + p.v, 0), R = 38, C = 2 * Math.PI * R, du = Math.random().toString(36).slice(2, 7);
     let off = 0, segs = "";
     if (tot) parts.forEach((p, i) => {
       if (!p.v) return; const len = p.v / tot * C, gap = parts.filter(q => q.v).length > 1 ? 2 : 0;
       segs += '<circle r="' + R + '" cx="50" cy="50" fill="none" stroke="' + p.c + '" stroke-width="12" stroke-dasharray="' + Math.max(0, len - gap).toFixed(2) + ' ' + C.toFixed(2) + '" stroke-dashoffset="' + (-off).toFixed(2) + '" class="dseg" style="--c:' + C.toFixed(2) + ';animation-delay:' + (i * .35) + 's"/>';
       off += len;
     });
-    return '<div class="dnut"><svg viewBox="0 0 100 100" role="img" aria-label="' + esc(small + ": " + big) + '"><defs><linearGradient id="dsh" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".6"/><stop offset=".35" stop-color="#fff" stop-opacity=".08"/><stop offset=".6" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".22"/></linearGradient></defs><circle r="' + R + '" cx="50" cy="50" fill="none" stroke="rgba(58,16,24,.08)" stroke-width="12"/><g transform="rotate(-90 50 50)">' + segs + '</g>' + (tot ? '<g class="dsheen"><circle r="' + R + '" cx="50" cy="50" fill="none" stroke="url(#dsh)" stroke-width="12"/><circle r="' + (R + 6) + '" cx="50" cy="50" fill="none" stroke="rgba(255,248,225,.5)" stroke-width=".7"/><circle r="' + (R - 6) + '" cx="50" cy="50" fill="none" stroke="rgba(255,248,225,.35)" stroke-width=".6"/></g>' : '') + '<text x="50" y="50" text-anchor="middle" class="dbig">' + esc(big) + '</text><text x="50" y="64" text-anchor="middle" class="dsm">' + esc(small) + '</text></svg>' +
+    return '<div class="dnut"><svg viewBox="0 0 100 100" role="img" aria-label="' + esc(small + ": " + big) + '"><defs><linearGradient id="dsh' + du + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".6"/><stop offset=".35" stop-color="#fff" stop-opacity=".08"/><stop offset=".6" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".22"/></linearGradient></defs><circle r="' + R + '" cx="50" cy="50" fill="none" stroke="rgba(58,16,24,.08)" stroke-width="12"/><g transform="rotate(-90 50 50)">' + segs + '</g>' + (tot ? '<g class="dsheen"><circle r="' + R + '" cx="50" cy="50" fill="none" stroke="url(#dsh' + du + ')" stroke-width="12"/><circle r="' + (R + 6) + '" cx="50" cy="50" fill="none" stroke="rgba(255,248,225,.5)" stroke-width=".7"/><circle r="' + (R - 6) + '" cx="50" cy="50" fill="none" stroke="rgba(255,248,225,.35)" stroke-width=".6"/></g>' : '') + '<text x="50" y="50" text-anchor="middle" class="dbig">' + esc(big) + '</text><text x="50" y="64" text-anchor="middle" class="dsm">' + esc(small) + '</text></svg>' +
       '<div class="dleg">' + parts.map(p => '<span><i style="background:' + p.c + '"></i>' + p.v + ' ' + esc(p.l) + '</span>').join("") + '</div></div>';
   }
 
@@ -2580,20 +2796,61 @@ body.offline .netbar { transform: translate(-50%, 0); }
     return r;
   }
   const dShort = d => d.getDate() + " " + MON3[d.getMonth()];
-  function tile(label, value, sub, c) { return '<div class="st"><span class="sl">' + label + '</span><b class="' + (c || "") + '">' + value + '</b>' + (sub ? '<small>' + sub + '</small>' : "") + '</div>'; }
+  // a small gold icon for each tile, and a little crown on the best day
+  const TILE_IC = {
+    avg: '<path d="M3 12h3l2-5 3 9 2-6 2 2h6"/>',
+    up: '<path d="M4 17l6-6 4 4 6-7"/><path d="M15 8h5v5"/>',
+    down: '<path d="M4 7l6 6 4-4 6 7"/><path d="M15 16h5v-5"/>',
+    drop: '<path d="M12 4v13"/><path d="M7 12l5 5 5-5"/><path d="M5 20h14"/>',
+    week: '<rect x="4" y="5" width="16" height="15" rx="2.5"/><path d="M4 10h16M9 3v4M15 3v4"/>',
+    fire: '<path d="M12 21c-3.9 0-6.5-2.6-6.5-6 0-3.6 3-5.4 3.6-9 2.2 1.4 3 3.2 3 5 1-.6 1.6-1.8 1.7-3 2.3 1.6 4.7 4.2 4.7 7 0 3.4-2.6 6-6.5 6z"/>',
+    cloud: '<path d="M7 18h10a4 4 0 0 0 .6-8 5.5 5.5 0 0 0-10.6 1.2A3.5 3.5 0 0 0 7 18z"/>',
+    moon: '<path d="M19 14.5A7.5 7.5 0 0 1 9.5 5a7.5 7.5 0 1 0 9.5 9.5z"/>',
+    money: '<rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.6"/>',
+    pct: '<path d="M6 18L18 6"/><circle cx="7.5" cy="7.5" r="2"/><circle cx="16.5" cy="16.5" r="2"/>'
+  };
+  const tileIc = l => /^Média/.test(l) ? "avg" : /^Melhor/.test(l) ? "up" : /^Pior/.test(l) ? "down" : /queda|Distância/.test(l) ? "drop" : /semana/.test(l) ? "week" : /seguidos a ganhar|verdes/.test(l) ? "fire" : /seguidos a perder/.test(l) ? "cloud" : /sem operar/.test(l) ? "moon" : /Lucro|Crescimento/.test(l) ? "money" : /Risco/.test(l) ? "pct" : "";
+  const CROWN = () => { const cu = Math.random().toString(36).slice(2, 7); return '<svg class="crown" viewBox="0 0 24 16" aria-hidden="true"><path d="M2 14l1.6-10 5 5L12 2l3.4 7 5-5L22 14z" fill="url(#crg' + cu + ')"/><defs><linearGradient id="crg' + cu + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFF0B8"/><stop offset=".5" stop-color="#E3BD6A"/><stop offset="1" stop-color="#A8833F"/></linearGradient></defs></svg>'; };
+  function tile(label, value, sub, c) { const k = tileIc(label); return '<div class="st"><span class="sl">' + (k ? '<svg class="sti" viewBox="0 0 24 24" aria-hidden="true">' + TILE_IC[k] + '</svg>' : '') + label + '</span><b class="' + (c || "") + '">' + value + (label === "Melhor dia" && value !== "—" ? CROWN() : "") + '</b>' + (sub ? '<small>' + sub + '</small>' : "") + '</div>'; }
+  // the hit rate as a gold speedometer
+  function gauge(win, tp, sl) {
+    const v = win == null ? 0 : Math.max(0, Math.min(100, win)), R = 38, a = Math.PI * R;
+    const ang = -90 + v * 1.8, gu = Math.random().toString(36).slice(2, 7);
+    return '<div class="dnut gauge"><svg viewBox="0 0 100 84" role="img" aria-label="Acerto: ' + (win == null ? "sem dados" : Math.round(v) + "%") + '"><defs><linearGradient id="ggd' + gu + '" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#B03F55"/><stop offset=".45" stop-color="#D9B66C"/><stop offset="1" stop-color="#3C7859"/></linearGradient><linearGradient id="ggn' + gu + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFF0B8"/><stop offset="1" stop-color="#A8833F"/></linearGradient></defs>' +
+      '<path d="M12 58 A38 38 0 0 1 88 58" fill="none" stroke="rgba(58,16,24,.08)" stroke-width="10" stroke-linecap="round"/>' +
+      '<path class="g-arc" d="M12 58 A38 38 0 0 1 88 58" fill="none" stroke="url(#ggd' + gu + ')" stroke-width="10" stroke-linecap="round" stroke-dasharray="' + (a * v / 100).toFixed(1) + ' ' + a.toFixed(1) + '" style="--a:' + a.toFixed(1) + '"/>' +
+      [0, 25, 50, 75, 100].map(t => { const r = (-180 + t * 1.8) * Math.PI / 180; return '<line x1="' + (50 + Math.cos(r) * 27).toFixed(1) + '" y1="' + (58 + Math.sin(r) * 27).toFixed(1) + '" x2="' + (50 + Math.cos(r) * 30).toFixed(1) + '" y2="' + (58 + Math.sin(r) * 30).toFixed(1) + '" stroke="#B8913F" stroke-width="1"/>'; }).join("") +
+      '<g class="g-ndl" style="--ang:' + ang.toFixed(1) + 'deg"><path d="M50 58 L48.4 57 L50 28 L51.6 57 Z" fill="url(#ggn' + gu + ')" stroke="#8A6420" stroke-width=".4"/></g><circle cx="50" cy="58" r="4" fill="#3A1018" stroke="#D9B66C" stroke-width="1.2"/>' +
+      '<text x="50" y="80" text-anchor="middle" class="dbig">' + (win == null ? "—" : Math.round(v) + "%") + '</text></svg>' +
+      '<div class="dleg"><span class="g-cap">acerto</span><span><i style="background:#3C7859"></i>' + tp + ' TP</span><span><i style="background:#B03F55"></i>' + sl + ' SL</span></div></div>';
+  }
+  // the month as little coloured squares, one per day
+  function heatHtml(s, days) {
+    let h = '<div class="chc wide heat-c"><div class="cht">O mês em quadradinhos <small>cada quadrado é um dia</small></div><div class="heat"><span class="hh">Seg</span><span class="hh">Ter</span><span class="hh">Qua</span><span class="hh">Qui</span><span class="hh">Sex</span>';
+    const lead = (days[0].getDay() + 6) % 7; for (let i = 0; i < lead; i++) h += '<i class="hq out"></i>';
+    let mx = 1; days.forEach(d => { const e = entry(s.key, iso(d)); if (traded(s.key, iso(d)) && !e.off) mx = Math.max(mx, Math.abs(pctOf(e))); });
+    days.forEach((d, i) => {
+      const id = iso(d), e = entry(s.key, id), t = traded(s.key, id) && !e.off, p = t ? pctOf(e) : 0;
+      const k = !t ? (e.off ? "off" : "none") : p > 0 ? "pos" : p < 0 ? "neg" : "zero", op = t && p ? (.35 + .65 * Math.abs(p) / mx).toFixed(2) : 1;
+      h += '<i class="hq ' + k + (id === todayId ? " today" : "") + '" style="--o:' + op + ';animation-delay:' + (i * 25) + 'ms" data-tip="plain" data-tv="' + esc(dShort(d) + ": " + (t ? fmt(p) : e.off ? "sem operar" : "sem registo")) + '"><b>' + d.getDate() + '</b></i>';
+    });
+    return h + '</div><div class="heat-leg"><span><i class="hq neg"></i>negativo</span><span><i class="hq zero"></i>0%</span><span><i class="hq pos"></i>positivo</span><span>quanto mais forte a cor, maior o resultado</span></div></div>';
+  }
+  let perPrev = per;
   function statsHtml(s) {
     const days = periodDays(s), r = statsOf(s, days);
     const plabel = per === "m" ? cap(MONTHS[view.m]) + " " + view.y : per === "y" ? "Ano " + view.y : "Desde o início";
     let h = '<div class="stw"><section class="stp-card glass g-' + s.role + '"><svg class="wm" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4.5A1.5 1.5 0 0 1 6.5 3H19v15H6.5A1.5 1.5 0 0 0 5 19.5z"/><path d="M5 19.5A1.5 1.5 0 0 0 6.5 21H19v-3"/><path d="M9 7.5h6M9 11h4"/></svg>';
     h += '<div class="st-head"><div><div class="kind">Estatísticas</div><h2>' + plabel + '</h2></div>' +
-      '<div class="st-hr"><button type="button" class="sumbtn" data-sum="' + s.role + '">✦ Resumo de ' + MONTHS[view.m] + '</button><div class="per" role="group" aria-label="Período">' + [["m", "Mês"], ["y", "Ano"], ["all", "Tudo"]].map(([k, l]) => '<button type="button" data-per="' + k + '" aria-pressed="' + (per === k) + '">' + l + '</button>').join("") + '</div></div></div>';
+      '<div class="st-hr"><button type="button" class="sumbtn" data-sum="' + s.role + '">✦ Resumo de ' + MONTHS[view.m] + '</button><div class="per pslide" role="group" data-pi="' + ["m", "y", "all"].indexOf(perPrev) + '|' + ["m", "y", "all"].indexOf(per) + '" aria-label="Período">' + [["m", "Mês"], ["y", "Ano"], ["all", "Tudo"]].map(([k, l]) => '<button type="button" data-per="' + k + '" aria-pressed="' + (per === k) + '">' + l + '</button>').join("") + '</div></div></div>';
+    setTimeout(() => { perPrev = per; }, 0);
     // no days yet: still show the NFP / CPI / FOMC table of the year (handy for backtesting)
     if (!r.n) { h += '<div class="ch-empty big-empty">Ainda não há dias registados neste período.</div><div class="sec"><span>Notícias</span><small>NFP, CPI e FOMC de ' + view.y + '</small></div><div class="charts">' + newsTables(s) + '</div></section></div>'; return h; }
     // headline: the result, the green / red days ring and the hit rate
     const pd = r.n ? r.pos / r.n * 100 : 0;
     h += '<div class="hero"><div class="hero-main"><span class="sl">Resultado</span><b class="' + cls(r.pct) + '">' + fmt(r.pct) + '</b><small>' + r.tp + ' TP, ' + r.sl + ' SL em ' + r.n + (r.n === 1 ? ' dia' : ' dias') + (s.acct && r.eurN ? ' · ' + eur(r.eur) : '') + '</small></div>' +
       donut([{ v: r.pos, c: "#3C7859", l: "positivos" }, { v: r.zero, c: "#C9A55E", l: "a 0%" }, { v: r.neg, c: "#B03F55", l: "negativos" }], Math.round(pd) + "%", "dias verdes") +
-      donut([{ v: r.tp, c: "#3C7859", l: "TP" }, { v: r.sl, c: "#B03F55", l: "SL" }], r.win == null ? "—" : Math.round(r.win) + "%", "acerto") + '</div>';
+      gauge(r.win, r.tp, r.sl) + '</div>';
     const sec = (t, sub) => '<div class="sec"><span>' + t + '</span>' + (sub ? '<small>' + sub + '</small>' : '') + '</div>';
     h = h.replace('<div class="hero">', sec("Resumo", "o essencial deste período") + '<div class="hero">');
     h += storyHtml(r);
@@ -2608,7 +2865,7 @@ body.offline .netbar { transform: translate(-50%, 0); }
     if (r.off) h += tile("Dias sem operar", String(r.off), "feriados, férias…");
     h += '</div>';
     h += sec("Evolução", "como o resultado foi mudando") + '<div class="charts"><div class="chc wide"><div class="cht">Como foi crescendo <small>resultado acumulado, dia a dia</small></div>' + lineChart(r.curve, { f: (v, ax) => ax ? fmt(Math.round(v)) : fmt(Math.round(v * 10) / 10), labels: true, aria: "Resultado acumulado" }) + hint("Se a linha sobe, estás a ganhar; se desce, estás a perder. Quanto mais inclinada, mais forte foi o dia.") + '</div>';
-    if (per === "m") h += '<div class="chc wide"><div class="cht">Resultado de cada dia</div>' + barChart(r.daily, { aria: "Resultado de cada dia", f: fmt }) + hint("Cada barra é um dia: verde para cima é dia positivo, vermelho para baixo é dia negativo.") + '</div>';
+    if (per === "m") { const bi = r.daily.reduce((b, x, i) => x.v > (b < 0 ? -Infinity : r.daily[b].v) ? i : b, -1); h += '<div class="chc wide"><div class="cht">Resultado de cada dia</div>' + barChart(r.daily.map((x, i) => i === bi && x.v > 0 ? Object.assign({}, x, { crown: 1 }) : x), { aria: "Resultado de cada dia", f: fmt }) + hint("Cada barra é um dia: verde para cima é dia positivo, vermelho para baixo é dia negativo. A coroa marca o melhor dia.") + '</div>' + heatHtml(s, days); }
     else h += '<div class="chc wide"><div class="cht">Resultado de cada semana</div>' + barChart([...r.weeks.values()].slice(-26).map(W => ({ l: String(W.w), v: W.v, n: 1, tip: "Semana " + W.w + " (" + dShort(W.d) + "): " + fmt(W.v) })), { aria: "Resultado de cada semana", f: fmt }) + '</div>';
     h += '</div>' + sec("Padrões", "em que dias corre melhor") + '<div class="charts">';
     h += '<div class="chc' + (per === "m" ? " wide" : "") + '"><div class="cht">Por dia da semana <small>soma do resultado</small></div>' + barChart(["Seg", "Ter", "Qua", "Qui", "Sex"].map((l, i) => { const w = r.wd[i]; return { l, v: w.v, n: w.n, tip: l + ": " + fmt(w.v) + " em " + w.n + (w.n === 1 ? " dia" : " dias") + (w.tp + w.sl ? ", acerto " + NUM1.format(w.tp / (w.tp + w.sl) * 100) + "%" : "") }; }), { aria: "Resultado por dia da semana", f: fmt }) + hint("Soma de todos os dias desse dia da semana. Ajuda a ver se há dias em que costuma correr melhor.") + '</div>';
@@ -2813,7 +3070,7 @@ body.offline .netbar { transform: translate(-50%, 0); }
     const curDD = C.peak && C.last != null ? (C.peak - C.last) / C.peak * 100 : 0;
     let h = '<section class="acc-card glass g-' + (isProp(a) ? "prop" : "conta") + '">';
     h += '<div class="st-head"><div><div class="kind">Conta</div><h2>' + cap(MONTHS[view.m]) + ' <em>' + view.y + '</em></h2></div>' +
-      '<div class="bank ' + (isProp(a) ? "b-prop" : "b-fusion") + '" aria-label="Saldo atual: ' + (C.last != null ? EUR.format(C.last) : "sem registo") + '"><span class="bk-n">' + esc(acName(a)) + '</span><span class="bk-logo">✦ Diário</span><i class="bk-chip" aria-hidden="true"></i><small>Saldo atual</small><b>' + (C.last != null ? EUR.format(C.last) : "—") + '</b><span class="bk-dots" aria-hidden="true">•••• •••• ' + (isProp(a) ? "PROP" : "FUSN") + '</span></div></div>';
+      '<div class="bank ' + (isProp(a) ? "b-prop" : "b-fusion") + '" aria-label="Saldo atual: ' + (C.last != null ? EUR.format(C.last) : "sem registo") + '"><span class="bk-n">' + esc(acName(a)) + '</span><span class="bk-logo">✦ Diário</span><i class="bk-chip" aria-hidden="true"></i><svg class="bk-nfc" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 4.5a5 5 0 0 1 0 7M8 3a7.5 7.5 0 0 1 0 10M11 1.5a10 10 0 0 1 0 13"/></svg><span class="bk-num" aria-hidden="true">' + (isProp(a) ? "4716" : "5412") + ' •••• •••• ' + String(view.y) + '</span><small>Saldo atual</small><b>' + (C.last != null ? EUR.format(C.last) : "—") + '</b><span class="bk-dots" aria-hidden="true">' + (isProp(a) ? "PROP" : "FUSION") + ' · ' + pad(view.m + 1) + '/' + String(view.y).slice(2) + '</span></div></div>';
     // three headline chips: this month, since the start, money already taken out
     const paid = payTotals(a);
     h += '<div class="achips">' +
@@ -2942,7 +3199,7 @@ body.offline .netbar { transform: translate(-50%, 0); }
         const y = p.dia.slice(0, 4);
         if (y !== year) { year = y; const ty = list.filter(q => q.dia.startsWith(y) && q.estado !== "pedido").reduce((s0, q) => s0 + q.valor, 0); h += '<div class="pay-y"><b>' + y + '</b><span>' + EUR.format(ty) + ' recebidos</span></div>'; }
         const [yy, mm, dd] = p.dia.split("-").map(Number), dt = new Date(yy, mm - 1, dd);
-        h += '<div class="payrow' + (p.estado === "pedido" ? " wait" : "") + '"><div class="pay-d"><b>' + dd + '</b><span>' + MON3[mm - 1] + '</span></div>' +
+        h += '<div class="payrow' + (p.estado === "pedido" ? " wait" : "") + '">' + (p.estado === "pedido" ? "" : '<span class="pago" aria-hidden="true">PAGO</span>') + '<div class="pay-d"><b>' + dd + '</b><span>' + MON3[mm - 1] + '</span></div>' +
           '<div class="pay-m"><b>' + EUR.format(p.valor) + '</b><small>' + DOWL[dt.getDay()] + (p.nota ? ' · ' + esc(p.nota) : '') + '</small></div>' +
           '<span class="pay-who pw-' + (p.pessoa === "Miguel" ? "m" : "c") + '">' + esc(p.pessoa || "Carla") + '</span>' +
           '<button type="button" class="pay-x" data-paydel="' + a + '|' + p.id + '" aria-label="Apagar este pagamento">✕</button></div>';
@@ -3010,8 +3267,12 @@ body.offline .netbar { transform: translate(-50%, 0); }
   const AC_PIN = "1234", SS_PIN = "diario-conta-aberta";
   let pinOk = false, pinIn = "";
   try { pinOk = sessionStorage.getItem(SS_PIN) === "1"; } catch (_) {}
+  const VAULT = '<svg class="vlt" viewBox="0 0 80 80"><defs><linearGradient id="vg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F6E0A4"/><stop offset=".5" stop-color="#CDA75E"/><stop offset="1" stop-color="#8A6420"/></linearGradient></defs>' +
+    '<g class="v-door"><circle cx="40" cy="40" r="36" fill="#2A0811" stroke="url(#vg)" stroke-width="3"/><circle cx="40" cy="40" r="29" fill="none" stroke="url(#vg)" stroke-width="1" stroke-dasharray="2 3"/>' +
+    [0, 60, 120, 180, 240, 300].map(a => { const r = a * Math.PI / 180; return '<circle cx="' + (40 + Math.cos(r) * 32.5).toFixed(1) + '" cy="' + (40 + Math.sin(r) * 32.5).toFixed(1) + '" r="1.6" fill="url(#vg)"/>'; }).join("") +
+    '<g class="v-wheel"><circle cx="40" cy="40" r="7" fill="url(#vg)"/><path d="M40 20v40M20 40h40M26 26l28 28M54 26L26 54" stroke="url(#vg)" stroke-width="3" stroke-linecap="round"/><circle cx="40" cy="40" r="4" fill="#2A0811"/></g></g></svg>';
   function pinHtml(bad) {
-    return '<div class="pinbox' + (bad ? " bad" : "") + '"><div class="pin-lock" aria-hidden="true">🔒</div><div class="pin-t">Conta</div><p class="pin-s">Escreve o código para entrar</p>' +
+    return '<div class="pinbox vault' + (bad ? " bad" : "") + '"><div class="pin-lock" aria-hidden="true">' + VAULT + '</div><div class="pin-t">Conta</div><p class="pin-s">Escreve o código para entrar</p>' +
       '<div class="pin-dots" aria-live="polite" aria-label="' + pinIn.length + ' de 4 números">' + [0, 1, 2, 3].map(i => '<i' + (i < pinIn.length ? ' class="on"' : '') + '></i>').join("") + '</div>' +
       '<div class="pin-pad">' + ["1", "2", "3", "4", "5", "6", "7", "8", "9", "", "0", "⌫"].map(k => k ? '<button type="button" data-pin="' + k + '" aria-label="' + (k === "⌫" ? "Apagar" : k) + '">' + k + '</button>' : '<span></span>').join("") + '</div></div>';
   }
@@ -3020,7 +3281,13 @@ body.offline .netbar { transform: translate(-50%, 0); }
     if (k === "⌫") pinIn = pinIn.slice(0, -1); else if (/^\d$/.test(k) && pinIn.length < 4) pinIn += k;
     try { haptic(); } catch (_) {}
     if (pinIn.length === 4) {
-      if (pinIn === AC_PIN) { pinOk = true; pinIn = ""; try { sessionStorage.setItem(SS_PIN, "1"); } catch (_) {} render(); return; }
+      if (pinIn === AC_PIN) {
+        pinOk = true; pinIn = ""; try { sessionStorage.setItem(SS_PIN, "1"); } catch (_) {}
+        // the vault door: the wheel turns and the door swings open, then the Conta appears
+        const pb = document.querySelector(".pinbox");
+        if (pb && !(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches)) { pb.querySelectorAll(".pin-dots i").forEach(x => x.classList.add("on")); pb.classList.add("opening"); setTimeout(() => { render(); document.querySelectorAll(".bank").forEach(coinRain); }, 1250); } else render();
+        return;
+      }
       pinIn = ""; $("view").innerHTML = pinHtml(true); return;
     }
     $("view").innerHTML = pinHtml(false);
@@ -3716,6 +3983,32 @@ body.offline .netbar { transform: translate(-50%, 0); }
     window.addEventListener("mousemove", e => { mx = e.clientX; my = e.clientY; if (!tk) tk = requestAnimationFrame(check); }, { passive: true });
     window.addEventListener("scroll", () => { if (!tk) tk = requestAnimationFrame(check); }, { passive: true });
   })();  // a soft entrance when the tab / month changes, and the big totals count up from 0
+  // Conta: the balance on the card counts up while little gold coins fall
+  function coinRain(card) {
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const b = card.querySelector("b"); if (b) {
+      const txt = b.textContent, m = txt.replace(/[^\d,-]/g, "").replace(",", "."), target = parseFloat(m);
+      if (isFinite(target) && target > 0) { const t0 = performance.now(), D = 900; const step = t => { const q = Math.min(1, (t - t0) / D), e = 1 - Math.pow(1 - q, 3); if (!document.contains(b)) return; b.textContent = q < 1 ? EUR.format(target * e) : txt; if (q < 1) requestAnimationFrame(step); }; requestAnimationFrame(step); }
+    }
+    const box = document.createElement("span"); box.className = "coins"; box.setAttribute("aria-hidden", "true");
+    let h = ""; for (let i = 0; i < 9; i++) h += '<i style="left:' + (6 + Math.random() * 86).toFixed(1) + '%;animation-delay:' + (Math.random() * .7).toFixed(2) + 's;--r:' + Math.round(Math.random() * 360) + 'deg"></i>';
+    box.innerHTML = h; card.appendChild(box); setTimeout(() => box.remove(), 2200);
+  }
+  // Conta: the light on the card follows the finger / mouse
+  document.addEventListener("pointermove", e => { const c = e.target.closest && e.target.closest(".bank"); if (!c) return; const r = c.getBoundingClientRect(); c.style.setProperty("--mx", ((e.clientX - r.left) / r.width * 100).toFixed(1) + "%"); c.style.setProperty("--my", ((e.clientY - r.top) / r.height * 100).toFixed(1) + "%"); c.classList.add("lit"); }, { passive: true });
+  document.addEventListener("pointerout", e => { const c = e.target.closest && e.target.closest(".bank"); if (c && !c.contains(e.relatedTarget)) c.classList.remove("lit"); });
+  // Estatísticas: the gold pill slides from Mês to Ano to Tudo
+  document.addEventListener("click", e => {
+    if (!e.target.closest("[data-per]")) return;
+    setTimeout(() => document.querySelectorAll(".pslide").forEach(p => {
+      const [a, b] = (p.dataset.pi || "").split("|").map(Number), bs = p.querySelectorAll("button");
+      if (!(a >= 0) || !(b >= 0) || a === b || !bs[a] || !bs[b]) return;
+      const ind = document.createElement("i"); ind.className = "per-ind"; ind.setAttribute("aria-hidden", "true");
+      ind.style.left = bs[a].offsetLeft + "px"; ind.style.width = bs[a].offsetWidth + "px"; p.prepend(ind); p.classList.add("sliding");
+      requestAnimationFrame(() => requestAnimationFrame(() => { ind.style.left = bs[b].offsetLeft + "px"; ind.style.width = bs[b].offsetWidth + "px"; }));
+      setTimeout(() => { p.classList.remove("sliding"); ind.remove(); }, 420);
+    }), 0);
+  });
   // "+1" floating up when a TP or SL goes up
   function plusAt(el, n, field) {
     if (!el || (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches)) return;
@@ -3754,6 +4047,8 @@ body.offline .netbar { transform: translate(-50%, 0); }
     const v = $("view"); v.classList.remove("enter"); void v.offsetWidth; v.classList.add("enter");
     v.querySelectorAll(".big, .mtotal .mp").forEach(countUp);
     v.querySelectorAll(".phead h2").forEach(h => h.classList.add("pen"));
+    v.querySelectorAll(".cal-grid").forEach(g => { g.classList.add("casc"); setTimeout(() => g.classList.remove("casc"), 1600); });
+    v.querySelectorAll(".bank").forEach(coinRain);
   }
   function countUp(el) {
     const m = el.textContent.trim().match(/^([+−-]?)(\d+(?:,\d+)?)%$/); if (!m) return;
@@ -3976,7 +4271,11 @@ body.offline .netbar { transform: translate(-50%, 0); }
     const row = i.closest(".lrow"), e1 = entry(s, id), p = pctOf(e1), res = row && row.querySelector(".res"), to = row && row.querySelector(".to");
     i.classList.toggle("z", !v);
     if (to) { to.lastChild.textContent = e1.tp + e1.sl; to.classList.toggle("z", !(e1.tp + e1.sl)); }
+    const before = row ? (row.className.match(/\bd-(pos|neg|zero)\b/) || [""])[0] : "";
     if (row) { row.classList.remove("d-pos", "d-neg", "d-zero"); row.classList.toggle("vazio", !traded(s, id)); if (traded(s, id)) row.classList.add("d-" + cls(p)); }
+    // the new colour sweeps across the row like a wave; the numbers roll in
+    if (row && traded(s, id) && before !== "d-" + cls(p)) { row.classList.remove("wave"); void row.offsetWidth; row.classList.add("wave"); setTimeout(() => row.classList.remove("wave"), 900); }
+    setTimeout(() => [i, to && to.querySelector("b"), row && row.querySelector(".res")].forEach(el => { if (!el) return; el.classList.remove("roll"); void el.offsetWidth; el.classList.add("roll"); }), 0);
     if (res) { const eu = res.querySelector(".eur"); res.className = "res " + cls(p); res.firstChild.nodeValue = fmt(p); if (eu) eu.textContent = eur(euroOf(e1)); }
     dirtyView = true;
   });
