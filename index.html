@@ -25,7 +25,7 @@ img { max-width: 100%; }
 .dlg-card input[type="email"] { width: 100%; border-radius: 12px; border: 1px solid rgba(205, 167, 94, .3); background: rgba(0, 0, 0, .25); color: #EFDCC6; padding: 12px; font: 15px/1.4 "Jost", Arial, sans-serif; }
 </style>
 </head>
-<body>
+<body class="loading">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Pinyon+Script&family=Jost:wght@400;500;600&display=swap">
@@ -170,6 +170,20 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
 .phead { display: flex; justify-content: space-between; align-items: flex-end; gap: 10px; }
 .phead h2 { margin: 0; font-family: var(--display); font-weight: 500; font-size: 24px; line-height: 1; color: var(--champ); }
 .phead h2 em { font-weight: 400; color: var(--soft); }
+.phead h2.cur { font-family: var(--script); font-weight: 400; font-size: 34px; color: transparent; background: linear-gradient(100deg, #B8893A, #F3D98E 45%, #CDA75E 60%, #A8833F); -webkit-background-clip: text; background-clip: text; line-height: 1.05; padding-right: 4px; }
+.phead h2.cur em { font-family: var(--display); font-size: 22px; -webkit-text-fill-color: var(--soft); }
+/* a gold light that slowly runs around the Estratégia box */
+@property --ang { syntax: "<angle>"; initial-value: 0deg; inherits: false; }
+.pbody.g-estrategia::before, .pbody.g-pestrategia::before { content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1.5px; pointer-events: none; z-index: 2;
+  background: conic-gradient(from var(--ang), transparent 0deg 250deg, rgba(227, 189, 106, .15) 280deg, rgba(246, 222, 160, .95) 320deg, rgba(227, 189, 106, .15) 345deg, transparent 360deg);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0); animation: borderRun 10s linear infinite; }
+@keyframes borderRun { to { --ang: 360deg; } }
+@media (prefers-reduced-motion: reduce) { .pbody.g-estrategia::before, .pbody.g-pestrategia::before { animation: none; } }
+/* stickers float a little when you scroll (depth) */
+#front .sk { translate: 0 calc(var(--py, 0px) * (var(--f, .3) + .35)); }
+/* a very fine paper texture on the light boxes */
+:root { --paper: url("data:image/svg+xml;utf8,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27180%27 height=%27180%27%3E%3Cfilter id=%27n%27%3E%3CfeTurbulence type=%27fractalNoise%27 baseFrequency=%27.85%27 numOctaves=%272%27 stitchTiles=%27stitch%27/%3E%3CfeColorMatrix values=%270 0 0 0 .32 0 0 0 0 .22 0 0 0 0 .14 0 0 0 .07 0%27/%3E%3C/filter%3E%3Crect width=%27100%25%27 height=%27100%25%27 filter=%27url(%23n)%27/%3E%3C/svg%3E"); }
+.lrow, .chc, .st, .spark, .cd, .nw-sr, .tdr { background-image: var(--paper) !important; background-size: 180px 180px !important; }
 .stats { font-size: 12px; color: var(--soft); margin-top: 5px; }
 .stats b { color: var(--champ); font-weight: 500; }
 .big { font-family: var(--display); font-weight: 600; font-size: 34px; line-height: 1; }
@@ -212,11 +226,48 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
 .lrow.d-pos { background: #93CBA4; } .lrow.d-neg { background: #E2909F; } .lrow.d-zero { background: #E2C36E; }
 .lrow.d-pos .res { color: #164A2E; font-weight: 700; } .lrow.d-neg .res { color: #7A1430; font-weight: 700; } .lrow.d-zero .res { color: #5C4210; font-weight: 700; }
 body.night .lrow.d-pos { background: #86BB96; } body.night .lrow.d-neg { background: #D28494; } body.night .lrow.d-zero { background: #D3B565; }
+/* night mode: the gold lines fade, little stars twinkle */
+#nightsky { display: none; position: fixed; inset: 0; z-index: 0; pointer-events: none; }
+body.night #nightsky { display: block; }
+#nightsky i { position: absolute; border-radius: 50%; background: #FFF3D6; box-shadow: 0 0 6px rgba(255, 236, 190, .9); opacity: .15; animation: starTw 5s ease-in-out infinite; }
+@keyframes starTw { 0%, 100% { opacity: .12; transform: scale(.7); } 50% { opacity: .95; transform: scale(1.15); } }
+body.night #rings { opacity: .25; transition: opacity 1s ease; }
+@media (prefers-reduced-motion: reduce) { #nightsky i { animation: none; opacity: .5; } }
+/* loading: soft shimmering boxes instead of an empty page */
+body.loading .pbody > *, body.loading .tabbed .slide > * { opacity: 0; }
+body.loading .pbody, body.loading .tabbed .slide { position: relative; min-height: 420px; }
+body.loading .pbody::after, body.loading .tabbed .slide::after { content: ""; position: absolute; inset: 16px; border-radius: 14px; z-index: 6;
+  background: linear-gradient(100deg, rgba(251, 243, 238, .06) 20%, rgba(251, 243, 238, .16) 40%, rgba(251, 243, 238, .06) 60%) 0 0 / 250% 100%,
+    repeating-linear-gradient(180deg, rgba(251, 243, 238, .08) 0 44px, transparent 44px 52px); animation: shimmer 1.4s linear infinite; }
+@keyframes shimmer { from { background-position: 125% 0, 0 0; } to { background-position: -125% 0, 0 0; } }
 #view.enter { animation: viewIn .4s cubic-bezier(.2, .8, .2, 1); }
 @keyframes viewIn { from { opacity: 0; transform: translateY(12px); } }
 .spk-pulse { transform-box: fill-box; transform-origin: center; animation: spkPulse 2.2s ease-out infinite; }
 @keyframes spkPulse { 0% { transform: scale(1); opacity: .8; } 100% { transform: scale(3.4); opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { .spk-pulse { animation: none; opacity: 0; } }
+/* Notícias: search every strong news, and the "open in the Diário" box */
+.nw-srch + .nw-hero { margin-top: 16px; }
+.nw-srch { margin: 14px 0 6px; padding: 16px; border-radius: 20px; background: rgba(23, 3, 7, .5); border: 1px solid rgba(205, 167, 94, .3); }
+.nw-sh { display: flex; align-items: baseline; gap: 10px; margin-bottom: 10px; } .nw-sh b { font-family: var(--display); font-size: 19px; color: var(--champ); font-weight: 500; } .nw-sh small { color: var(--soft); font-size: 12px; }
+#nwQ { width: 100%; box-sizing: border-box; height: 44px; border-radius: 14px; border: 1px solid rgba(205, 167, 94, .4); background: rgba(251, 243, 238, .96); color: var(--ink); padding: 0 14px; font: 15px var(--sans); color-scheme: light; }
+#nwQ:focus { outline: 1.5px solid var(--gold); outline-offset: 1px; }
+.nw-qchips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.nw-qchips button { border: 1px solid rgba(205, 167, 94, .45); background: transparent; color: var(--gold); border-radius: 999px; padding: 6px 12px; font: 600 12.5px/1 var(--sans); cursor: pointer; }
+.nw-qchips button.on { background: linear-gradient(135deg, #CDA75E, #A8833F); color: #2A0A11; border-color: transparent; }
+#nwSR:not(:empty) { margin-top: 12px; max-height: 460px; overflow-y: auto; padding-right: 2px; }
+.nw-sc { color: var(--soft); font-size: 12px; margin-bottom: 6px; }
+.nw-sy { position: sticky; top: 0; z-index: 1; padding: 6px 2px 4px; font-family: var(--display); font-size: 16px; color: var(--gold); background: rgba(30, 6, 12, .96); }
+.nw-sr { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: 8px; padding: 8px 10px; margin-bottom: 6px; border-radius: 12px; background: rgba(251, 243, 238, .94); color: var(--ink); }
+.nw-srd { border: 0; background: none; padding: 0; text-align: left; color: inherit; cursor: pointer; min-width: 0; font: inherit; }
+.nw-srd b { display: block; font-size: 13.5px; } .nw-srd small { display: block; font-size: 11.5px; color: #8C6168; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; } .nw-srd em { display: block; font-style: normal; font-size: 12px; font-weight: 600; margin-top: 1px; } .nw-srd em span { font-weight: 400; color: #8C6168; }
+.nw-res { font-weight: 700; font-size: 14px; min-width: 44px; text-align: right; } .nw-res.pos { color: #2F6B4B; } .nw-res.neg { color: #A3324A; } .nw-res.zero, .nw-res.none { color: #8C6168; font-weight: 400; }
+.nw-go { border: 0; border-radius: 999px; padding: 7px 10px; background: linear-gradient(135deg, #CDA75E, #A8833F); color: #2A0A11; font: 600 12px/1 var(--sans); cursor: pointer; white-space: nowrap; }
+.nw-godi { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 14px; margin-bottom: 12px; border-radius: 16px; background: linear-gradient(135deg, rgba(205, 167, 94, .18), rgba(205, 167, 94, .06)); border: 1px solid rgba(205, 167, 94, .45); }
+.nw-godi small { display: block; font-size: 11.5px; color: var(--soft); } .nw-godi b { font-family: var(--display); font-size: 20px; color: var(--champ); } .nw-godi b.pos { color: #8FD4A8; } .nw-godi b.neg { color: #F29AAE; } .nw-godi b span { font: 500 12px var(--sans); color: var(--soft); }
+.nw-gobtn { flex: none; border: 0; border-radius: 999px; padding: 10px 14px; background: linear-gradient(135deg, #CDA75E, #A8833F); color: #2A0A11; font: 600 13px/1 var(--sans); cursor: pointer; }
+.lrow.flash { animation: rowFlash 2.2s ease-out; }
+@keyframes rowFlash { 0%, 30% { box-shadow: 0 0 0 3px #E3BD6A, 0 0 22px 4px rgba(227, 189, 106, .7); } 100% { box-shadow: 0 0 0 0 rgba(227, 189, 106, 0); } }
+.nt-c[data-nwday] { cursor: pointer; border-radius: 6px; } .nt-c[data-nwday]:hover { background: rgba(205, 167, 94, .15); }
 .lrow.today { box-shadow: inset 0 0 0 1.5px var(--gold); animation: todayGlow 3s ease-in-out infinite; position: relative; }
 @keyframes todayGlow { 0%, 100% { box-shadow: inset 0 0 0 1.5px var(--gold), 0 0 0 0 rgba(205, 167, 94, 0); } 50% { box-shadow: inset 0 0 0 1.5px var(--gold), 0 0 16px 2px rgba(225, 190, 110, .55); } }
 @media (prefers-reduced-motion: reduce) { .lrow.today { animation: none; } }
@@ -251,7 +302,15 @@ body.night .lrow.d-pos { background: #86BB96; } body.night .lrow.d-neg { backgro
 .nb.has { color: #9C7330; opacity: 1; }
 .nb.has::after { content: ""; position: absolute; top: 4px; right: 4px; width: 5px; height: 5px; border-radius: 50%; background: #B8913F; }
 
-.wrow { display: flex; justify-content: space-between; align-items: center; gap: 8px; border-radius: 10px; padding: 6px 12px; margin-bottom: 6px; background: var(--weekbg); }
+.wrow { display: flex; justify-content: space-between; align-items: center; gap: 8px; border-radius: 10px; padding: 6px 12px; margin-bottom: 6px; background: var(--weekbg); position: relative; overflow: hidden; }
+.wrow .wbar { position: absolute; left: 12px; bottom: 3px; height: 3px; width: calc((100% - 24px) * var(--w) / 100); border-radius: 3px; background: linear-gradient(90deg, rgba(127, 211, 160, .35), #7FD3A0); transform-origin: left; animation: wbarIn .9s cubic-bezier(.2, .8, .2, 1); }
+.wrow .wbar.neg { background: linear-gradient(90deg, rgba(240, 138, 160, .35), #F08AA0); } .wrow .wbar.zero { background: linear-gradient(90deg, rgba(230, 205, 146, .3), #E6CD92); }
+@keyframes wbarIn { from { transform: scaleX(0); } }
+/* everything you tap gives a little press */
+button, .lrow, .cd, .achip, .nw-card, .tdr, .pchip { -webkit-tap-highlight-color: transparent; }
+button:not(.key):not(.mlbtn):active, .cd:active, .nw-card:active, .tdr:active { transform: scale(.96); }
+.lrow:active { transform: scale(.992); }
+button, .cd, .nw-card, .tdr, .lrow { transition: transform .12s ease; }
 .wrow .wl { font-size: 12px; color: var(--soft); }
 .wrow .wl b { font-family: var(--display); font-weight: 500; font-size: 15px; color: var(--champ); margin-right: 6px; }
 .wrow .wr { display: flex; align-items: center; gap: 10px; font-size: 11.5px; color: var(--soft); }
@@ -1950,17 +2009,19 @@ body.ses-open .sesbtn { display: none !important; }
     if (!window.supabase || SUPABASE_URL.indexOf("COLA_AQUI") === 0) {
       mode = "local"; loadLocal(); idleStatus();
       document.getElementById("foot").textContent = "Modo de teste: os registos ficam guardados apenas neste browser.";
-      render(); goTodayOnce(); return;
+      document.body.classList.remove("loading"); render(); goTodayOnce(); return;
     }
     sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
     mode = "db"; ro = false; document.body.classList.remove("ro");
     // show at once what was saved on this device last time (also works without internet)
     loadLocal(); loadPend();
     pend.d.forEach(k => dirty.add(k)); pend.c.forEach(k => cdirty.add(k));
+    if (SERIES.some(x => store[x.key].size > 0)) document.body.classList.remove("loading");   // already saved on this phone: show it at once
     render();
     setStatus("load", "A carregar…");
     try { const { data } = await sb.auth.getSession(); setAuth(data && data.session); sb.auth.onAuthStateChange((_ev, session) => setAuth(session)); } catch (_) { setAuth(null); }
     try { await loadRemote(); cacheAll(); idleStatus(); await syncPending(); } catch (_) { offlineStatus(); }
+    if (document.body.classList.contains("loading")) { document.body.classList.remove("loading"); render(); }
     goTodayOnce();
     const refresh = () => { if (document.visibilityState === "visible" && dirty.size === 0 && !timers.size && navigator.onLine) loadRemote().then(cacheAll).catch(() => {}); };
     document.addEventListener("visibilitychange", refresh);
@@ -2096,7 +2157,8 @@ body.ses-open .sesbtn { display: none !important; }
   function panelHtml(s, days) {
     const ids = days.map(iso), t = sum(s.key, ids), notes = s.acct;
     let h = ptabHtml(s) + '<div class="pbody glass g-' + s.role + '">' + (SEASON_NOW === "natal" ? tableLights(s.role) : "");
-    h += '<div class="phead"><div><h2>' + cap(MONTHS[view.m]) + ' <em>' + view.y + '</em></h2>' +
+    const isCur = view.y === now.getFullYear() && view.m === now.getMonth();
+    h += '<div class="phead"><div><h2' + (isCur ? ' class="cur"' : '') + '>' + cap(MONTHS[view.m]) + ' <em>' + view.y + '</em></h2>' +
       '<div class="stats"><b>' + t.tp + '</b> TP, <b>' + t.sl + '</b> SL</div></div>' +
       '<div class="big ' + cls(t.pct) + '">' + fmt(t.pct) + '</div></div>';
     h += '<div class="spark"><div class="sv" data-spark="' + s.key + '"></div></div><div class="ledger">';
@@ -2129,7 +2191,7 @@ body.ses-open .sesbtn { display: none !important; }
       const weHtml = we.n ? '<span class="weur ' + cls(we.v) + '" data-tip="plain" data-tv="Soma das calculadoras da semana (' + we.n + (we.n === 1 ? " dia" : " dias") + ')">' + CALC_SM + eur(we.v) + '</span>' : "";
       const split = wk5.some(x => x.getMonth() !== view.m);
       h += '<div class="wrow"' + (split ? ' data-tip="plain" data-tv="Semana completa (' + weekLabel(wk5) + '), conta também os dias do outro mês"' : '') + '><div class="wl"><b>Semana ' + g.w + '</b>' + weekLabel(wk5) + '</div>' +
-        '<div class="wr"><span class="wtx">' + wt.tp + ' TP, ' + wt.sl + ' SL, ' + (wt.tp + wt.sl) + ' TO</span>' + weHtml + '<span class="wp ' + cls(wt.pct) + '">' + fmt(wt.pct) + '</span></div></div>';
+        '<div class="wr"><span class="wtx">' + wt.tp + ' TP, ' + wt.sl + ' SL, ' + (wt.tp + wt.sl) + ' TO</span>' + weHtml + '<span class="wp ' + cls(wt.pct) + '">' + fmt(wt.pct) + '</span></div>' + (wt.tp + wt.sl ? '<i class="wbar ' + cls(wt.pct) + '" style="--w:' + Math.max(6, Math.min(100, Math.abs(wt.pct) * 1.4)) + '%" aria-hidden="true"></i>' : '') + '</div>';
       if (bd) h += '</div>';
     }
     h += '</div>' + monthTotal(s, t, days) + yearBox(s) + '</div>';
@@ -2374,7 +2436,7 @@ body.ses-open .sesbtn { display: none !important; }
             const id = iso(d), e = entry(s.key, id), tr = traded(s.key, id), p = tr ? pctOf(e) : 0;
             col.n++; if (tr) { col.op++; col.tot += p; }
             const res = id > tdy0 ? '<i>por vir</i>' : e.off ? '<i>sem operar</i>' : tr ? '<em class="' + cls(p) + '">' + fmt(p) + '</em>' : '<i>—</i>';
-            return '<div class="nt-c' + (id === tdy0 ? " hoje" : "") + '"><b>' + DOW[d.getDay()] + ' ' + d.getDate() + '</b>' + res + '</div>';
+            return '<div class="nt-c' + (id === tdy0 ? " hoje" : "") + '" data-nwday="' + id + '" role="button" tabindex="0" aria-label="Ver as notícias de ' + d.getDate() + ' de ' + MONTHS[d.getMonth()] + '"><b>' + DOW[d.getDay()] + ' ' + d.getDate() + '</b>' + res + '</div>';
           }).join("") + '</td>';
         });
         rowsH += '<tr><th>' + cap(MON3[m]) + '</th>' + cells.join("") + '</tr>';
@@ -3359,7 +3421,12 @@ body.ses-open .sesbtn { display: none !important; }
   function drawSparks(days) {
     document.querySelectorAll("[data-spark]").forEach(el => { el.innerHTML = spark(el.dataset.spark, days, el.clientWidth || 420); });
   }
-  // a soft entrance when the tab / month changes, and the big totals count up from 0
+  document.addEventListener("click", e => { const c = e.target.closest("[data-nwday]"); if (c && window.Noticias && window.Noticias.openDay) window.Noticias.openDay(c.dataset.nwday); });
+  document.addEventListener("keydown", e => { const c = e.target.closest && e.target.closest("[data-nwday]"); if (c && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); if (window.Noticias && window.Noticias.openDay) window.Noticias.openDay(c.dataset.nwday); } });  // stickers: a touch of depth while scrolling
+  (function () {
+    const fr = document.getElementById("front"); if (!fr || (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches)) return;
+    let tk = 0; window.addEventListener("scroll", () => { if (tk) return; tk = requestAnimationFrame(() => { tk = 0; fr.style.setProperty("--py", (-window.scrollY * 0.07).toFixed(1) + "px"); }); }, { passive: true });
+  })();  // a soft entrance when the tab / month changes, and the big totals count up from 0
   let lastViewKey = "";
   function viewEnter() {
     const k = [tab, view.y, view.m, grp, acView, SERIES.some(x => store[x.key].size > 0)].join("|");
@@ -3375,6 +3442,22 @@ body.ses-open .sesbtn { display: none !important; }
     const step = t => { const q = Math.min(1, (t - t0) / D), e = 1 - Math.pow(1 - q, 3); if (!document.contains(el)) return; el.textContent = m[1] + (target * e).toFixed(dec).replace(".", ",") + "%"; if (q < 1) requestAnimationFrame(step); else el.textContent = final; };
     requestAnimationFrame(step);
   }
+  // used by the Notícias tab: the Diário result of a day, and "open this day in the Diário"
+  window.DiarioHook = {
+    result(id) {
+      const s = GS()[0], e = entry(s.key, id);
+      if (e.off) return { txt: "sem operar", cls: "zero", who: s.full };
+      if (!traded(s.key, id)) return null;
+      const p = pctOf(e); return { txt: fmt(p), cls: cls(p), who: s.full, tp: e.tp, sl: e.sl };
+    },
+    goDay(id) {
+      const [y, m] = id.split("-").map(Number); view.y = y; view.m = m - 1; side = 0; saveShown(); setTab("diario");
+      setTimeout(() => {
+        const s = GS()[0], r = document.querySelector('.lrow[data-row="' + s.key + '|' + id + '"]');
+        if (r) { r.scrollIntoView({ block: "center", behavior: "smooth" }); r.classList.add("flash"); setTimeout(() => r.classList.remove("flash"), 2400); }
+      }, 150);
+    }
+  };
   function setTab(t) { tab = t; try { localStorage.setItem(LS_TAB, t); } catch (_) {} render(); }
 
   // ---------- day dialog (note + day off) ----------
@@ -3753,6 +3836,13 @@ body.ses-open .sesbtn { display: none !important; }
     const LS_N = "diario-trading-noite", L = { auto: "Modo noite: automático", on: "Modo noite: ligado", off: "Modo noite: desligado" };
     let nm = "auto"; try { const v = localStorage.getItem(LS_N); if (L[v]) nm = v; } catch (_) {}
     const btn = $("nightBtn");
+    if (!document.getElementById("nightsky")) {
+      // night mode: tiny stars twinkling in the background
+      const sky = document.createElement("div"); sky.id = "nightsky"; sky.setAttribute("aria-hidden", "true");
+      let sd = 7, st = ""; const rnd = () => { sd = (sd * 9301 + 49297) % 233280; return sd / 233280; };
+      for (let i = 0; i < 46; i++) { const z = 1 + Math.round(rnd() * 2); st += '<i style="left:' + (rnd() * 100).toFixed(1) + '%;top:' + (rnd() * 100).toFixed(1) + '%;width:' + z + 'px;height:' + z + 'px;animation-delay:' + (rnd() * 6).toFixed(1) + 's;animation-duration:' + (3 + rnd() * 4).toFixed(1) + 's"></i>'; }
+      sky.innerHTML = st; document.body.prepend(sky);
+    }
     const apply = () => { const h = new Date().getHours(), on = nm === "on" || (nm === "auto" && (h >= 22 || h < 6)); document.body.classList.toggle("night", on); if (btn) btn.lastChild.textContent = L[nm]; };
     if (btn) btn.addEventListener("click", () => { nm = nm === "auto" ? "on" : nm === "on" ? "off" : "auto"; try { localStorage.setItem(LS_N, nm); } catch (_) {} apply(); });
     apply(); setInterval(apply, 5 * 60000);

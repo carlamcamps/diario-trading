@@ -447,7 +447,11 @@
       h += '<div class="nw-next">' + next.map(e => '<button type="button" class="nw-card" data-ev="' + e.i + '"><span class="top"><span class="bubble">' + icon(e.k) + '</span><span class="when">' + esc(until(e.d)) + '</span></span><b>' + esc(e.title) + '</b><small>' + esc(cap(fmtShort.format(e.d))) + ', ' + esc(timeOf(e)) + '</small></button>').join("") + '</div>';
     } else h += '<p style="margin-top:12px">Não há notícias fortes marcadas para os próximos dias.</p>';
     h += '</section>';
-    // month bar
+    const heroH = h.slice('<div class="nw">'.length); h = '<div class="nw">';
+    // search every strong news since 2024 (shown under the calendar)
+    let srchH = '<section class="nw-srch"><div class="nw-sh"><b>Procurar notícias</b><small>todos os dias desde 2024</small></div><input id="nwQ" type="search" enterkeyhint="search" placeholder="Ex.: NFP, CPI, FOMC, Powell…" value="' + esc(q) + '" autocomplete="off" aria-label="Procurar notícias">' +
+      '<div class="nw-qchips">' + ["NFP", "CPI", "FOMC", "PCE", "PPI", "GDP", "Powell", "Feriados"].map(c => '<button type="button" data-q="' + c + '"' + (q.toLowerCase() === c.toLowerCase() ? ' class="on"' : '') + '>' + c + '</button>').join("") + '</div><div id="nwSR"></div></section>';
+    // month bar (the calendar comes first)
     h += '<div class="nw-bar"><div class="nw-mnav"><button type="button" data-mv="-1" aria-label="Mês anterior">‹</button><span>' + cap(MONTHS[vm]) + ' ' + vy + '</span><button type="button" data-mv="1" aria-label="Mês seguinte">›</button></div></div>';
     // month grid
     const first = new Date(Date.UTC(vy, vm, 1, 12)), startOff = (first.getUTCDay() + 6) % 7, nDays = new Date(Date.UTC(vy, vm + 1, 0)).getUTCDate();
@@ -468,8 +472,38 @@
       h += '</button>';
     }
     h += '</div><div class="nw-legend">' + ["infl", "jobs", "bank", "talk", "shop", "gdp", "pmi"].map(kk => '<span><span class="chip">' + icon(kk) + '</span>' + KIND_NAME[kk] + '</span>').join("") + '<span><span class="chip g">' + icon("hol") + '</span>Feriado</span></div></section>';
-    h += '</div>';
+    h += srchH + heroH + '</div>';
     root.innerHTML = h;
+    drawSearch();
+  }
+  // ---------- search ----------
+  let q = "";
+  function qMatch(qq) {
+    const t = String(qq || "").trim(); if (!t) return null;
+    const A = [[/^nfp$|payroll|^empregos?$/i, e => /^(?!.*\bADP\b).*non-farm/i.test(e.title)], [/^cpi$|infla/i, e => /\bCPI\b/.test(e.title)], [/^fomc$|^juros$|^fed$/i, e => /federal funds rate|fomc statement|fomc press/i.test(e.title)],
+      [/^pce$/i, e => /\bPCE\b/.test(e.title)], [/^ppi$/i, e => /\bPPI\b/.test(e.title)], [/^(gdp|pib)$/i, e => /\bGDP\b/.test(e.title)], [/powell|warsh/i, e => /powell|warsh|fed chair/i.test(e.title)],
+      [/^claims$|subs[ií]dio/i, e => /unemployment claims/i.test(e.title)], [/^(feriados?|holidays?)$/i, e => e.impact === "Holiday"]];
+    for (const [re, f] of A) if (re.test(t)) return f;
+    const lo = t.toLowerCase();
+    return e => e.title.toLowerCase().includes(lo) || (e.impact !== "Holiday" && String(explain(e).name || "").toLowerCase().includes(lo));
+  }
+  function drawSearch() {
+    const box = root && root.querySelector("#nwSR"); if (!box || !all) return;
+    root.querySelectorAll("[data-q]").forEach(b => b.classList.toggle("on", b.dataset.q.toLowerCase() === q.trim().toLowerCase()));
+    const f = qMatch(q); if (!f) { box.innerHTML = ""; return; }
+    const hits = all.filter(e => e.country === "USD" && f(e));
+    if (!hits.length) { box.innerHTML = '<div class="nw-empty">Nada encontrado. Experimenta NFP, CPI, FOMC ou o nome em inglês.</div>'; return; }
+    const byDay = new Map(); for (const e of hits) { if (!byDay.has(e.day)) byDay.set(e.day, []); byDay.get(e.day).push(e); }
+    const days = [...byDay.keys()].sort().reverse(), todayK = dayKey(new Date()), H = window.DiarioHook;
+    let h = '<div class="nw-sc">' + days.length + (days.length === 1 ? ' dia' : ' dias') + (days.length > 300 ? ' (a mostrar os 300 mais recentes)' : '') + '</div>', yr = "";
+    for (const k of days.slice(0, 300)) {
+      const list = byDay.get(k), e0 = list[0], y = k.slice(0, 4), R = H ? H.result(k) : null;
+      if (y !== yr) { yr = y; h += '<div class="nw-sy">' + y + '</div>'; }
+      const nums = e0.actual ? esc(e0.actual) + (e0.forecast ? ' <span>prev. ' + esc(e0.forecast) + '</span>' : '') : (k > todayK ? '<span>por vir</span>' : '');
+      h += '<div class="nw-sr"><button type="button" class="nw-srd" data-day="' + k + '"><b>' + esc(cap(fmtShort.format(e0.d))) + '</b><small>' + esc(timeOf(e0)) + ' · ' + esc(list.map(x => x.title).slice(0, 2).join(", ")) + (list.length > 2 ? "…" : "") + '</small>' + (nums ? '<em>' + nums + '</em>' : '') + '</button>' +
+        '<span class="nw-res ' + (R ? R.cls : "none") + '">' + (R ? esc(R.txt) : "—") + '</span>' + (H ? '<button type="button" class="nw-go" data-godiario="' + k + '">Diário ›</button>' : '') + '</div>';
+    }
+    box.innerHTML = h;
   }
 
   // ---------- day panel ----------
@@ -481,6 +515,7 @@
     document.body.appendChild(sheet);
     sheet.addEventListener("click", e => {
       if (e.target.classList.contains("scrim") || e.target.closest(".nw-x")) { closeSheet(); return; }
+      const g = e.target.closest("[data-godiario]"); if (g) { const k = g.dataset.godiario; closeSheet(); if (window.DiarioHook) window.DiarioHook.goDay(k); return; }
       const b = e.target.closest("button.more");
       if (b) { const x = b.nextElementSibling, open = b.getAttribute("aria-expanded") !== "true"; b.setAttribute("aria-expanded", String(open)); x.classList.toggle("open", open); }
     });
@@ -520,7 +555,9 @@
     const [y, m, d] = k.split("-").map(Number);
     sheet.querySelector("#nwPT").textContent = cap(fmtLong.format(new Date(Date.UTC(y, m - 1, d, 12))));
     sheet.querySelector("#nwPK").textContent = list.length ? (list.length === 1 ? "1 notícia" : list.length + " notícias") : "Dia calmo";
-    sheet.querySelector("#nwPL").innerHTML = list.length ? list.map((e, n) => evHtml(e, focusEv != null ? e.i === focusEv : list.length === 1, n)).join("") : '<div class="nw-empty">Sem notícias de alto impacto dos EUA neste dia.</div>';
+    const H = window.DiarioHook, wd = new Date(Date.UTC(y, m - 1, d, 12)).getUTCDay(), R = H ? H.result(k) : null;
+    const goH = H && wd > 0 && wd < 6 ? '<div class="nw-godi"><div><small>No teu Diário · ' + esc(R ? R.who : "Estratégia") + '</small><b class="' + (R ? R.cls : "") + '">' + (R ? esc(R.txt) + (R.tp != null ? ' <span>' + R.tp + ' TP · ' + R.sl + ' SL</span>' : '') : 'ainda sem registo') + '</b></div><button type="button" class="nw-gobtn" data-godiario="' + k + '">Abrir no Diário ›</button></div>' : '';
+    sheet.querySelector("#nwPL").innerHTML = goH + (list.length ? list.map((e, n) => evHtml(e, focusEv != null ? e.i === focusEv : list.length === 1, n)).join("") : '<div class="nw-empty">Sem notícias de alto impacto dos EUA neste dia.</div>');
     lastFocus = document.activeElement;
     sheet.setAttribute("aria-hidden", "false");
     requestAnimationFrame(() => sheet.classList.add("open"));
@@ -555,9 +592,13 @@
         return { time: timeOf(e), title: e.title, sub: x.name + (e.actual ? " · saiu " + e.actual + (e.forecast ? " (previsto " + e.forecast + ")" : "") : (e.forecast ? " · previsto " + e.forecast : "")) + (v && x.fx && v.dir !== "eq" ? (((v.dir === "up") !== !!x.fx.inv) ? " · dólar ↑" : " · dólar ↓") : "") };
       });
     },
+    openDay(k) { injectCss(); load().then(() => openDay(k)); },
     mount(el) {
       injectCss(); root = el;
+      el.addEventListener("input", e => { if (e.target.id === "nwQ") { q = e.target.value; drawSearch(); } });
       el.addEventListener("click", e => {
+        const gq = e.target.closest("[data-q]"); if (gq) { q = gq.dataset.q; const i = el.querySelector("#nwQ"); if (i) i.value = q; drawSearch(); return; }
+        const go = e.target.closest("[data-godiario]"); if (go) { if (window.DiarioHook) window.DiarioHook.goDay(go.dataset.godiario); return; }
         const mv = e.target.closest("[data-mv]");
         if (mv) { vm += +mv.dataset.mv; if (vm < 0) { vm = 11; vy--; } if (vm > 11) { vm = 0; vy++; } draw(true); return; }
         const c = e.target.closest("[data-cur]");
@@ -569,7 +610,7 @@
       });
       draw();
       load();
-      setInterval(() => { if (root && document.contains(root) && !(sheet && sheet.classList.contains("open"))) draw(); }, 60000);
+      setInterval(() => { if (root && document.contains(root) && !(sheet && sheet.classList.contains("open")) && !(document.activeElement && document.activeElement.id === "nwQ")) draw(); }, 60000);
     }
   };
 })();
