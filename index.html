@@ -706,6 +706,10 @@ button, .cd, .nw-card, .tdr, .lrow { transition: transform .12s ease; }
 .eod-p.pos { color: #8FD4A8; } .eod-p.neg { color: #F29AAE; } .eod-p.zero { color: #E6CD92; }
 .eod-m { margin: 2px 0 0; font-family: "Playfair Display", Georgia, serif; font-style: italic; color: #C7A9A3; font-size: 16px; }
 .eod-s { position: absolute; width: 12px; height: 12px; background: linear-gradient(135deg, #FFF3C4, #E0A92E); clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%); animation: spark 2.4s ease-in-out infinite; pointer-events: none; }
+.eod-conf { position: absolute; inset: 0; pointer-events: none; overflow: hidden; border-radius: inherit; }
+.eod-conf i { position: absolute; top: -12px; width: 7px; height: 11px; border-radius: 2px; opacity: .9; animation: confFall linear forwards; }
+@keyframes confFall { to { transform: translateY(var(--fy)) rotate(var(--fr)); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .eod-conf { display: none; } }
 .eod-s.s1 { top: 16px; left: 22px; } .eod-s.s2 { top: 30px; right: 26px; width: 9px; height: 9px; animation-delay: .8s; } .eod-s.s3 { bottom: 70px; left: 30px; width: 8px; height: 8px; animation-delay: 1.6s; }
 .sp-fest { position: relative; z-index: 2; width: 128px; height: 128px; margin: -134px 0 -14px; pointer-events: none; opacity: 0; transform: scale(.7); }
 .splash.in .sp-fest { animation: spFest .55s cubic-bezier(.2, 1.5, .4, 1) .7s forwards; }
@@ -1181,6 +1185,10 @@ body.ses-open .sesbtn { display: none !important; }
   background: linear-gradient(90deg, rgba(0, 0, 0, .28), transparent 9%, transparent 91%, rgba(0, 0, 0, .28)), linear-gradient(180deg, var(--k1) 0%, var(--k2) 22%, var(--k3) 100%);
   box-shadow: 0 16px 0 var(--k4), 0 16px 0 1px rgba(0, 0, 0, .5), 0 28px 30px -12px rgba(0, 0, 0, .9), 0 0 34px -14px var(--glow), inset 0 1px 0 rgba(255, 255, 255, .2);
   transform: translateY(-16px); transition: transform .06s ease-out, box-shadow .06s ease-out; }
+.ses.enter .ses-btns .key { animation: keyIn .6s cubic-bezier(.2, 1.5, .4, 1) both; }
+.ses.enter .ses-btns .key.ses-sl { animation-delay: .08s; }
+@keyframes keyIn { from { opacity: 0; transform: translateY(60px) scale(.9); } }
+@media (prefers-reduced-motion: reduce) { .ses.enter .ses-btns .key { animation: none; } }
 .ses-btns .key.ses-sl { --k1: #8E2A40; --k2: #5E1627; --k3: #350A15; --k4: #1E040B; --line: rgba(240, 170, 185, .22); --glow: rgba(170, 60, 85, .35); }
 .ses-btns .key .cap { position: absolute; inset: 7px 13px 22px; border-radius: 11px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
   background: radial-gradient(90% 60% at 50% 30%, rgba(0, 0, 0, .16), transparent 70%), linear-gradient(180deg, var(--k2), var(--k1));
@@ -3249,7 +3257,7 @@ body.ses-open .sesbtn { display: none !important; }
         '<button type="button" class="ses-undo" data-ses="undo"' + (sesHist.length ? '' : ' disabled') + '>↶ Desfazer o último toque</button>') +
       '<p class="ses-help">Toca em cada operação. Fica guardado no Diário de hoje, na ' + s.full + '.</p>' + moodBarHtml();
   }
-  sesBtn.addEventListener("click", () => { sesHist = []; drawSes(); ses.hidden = false; document.body.classList.add("ses-open"); });
+  sesBtn.addEventListener("click", () => { sesHist = []; drawSes(); ses.hidden = false; document.body.classList.add("ses-open"); ses.classList.remove("enter"); void ses.offsetWidth; ses.classList.add("enter"); setTimeout(() => ses.classList.remove("enter"), 900); });
   ses.addEventListener("click", e => {
     const r = e.target.closest("[data-sesr]");
     if (r) { sesRole = r.dataset.sesr; sesHist = []; try { localStorage.setItem("diario-trading-sessao", sesRole); } catch (_) {} drawSes(); return; }
@@ -3286,7 +3294,9 @@ body.ses-open .sesbtn { display: none !important; }
       return '<div class="eod-r"><span class="eod-n">' + (s.acct ? s.label : s.full) + '</span>' + (e.off ? '<span class="eod-x">Sem operar</span>' : '<span class="eod-tp">' + e.tp + ' TP</span><span class="eod-sl">' + e.sl + ' SL</span><b class="eod-p ' + (t ? cls(p) : "zero") + '">' + fmt(t ? p : 0) + '</b>') + '</div>'; };
     const acc = SERIES.filter(s => s.acct || traded(s.key, id)).sort((a, b) => b.acct - a.acct), best = Math.max(...acc.map(s => traded(s.key, id) ? pctOf(entry(s.key, id)) : -1e9));
     const msg = best >= 10 ? "Que dia! Mereces descansar ✨" : best > 0 ? "Dia positivo. Bom trabalho ✨" : best === 0 ? "Dia equilibrado. Amanhã há mais ✨" : best > -1e9 ? "Dias assim também ensinam. Trust the process ✨" : "Bom descanso ✨";
-    eod.innerHTML = '<div class="dlg-card eod-card" role="dialog" aria-modal="true" aria-labelledby="eodT"><i class="eod-s s1"></i><i class="eod-s s2"></i><i class="eod-s s3"></i>' +
+    const allP = acc.filter(s0 => traded(s0.key, id)).reduce((a, s0) => a + pctOf(entry(s0.key, id)), 0);
+    let conf = ''; if (allP > 0) { const C = ['#E3BD6A', '#F6E2AE', '#CDA75E', '#FFF3C4', '#B8893A']; for (let i = 0; i < 34; i++) conf += '<i style="left:' + (Math.random() * 100).toFixed(1) + '%;background:' + C[i % C.length] + ';--fy:' + (260 + Math.random() * 260).toFixed(0) + 'px;--fr:' + (Math.random() * 720 - 360).toFixed(0) + 'deg;animation-duration:' + (1.8 + Math.random() * 1.6).toFixed(2) + 's;animation-delay:' + (Math.random() * .8).toFixed(2) + 's"></i>'; conf = '<div class="eod-conf" aria-hidden="true">' + conf + '</div>'; }
+    eod.innerHTML = '<div class="dlg-card eod-card" role="dialog" aria-modal="true" aria-labelledby="eodT">' + conf + '<i class="eod-s s1"></i><i class="eod-s s2"></i><i class="eod-s s3"></i>' +
       '<div class="eod-h"><div class="sub">Fim do dia de trading</div><h3 id="eodT">' + DOWL[n.getDay()] + ', ' + n.getDate() + ' de ' + MONTHS[n.getMonth()] + '</h3></div>' +
       '<div class="eod-rows">' + acc.map(row).join("") + '</div>' +
       '<p class="eod-m">' + msg + '</p><div class="dlg-actions"><button type="button" class="btn primary" id="eodClose">Fechar</button></div></div>';
@@ -3538,7 +3548,23 @@ body.ses-open .sesbtn { display: none !important; }
     const N = window.Noticias && window.Noticias.nextToday ? window.Noticias.nextToday() : null; if (!N) return "";
     const m = Math.max(0, Math.round((N.d - Date.now()) / 60000)), hh = Math.floor(m / 60);
     return '📰 <b>' + esc(N.title) + '</b> às ' + esc(N.time) + ' · ' + (m <= 1 ? "a sair agora" : "faltam " + (hh ? hh + " h " : "") + (m % 60) + " min");
-  }  // a soft entrance when the tab / month changes, and the big totals count up from 0
+  }  // computer: the little icon on the browser tab gets a green / red dot with today's result
+  (function () {
+    if (!(window.matchMedia && window.matchMedia("(hover: hover) and (pointer: fine)").matches)) return;
+    const link = document.querySelector('link[rel="icon"]'); if (!link) return;
+    const base = link.getAttribute("href"); let last = "", img = null;
+    function upd() {
+      const id = iso(new Date()), tr = SERIES.filter(x => traded(x.key, id));
+      const st = tr.length ? (tr.reduce((a, x) => a + pctOf(entry(x.key, id)), 0) > 0 ? "pos" : tr.reduce((a, x) => a + pctOf(entry(x.key, id)), 0) < 0 ? "neg" : "zero") : "";
+      if (st === last) return; last = st;
+      if (!st) { link.href = base; return; }
+      const draw = () => { const c = document.createElement("canvas"); c.width = c.height = 64; const g = c.getContext("2d"); g.drawImage(img, 0, 0, 64, 64);
+        g.beginPath(); g.arc(50, 50, 13, 0, Math.PI * 2); g.fillStyle = "#170307"; g.fill(); g.beginPath(); g.arc(50, 50, 10, 0, Math.PI * 2); g.fillStyle = st === "pos" ? "#3FBF77" : st === "neg" ? "#E0566F" : "#E3BD6A"; g.fill();
+        try { link.href = c.toDataURL("image/png"); } catch (_) {} };
+      if (img && img.complete) draw(); else { img = new Image(); img.onload = draw; img.src = base; }
+    }
+    setInterval(upd, 4000); setTimeout(upd, 2500);
+  })();  // a soft entrance when the tab / month changes, and the big totals count up from 0
   let lastViewKey = "";
   function viewEnter() {
     const k = [tab, view.y, view.m, grp, acView, SERIES.some(x => store[x.key].size > 0)].join("|");
