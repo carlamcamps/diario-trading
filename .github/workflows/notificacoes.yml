@@ -50,7 +50,9 @@ jobs:
           SITE = 'https://carlamcamps.github.io/diario-trading/'
           from cryptography.hazmat.primitives import serialization
           _pub = vapid.public_key.public_bytes(serialization.Encoding.X962, serialization.PublicFormat.UncompressedPoint)
-          print('chave publica desta chave secreta:', base64.urlsafe_b64encode(_pub).decode().rstrip('='), '| tamanho do segredo:', len(PRIV))
+          PUBK = base64.urlsafe_b64encode(_pub).decode().rstrip('=')
+          os.makedirs('notificacoes', exist_ok=True)
+          open('notificacoes/chave-publica.txt', 'w').write(PUBK)   # the site reads this to sign up the phone with the matching key
 
           def sb(path, method='GET'):
               req = urllib.request.Request(URL + path, method=method, headers={'apikey': KEY, 'Authorization': 'Bearer ' + KEY})
@@ -58,7 +60,7 @@ jobs:
 
           subs = json.loads(sb('/push_subs?select=endpoint,sub'))
           if not subs:
-              print('Ainda nenhum telemovel ligou as notificacoes.'); raise SystemExit(0)
+              print('Ainda nenhum telemovel ligou as notificacoes.')
 
           LIS = ZoneInfo('Europe/Lisbon')
           now = datetime.datetime.now(datetime.timezone.utc)
@@ -118,7 +120,7 @@ jobs:
                   except WebPushException as ex:
                       code = ex.response.status_code if ex.response is not None else None
                       print('falhou:', k, code, (ex.response.text if ex.response is not None else str(ex))[:300])
-                      if code in (404, 410):
+                      if code in (404, 410) or (code == 400 and 'VapidPkHashMismatch' in (ex.response.text if ex.response is not None else '')):
                           sb('/push_subs?endpoint=eq.' + urllib.parse.quote(s['endpoint'], safe=''), 'DELETE')
               if not k.startswith('teste'):
                   sent.append(k)
@@ -129,5 +131,5 @@ jobs:
         run: |
           git config user.name "notificacoes"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add notificacoes/enviadas.json
+          git add notificacoes/enviadas.json notificacoes/chave-publica.txt
           git diff --cached --quiet || (git commit -m "Notificacoes enviadas" && (git push || (git pull --rebase && git push)))
