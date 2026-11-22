@@ -472,7 +472,7 @@
       h += '</button>';
     }
     h += '</div><div class="nw-legend">' + ["infl", "jobs", "bank", "talk", "shop", "gdp", "pmi"].map(kk => '<span><span class="chip">' + icon(kk) + '</span>' + KIND_NAME[kk] + '</span>').join("") + '<span><span class="chip g">' + icon("hol") + '</span>Feriado</span></div></section>';
-    h += srchH + heroH + '</div>';
+    h = '<div class="nw">' + heroH + h.slice('<div class="nw">'.length) + srchH + '</div>';
     root.innerHTML = h;
     drawSearch();
   }
