@@ -1575,6 +1575,41 @@ body.offline .netbar { transform: translate(-50%, 0); }
 .nw-qchips .ic { width: 14px; height: 14px; }
 .nw-qchips .nw-flag { width: 16px; height: 11px; }
 @media (prefers-reduced-motion: reduce) { .nw-first.soon, .flipc .fd i.flp, .spk-run, .lrow.wave, .bank .coins { animation: none !important; } }
+/* ---------- Configurações + BE ---------- */
+.stp.be .lb { color: #9C7330; }
+.plusd.be { color: #9C7330; }
+.lrow.estr.hasbe { grid-template-columns: 68px auto auto auto auto minmax(0, 1fr) 26px; }
+.lrow.cta.hasbe { grid-template-columns: 58px auto auto auto auto minmax(0, 1fr) 26px 26px; }
+.lrow.hasbe .offlbl { grid-column: 2 / 7; }
+@media (max-width: 520px) {
+  .lrow.estr.hasbe { grid-template-columns: 34px auto auto auto auto minmax(0, 1fr) 20px; gap: 3px; padding-left: 7px; }
+  .lrow.cta.hasbe { grid-template-columns: 28px auto auto auto auto minmax(0, 1fr) 20px 20px; gap: 3px; padding-left: 7px; }
+  .lrow.hasbe .date .dw { display: none; }
+  .lrow.hasbe .stp input { width: 29px !important; font-size: 13px; }
+  .lrow.hasbe .stp .lb { padding: 0 2px 0 5px; font-size: 9px; letter-spacing: 0; }
+  .lrow.hasbe .to { padding: 1px 6px 1px 5px; gap: 2px; } .lrow.hasbe .to .lb { font-size: 8.5px; }
+  .lrow.hasbe .res { padding: 2px 5px !important; font-size: 12px; }
+  .lrow.hasbe .nb { width: 20px; height: 20px; }
+}
+.cfg-card { max-width: 440px; }
+.cfg-sec { display: flex; flex-direction: column; gap: 6px; padding: 12px 0 4px; border-top: 1px solid rgba(205, 167, 94, .2); }
+.cfg-sec > b { font-family: var(--display); font-size: 17px; font-weight: 500; color: var(--champ); }
+.cfg-sec small { color: var(--soft); font-size: 12.5px; line-height: 1.4; }
+.cfg-tp { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 7px; margin-top: 6px; }
+.cfg-tp button { height: 42px; border-radius: 12px; border: 1px solid rgba(205, 167, 94, .4); background: linear-gradient(180deg, #4E1525, #2A0811); color: #F3D98E; font: 600 15px/1 var(--sans); cursor: pointer; box-shadow: 0 3px 0 #12030A, inset 0 1px 0 rgba(255, 236, 190, .18); }
+.cfg-tp button[aria-checked="true"] { background: repeating-linear-gradient(90deg, rgba(255, 250, 230, .1) 0 1px, transparent 1px 3px), linear-gradient(135deg, #EED39A, #CDA75E 38%, #A8833F 68%, #D9B76E); color: #2A0A11; border-color: rgba(246, 224, 164, .85); transform: translateY(2px); box-shadow: 0 1px 0 #12030A; }
+.cfg-ex { margin-top: 6px; font-size: 13px; color: var(--champ); } .cfg-ex b { color: var(--gold); }
+.cfg-sw { display: flex; align-items: flex-start; gap: 12px; cursor: pointer; }
+.cfg-sw input { position: absolute; opacity: 0; pointer-events: none; }
+.cfg-sw .sw { flex: 0 0 auto; width: 46px; height: 26px; border-radius: 999px; background: rgba(0, 0, 0, .35); border: 1px solid rgba(205, 167, 94, .45); position: relative; transition: background .2s; margin-top: 2px; }
+.cfg-sw .sw::after { content: ""; position: absolute; top: 2px; left: 2px; width: 20px; height: 20px; border-radius: 50%; background: #C7A9A3; transition: transform .2s, background .2s; }
+.cfg-sw input:checked + .sw { background: linear-gradient(135deg, #CDA75E, #A8833F); }
+.cfg-sw input:checked + .sw::after { transform: translateX(20px); background: #FFF6DA; }
+.cfg-sw input:focus-visible + .sw { outline: 2px solid var(--gold); outline-offset: 2px; }
+.cfg-sw b { display: block; font-family: var(--display); font-size: 16px; font-weight: 500; color: var(--champ); margin-bottom: 2px; }
+.cfg-ro { color: #F29AAE; font-size: 13px; margin: 0; }
+.xlsbtn { display: inline-flex; align-items: center; gap: 6px; }
+.xlsbtn svg { width: 14px; height: 14px; }
 /* ---------- Sessão ---------- */
 .ses::after { content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none; background: repeating-linear-gradient(45deg, rgba(255, 255, 255, .02) 0 1px, transparent 1px 3px), repeating-linear-gradient(-45deg, rgba(0, 0, 0, .06) 0 1px, transparent 1px 3px), radial-gradient(70% 45% at 30% 15%, rgba(255, 220, 230, .07), transparent 70%); }
 .ses[data-res="pos"] { --sesTint: radial-gradient(120% 85% at 50% 60%, rgba(40, 150, 90, .48), rgba(20, 90, 55, .26) 55%, rgba(10, 50, 30, .12) 85%, transparent); }
@@ -1582,6 +1617,10 @@ body.offline .netbar { transform: translate(-50%, 0); }
 .ses-frame { position: fixed; z-index: 0; pointer-events: none; top: max(8px, env(safe-area-inset-top, 0px)); left: 8px; right: 8px; bottom: max(8px, env(safe-area-inset-bottom, 0px)); border: 1px solid rgba(205, 167, 94, .45); border-radius: 24px;
   background: var(--fc-tl) 5px 5px / 30px no-repeat, var(--fc-tr) calc(100% - 5px) 5px / 30px no-repeat, var(--fc-bl) 5px calc(100% - 5px) / 30px no-repeat, var(--fc-br) calc(100% - 5px) calc(100% - 5px) / 30px no-repeat; box-shadow: inset 0 0 0 4px rgba(23, 3, 7, .3), inset 0 0 0 5px rgba(205, 167, 94, .15); }
 .ses > *:not(.ses-frame):not(.ses-wave) { position: relative; z-index: 1; }
+/* the Fusion / Prop tabs sit a bit lower, away from the phone's clock and status bar */
+.ses { padding-top: calc(max(16px, env(safe-area-inset-top, 0px)) + 26px); }
+.ses-frame { top: calc(max(8px, env(safe-area-inset-top, 0px)) + 12px); }
+.ses-top { padding: 0 6px; }
 .ses-watch { margin-top: 14px; width: 54px; height: 54px; filter: drop-shadow(0 4px 8px rgba(0, 0, 0, .6)); }
 .ses-watch svg { width: 100%; height: 100%; display: block; }
 .ses-watch .sw-t line { stroke: #CDA75E; stroke-width: 1.2; stroke-linecap: round; }
@@ -1679,7 +1718,7 @@ body.offline .netbar { transform: translate(-50%, 0); }
       </div>
       <div class="tools" role="group" aria-label="Ferramentas">
         <button type="button" id="bkJson"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2v8M4.8 7 8 10.2 11.2 7M3 12.5h10"/></svg>Cópia de segurança</button>
-        <button type="button" id="bkCsv"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="2.5" width="11" height="11" rx="1.5"/><path d="M2.5 6.2h11M2.5 9.8h11M6.2 2.5v11"/></svg>Exportar para Excel</button>
+        <button type="button" id="cfgBtn"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="8" r="2.2"/><path d="M8 1.8v1.6M8 12.6v1.6M1.8 8h1.6M12.6 8h1.6M3.6 3.6l1.1 1.1M11.3 11.3l1.1 1.1M12.4 3.6l-1.1 1.1M4.7 11.3l-1.1 1.1"/></svg>Configurações</button>
         <button type="button" id="pushBtn"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11.2V7.4a4 4 0 0 1 8 0v3.8l1.2 1.4H2.8z"/><path d="M6.6 13.6a1.5 1.5 0 0 0 2.8 0"/></svg><span>Ativar notificações</span></button>
         <button type="button" id="nightBtn"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13.2 10.4A5.6 5.6 0 0 1 5.6 2.8a5.6 5.6 0 1 0 7.6 7.6z"/></svg>Modo noite: automático</button>
       </div>
@@ -2233,7 +2272,10 @@ body.offline .netbar { transform: translate(-50%, 0); }
   })();
 
   // ---------- data ----------
-  const TP_PCT = 2, SL_PCT = 1;
+  // settings: how much a TP is worth (1 to 10 %) and whether to show the BE (break-even) box. Kept on the device and in Supabase.
+  const LS_CFG = "diario-trading-config";
+  let TP_PCT = 2, SHOW_BE = false; const SL_PCT = 1;
+  try { const c = JSON.parse(localStorage.getItem(LS_CFG) || "{}"); if (c.tp >= 1 && c.tp <= 10) TP_PCT = Math.round(c.tp); SHOW_BE = c.be === true; } catch (_) {}
   // three ledgers: one Estratégia, the Conta (Fusion Markets) and the Prop Firm. prop_estrategia is old data, kept but not shown.
   const ALLKEYS = ["estrategia", "conta", "prop_estrategia", "prop_conta"];
   // two pairs of tables: Fusion Markets (Estratégia + Conta) and Prop Firm (its own Estratégia + Conta).
@@ -2279,15 +2321,15 @@ body.offline .netbar { transform: translate(-50%, 0); }
   const cls = v => v > 0 ? "pos" : v < 0 ? "neg" : "zero";
   const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
   const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
-  const EMPTY = { tp: 0, sl: 0, note: "", off: false, risk: 0 };
+  const EMPTY = { tp: 0, sl: 0, be: 0, note: "", off: false, risk: 0 };
   const EUR = new Intl.NumberFormat("pt-PT", { style: "currency", currency: "EUR" });
   const eur = v => (v > 0 ? "+" : v < 0 ? "−" : "") + EUR.format(Math.abs(v));
   const euroOf = e => pctOf(e) * (e.risk || 0);
   const CALC = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="1.8" width="10" height="12.4" rx="1.8"/><rect x="5" y="3.8" width="6" height="2.6" rx=".6"/><path d="M5.6 8.8h.01M8 8.8h.01M10.4 8.8h.01M5.6 11.4h.01M8 11.4h.01M10.4 11.4h.01" stroke-width="1.8"/></svg>';
   const entry = (s, id) => store[s].get(id) || EMPTY;
-  const traded = (s, id) => { const e = store[s].get(id); return !!e && !e.off && (e.tp > 0 || e.sl > 0); };
-  const isEmpty = e => !e.tp && !e.sl && !e.note && !e.off && !e.risk;
-  const norm = v => ({ tp: Math.max(0, +v.tp || 0), sl: Math.max(0, +v.sl || 0), note: typeof v.note === "string" ? v.note.slice(0, 4000) : "", off: v.off === true, risk: Math.max(0, Math.min(1e7, +v.risk || 0)) });
+  const traded = (s, id) => { const e = store[s].get(id); return !!e && !e.off && (e.tp > 0 || e.sl > 0 || e.be > 0); };
+  const isEmpty = e => !e.tp && !e.sl && !e.be && !e.note && !e.off && !e.risk;
+  const norm = v => ({ tp: Math.max(0, +v.tp || 0), sl: Math.max(0, +v.sl || 0), be: Math.max(0, +v.be || 0), note: typeof v.note === "string" ? v.note.slice(0, 4000) : "", off: v.off === true, risk: Math.max(0, Math.min(1e7, +v.risk || 0)) });
   function isoWeek(d) {
     const t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
     const day = t.getUTCDay() || 7; t.setUTCDate(t.getUTCDate() + 4 - day);
@@ -2300,9 +2342,9 @@ body.offline .netbar { transform: translate(-50%, 0); }
     return out;
   }
   function sum(s, ids) {
-    let tp = 0, sl = 0;
-    for (const id of ids) { const e = entry(s, id); if (e.off) continue; tp += e.tp; sl += e.sl; }
-    return { tp, sl, pct: tp * TP_PCT - sl * SL_PCT };
+    let tp = 0, sl = 0, be = 0;
+    for (const id of ids) { const e = entry(s, id); if (e.off) continue; tp += e.tp; sl += e.sl; be += e.be || 0; }
+    return { tp, sl, be, to: tp + sl + be, pct: tp * TP_PCT - sl * SL_PCT };
   }
 
   const statusEl = document.getElementById("status");
@@ -2369,7 +2411,7 @@ body.offline .netbar { transform: translate(-50%, 0); }
     const e = store[s].get(id);
     let p;
     const chk = r => { if (r.error) throw r.error; };
-    if (mode === "db") { p = e ? sb.from("dias").upsert({ serie: s, dia: id, tp: e.tp, sl: e.sl, nota: e.note, sem_operar: e.off, risco: e.risk || 0 }).then(chk) : sb.from("dias").delete().eq("serie", s).eq("dia", id).then(chk); }
+    if (mode === "db") { p = e ? sb.from("dias").upsert(Object.assign({ serie: s, dia: id, tp: e.tp, sl: e.sl, nota: e.note, sem_operar: e.off, risco: e.risk || 0 }, beCol ? { be: e.be || 0 } : {})).then(chk) : sb.from("dias").delete().eq("serie", s).eq("dia", id).then(chk); }
     else { saveLocal(); p = Promise.resolve(); }
     inflight.set(k, p);
     try {
@@ -2388,14 +2430,24 @@ body.offline .netbar { transform: translate(-50%, 0); }
   // ---------- Supabase: everyone reads, only the signed-in owner writes (enforced by the database rules) ----------
   const SUPABASE_URL = "https://nexskfugwtmtwsexlhos.supabase.co";
   const SUPABASE_KEY = "sb_publishable_-OiT0kTGfY4MmMgD28LrEg_9cQ6kMXW";
-  let sb = null;
+  let sb = null, beCol = false, cfgDirty = false;
+  function saveCfgLocal() { try { localStorage.setItem(LS_CFG, JSON.stringify({ tp: TP_PCT, be: SHOW_BE })); } catch (_) {} }
+  async function saveCfg() {
+    saveCfgLocal(); if (mode !== "db" || !sb) return;
+    cfgDirty = true;
+    const r = await sb.from("dias").upsert({ serie: "config", dia: "2000-01-01", tp: TP_PCT, sl: SHOW_BE ? 1 : 0, nota: "configurações do Diário (valor do TP e BE)", sem_operar: false, risco: 0 });
+    cfgDirty = false; return r.error;
+  }
   async function loadRemote() {
-    const { data, error } = await sb.from("dias").select("serie,dia,tp,sl,nota,sem_operar,risco").limit(10000);
+    let { data, error } = await sb.from("dias").select("serie,dia,tp,sl,be,nota,sem_operar,risco").limit(10000);
+    if (error) { beCol = false; ({ data, error } = await sb.from("dias").select("serie,dia,tp,sl,nota,sem_operar,risco").limit(10000)); } else beCol = true;
     if (error) throw error;
+    const cfgRow = (data || []).find(r => r.serie === "config");
+    if (cfgRow && !cfgDirty) { const t = Math.round(+cfgRow.tp); if (t >= 1 && t <= 10) TP_PCT = t; SHOW_BE = +cfgRow.sl === 1; saveCfgLocal(); }
     const maps = { estrategia: new Map(), conta: new Map(), prop_estrategia: new Map(), prop_conta: new Map() };
     for (const r of data || []) {
       if (!maps[r.serie]) continue;
-      const n = norm({ tp: r.tp, sl: r.sl, note: r.nota || "", off: r.sem_operar === true, risk: r.risco });
+      const n = norm({ tp: r.tp, sl: r.sl, be: r.be, note: r.nota || "", off: r.sem_operar === true, risk: r.risco });
       if (!isEmpty(n)) maps[r.serie].set(String(r.dia).slice(0, 10), n);
     }
     for (const k of dirty) {
@@ -2534,7 +2586,7 @@ body.offline .netbar { transform: translate(-50%, 0); }
   function monthTotal(s, t, days) {
     const work = days.filter(d => !entry(s.key, iso(d)).off).length;
     const me = s.acct ? eurSum(s.key, days.map(iso)) : { n: 0 };
-    return '<div class="mtotal"><div class="ml"><b>Total de ' + MONTHS[view.m] + '</b><span>' + work + ' dias de trading, ' + t.tp + ' TP, ' + t.sl + ' SL, ' + (t.tp + t.sl) + ' TO</span></div><div class="mr"><div class="mp ' + cls(t.pct) + '">' + fmt(t.pct) + '</div>' +
+    return '<div class="mtotal"><div class="ml"><b>Total de ' + MONTHS[view.m] + '</b><span>' + work + ' dias de trading, ' + t.tp + ' TP, ' + t.sl + ' SL, ' + (SHOW_BE && t.be ? t.be + ' BE, ' : '') + t.to + ' TO</span></div><div class="mr"><div class="mp ' + cls(t.pct) + '">' + fmt(t.pct) + '</div>' +
       (me.n ? '<div class="meur ' + cls(me.v) + '">' + CALC_SM + eur(me.v) + '</div>' : '') + '</div></div>';
   }
   function noteBtn(s, id, e, d) {
@@ -2611,7 +2663,7 @@ body.offline .netbar { transform: translate(-50%, 0); }
       if (bd) h += '<div class="bdw">' + bdConf();
       for (const d of g.days) {
         const id = iso(d), e = entry(s.key, id), p = pctOf(e);
-        const base = (id === todayId ? " today" : id > todayId ? " future" : "") + (g.w === wkNow && id !== todayId && Math.abs(d - now) < 8 * 864e5 ? " wk-now" : "");
+        const base = (SHOW_BE ? " hasbe" : "") + (id === todayId ? " today" : id > todayId ? " future" : "") + (g.w === wkNow && id !== todayId && Math.abs(d - now) < 8 * 864e5 ? " wk-now" : "");
         const dateHtml = '<div class="date"><span class="dn">' + d.getDate() + '</span><span class="dw">' + DOW[d.getDay()] + '</span>' + (s.acct ? "" : newsMark(id)) + '</div>';
         const nbHtml = notes ? noteBtn(s.key, id, e, d) : "", ex = notes ? " cta" : " estr";
         const cbHtml = notes ? '<button type="button" class="nb' + (e.risk ? " has" : "") + '" data-calc="' + s.key + '|' + id + '" aria-label="Calculadora de ' + d.getDate() + ' de ' + MONTHS[d.getMonth()] + '"' + (e.risk ? ' data-tip="calc" data-risk="' + EUR.format(e.risk) + '" data-pct="' + fmt(p) + '" data-eur="' + eur(euroOf(e)) + '" data-cls="' + cls(p) + '"' : ' data-tip="empty" data-tv="Calcular em euros"') + '>' + CALC + '</button>' : "";
@@ -2622,8 +2674,8 @@ body.offline .netbar { transform: translate(-50%, 0); }
           const eurHtml = notes && e.risk && traded(s.key, id) ? '<span class="eur">' + eur(euroOf(e)) + '</span>' : "";
           const star = !s.acct && traded(s.key, id) && p >= BIG_DAY;
           h += '<div class="lrow' + ex + base + (traded(s.key, id) ? " d-" + cls(p) : " vazio") + (star ? " star" : "") + '" data-row="' + s.key + '|' + id + '"' + (star ? ' title="Dia acima de +' + BIG_DAY + '%"' : '') + '>' + dateHtml +
-            stepper(s.key, id, "tp", e.tp, !traded(s.key, id)) + stepper(s.key, id, "sl", e.sl, !traded(s.key, id)) +
-            '<span class="to' + (e.tp + e.sl ? "" : " z") + '" data-tip="plain" data-tv="Total de oportunidades (TP + SL)"><span class="lb">TO</span><b>' + (e.tp + e.sl || (traded(s.key, id) ? 0 : "—")) + '</b></span>' +
+            stepper(s.key, id, "tp", e.tp, !traded(s.key, id)) + stepper(s.key, id, "sl", e.sl, !traded(s.key, id)) + (SHOW_BE ? stepper(s.key, id, "be", e.be || 0, !traded(s.key, id)) : "") +
+            '<span class="to' + (e.tp + e.sl + (e.be || 0) ? "" : " z") + '" data-tip="plain" data-tv="Total de oportunidades (TP + SL' + (SHOW_BE ? " + BE" : "") + ')"><span class="lb">TO</span><b>' + (e.tp + e.sl + (e.be || 0) || (traded(s.key, id) ? 0 : "—")) + '</b></span>' +
             '<span class="res ' + cls(p) + (traded(s.key, id) && p >= 30 ? " hi" : "") + '">' + (traded(s.key, id) ? fmt(p) : "—") + eurHtml + (star ? '<i class="st3"></i>' : '') + '</span>' + nbHtml + cbHtml + offB + '</div>';
         }
       }
@@ -2633,7 +2685,7 @@ body.offline .netbar { transform: translate(-50%, 0); }
       const weHtml = we.n ? '<span class="weur ' + cls(we.v) + '" data-tip="plain" data-tv="Soma das calculadoras da semana (' + we.n + (we.n === 1 ? " dia" : " dias") + ')">' + CALC_SM + eur(we.v) + '</span>' : "";
       const split = wk5.some(x => x.getMonth() !== view.m);
       h += '<div class="wrow"' + (split ? ' data-tip="plain" data-tv="Semana completa (' + weekLabel(wk5) + '), conta também os dias do outro mês"' : '') + '><div class="wl"><b>Semana ' + g.w + '</b>' + weekLabel(wk5) + '</div>' +
-        '<div class="wr"><span class="wtx">' + wt.tp + ' TP, ' + wt.sl + ' SL, ' + (wt.tp + wt.sl) + ' TO</span>' + weHtml + '<span class="wp ' + cls(wt.pct) + '">' + fmt(wt.pct) + '</span></div>' + (wt.tp + wt.sl ? '<i class="wbar ' + cls(wt.pct) + '" style="--w:' + Math.max(6, Math.min(100, Math.abs(wt.pct) * 1.4)) + '%" aria-hidden="true"></i>' : '') + '</div>';
+        '<div class="wr"><span class="wtx">' + wt.tp + ' TP, ' + wt.sl + ' SL, ' + (SHOW_BE && wt.be ? wt.be + ' BE, ' : '') + wt.to + ' TO</span>' + weHtml + '<span class="wp ' + cls(wt.pct) + '">' + fmt(wt.pct) + '</span></div>' + (wt.tp + wt.sl ? '<i class="wbar ' + cls(wt.pct) + '" style="--w:' + Math.max(6, Math.min(100, Math.abs(wt.pct) * 1.4)) + '%" aria-hidden="true"></i>' : '') + '</div>';
       if (bd) h += '</div>';
     }
     h += '</div>' + monthTotal(s, t, days) + yearBox(s) + '</div>';
@@ -2871,7 +2923,7 @@ body.offline .netbar { transform: translate(-50%, 0); }
     const plabel = per === "m" ? cap(MONTHS[view.m]) + " " + view.y : per === "y" ? "Ano " + view.y : "Desde o início";
     let h = '<div class="stw"><section class="stp-card glass g-' + s.role + '"><svg class="wm" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4.5A1.5 1.5 0 0 1 6.5 3H19v15H6.5A1.5 1.5 0 0 0 5 19.5z"/><path d="M5 19.5A1.5 1.5 0 0 0 6.5 21H19v-3"/><path d="M9 7.5h6M9 11h4"/></svg>';
     h += '<div class="st-head"><div><div class="kind">Estatísticas</div><h2>' + plabel + '</h2></div>' +
-      '<div class="st-hr"><button type="button" class="sumbtn" data-sum="' + s.role + '">✦ Resumo de ' + MONTHS[view.m] + '</button><div class="per pslide" role="group" data-pi="' + ["m", "y", "all"].indexOf(perPrev) + '|' + ["m", "y", "all"].indexOf(per) + '" aria-label="Período">' + [["m", "Mês"], ["y", "Ano"], ["all", "Tudo"]].map(([k, l]) => '<button type="button" data-per="' + k + '" aria-pressed="' + (per === k) + '">' + l + '</button>').join("") + '</div></div></div>';
+      '<div class="st-hr"><button type="button" class="sumbtn" data-sum="' + s.role + '">✦ Resumo de ' + MONTHS[view.m] + '</button><button type="button" class="sumbtn xlsbtn" data-csv="1"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="2.5" width="11" height="11" rx="1.5"/><path d="M2.5 6.2h11M2.5 9.8h11M6.2 2.5v11"/></svg>Exportar para Excel</button><div class="per pslide" role="group" data-pi="' + ["m", "y", "all"].indexOf(perPrev) + '|' + ["m", "y", "all"].indexOf(per) + '" aria-label="Período">' + [["m", "Mês"], ["y", "Ano"], ["all", "Tudo"]].map(([k, l]) => '<button type="button" data-per="' + k + '" aria-pressed="' + (per === k) + '">' + l + '</button>').join("") + '</div></div></div>';
     setTimeout(() => { perPrev = per; }, 0);
     // no days yet: still show the NFP / CPI / FOMC table of the year (handy for backtesting)
     if (!r.n) { h += '<div class="ch-empty big-empty">Ainda não há dias registados neste período.</div><div class="sec"><span>Notícias</span><small>NFP, CPI e FOMC de ' + view.y + '</small></div><div class="charts">' + newsTables(s) + '</div></section></div>'; return h; }
@@ -3129,7 +3181,7 @@ body.offline .netbar { transform: translate(-50%, 0); }
         const ph = r ? (r.auto ? inVal(r.start) : "") : inVal(lastBefore(a, id, C));
         if (r && r.start != null && wStart == null) wStart = r.start;
         if (r && r.profit != null) { wp += r.profit; wn++; }
-        const base = (id === todayId ? " today" : id > todayId ? " future" : "") + (r && r.profit != null ? " d-" + cls(r.profit) : "");
+        const base = (SHOW_BE ? " hasbe" : "") + (id === todayId ? " today" : id > todayId ? " future" : "") + (r && r.profit != null ? " d-" + cls(r.profit) : "");
         const fld = (f, v, lab, phv) => '<label class="af"><span>' + lab + '</span><input type="text" inputmode="decimal" autocomplete="off" data-cin="' + a + '|' + id + '|' + f + '" value="' + inVal(v) + '"' + (phv ? ' placeholder="' + phv + '"' : '') + ' aria-label="' + lab + ' de ' + d.getDate() + ' de ' + MONTHS[d.getMonth()] + '"></label>';
         const extra = (r && (r.dep || r.lev || r.nota));
         h += '<div class="arow' + base + '" data-arow="' + a + '|' + id + '">' +
@@ -3809,8 +3861,8 @@ body.offline .netbar { transform: translate(-50%, 0); }
   }
   function backupCsv() {
     const q = v => '"' + String(v == null ? "" : v).replace(/"/g, '""') + '"', n2 = v => v == null || v === "" ? "" : String(Math.round(v * 100) / 100).replace(".", ",");
-    let csv = "﻿" + ["Tabela", "Dia", "TP", "SL", "Resultado %", "Risco €", "Resultado €", "Sem operar", "Humor", "Nota"].join(";") + "\n";
-    for (const s of SERIES) for (const id of [...store[s.key].keys()].sort()) { const e = store[s.key].get(id); csv += [q(s.full), id, e.tp, e.sl, pctOf(e), n2(e.risk || ""), e.risk ? n2(euroOf(e)) : "", e.off ? "sim" : "", q(moods.get(id) ? MOOD[moods.get(id)][2] : ""), q(e.note)].join(";") + "\n"; }
+    let csv = "﻿" + ["Tabela", "Dia", "TP", "SL", "BE", "Resultado %", "Risco €", "Resultado €", "Sem operar", "Humor", "Nota"].join(";") + "\n";
+    for (const s of SERIES) for (const id of [...store[s.key].keys()].sort()) { const e = store[s.key].get(id); csv += [q(s.full), id, e.tp, e.sl, e.be || 0, pctOf(e), n2(e.risk || ""), e.risk ? n2(euroOf(e)) : "", e.off ? "sim" : "", q(moods.get(id) ? MOOD[moods.get(id)][2] : ""), q(e.note)].join(";") + "\n"; }
     csv += "\n" + ["Conta", "Dia", "Início €", "Fim €", "Lucro €", "Risco €", "Depósito €", "Levantamento €", "", "Nota"].join(";") + "\n";
     for (const a of ACC_ALL()) { const C = acCompute(a); for (const id of C.ids) { const r = C.rows.get(id); csv += [q(acName(a)), id, n2(r.start), n2(r.fim), n2(r.profit), n2(r.risk), n2(r.dep), n2(r.lev), "", q(r.nota)].join(";") + "\n"; } }
     download("diario-trading-" + iso(new Date()) + ".csv", csv, "text/csv;charset=utf-8");
@@ -4063,11 +4115,37 @@ body.offline .netbar { transform: translate(-50%, 0); }
       setTimeout(() => { p.classList.remove("sliding"); ind.remove(); }, 420);
     }), 0);
   });
+  // ---------- Configurações: how much a TP is worth and the BE (break-even) box ----------
+  const cfgDlg = document.createElement("div"); cfgDlg.className = "dlg"; cfgDlg.id = "cfgdlg"; cfgDlg.hidden = true; document.body.appendChild(cfgDlg);
+  let cfgTp = TP_PCT, cfgBe = SHOW_BE;
+  function drawCfg() {
+    cfgDlg.innerHTML = '<div class="dlg-card cfg-card" role="dialog" aria-modal="true" aria-labelledby="cfgT"><div><div class="sub">Diário</div><h3 id="cfgT">Configurações</h3></div>' +
+      '<div class="cfg-sec"><b>Quanto vale um TP?</b><small>O SL vale sempre −1%. Ao mudar, o resultado de todos os dias é recalculado.</small><div class="cfg-tp" role="radiogroup" aria-label="Valor do TP">' +
+      [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(v => '<button type="button" role="radio" data-cfgtp="' + v + '" aria-checked="' + (v === cfgTp) + '">' + v + '%</button>').join("") + '</div>' +
+      '<div class="cfg-ex">1 TP = <b>+' + cfgTp + '%</b> · 1 SL = <b>−1%</b> · ex.: 3 TP e 2 SL = <b>' + fmt(3 * cfgTp - 2) + '</b></div></div>' +
+      '<div class="cfg-sec"><label class="cfg-sw"><input type="checkbox" id="cfgBe"' + (cfgBe ? " checked" : "") + '><span class="sw" aria-hidden="true"></span><span><b>Bolinha BE (break-even)</b><small>Para as operações que fecharam a zero, no preço de entrada. Contam no TO, mas não mexem no resultado.</small></span></label></div>' +
+      (ro ? '<p class="cfg-ro">Só leitura: entra na tua conta para mudar as configurações.</p>' : '') +
+      '<div class="dlg-actions"><button type="button" class="btn" data-cfg="cancel">Cancelar</button><button type="button" class="btn primary" data-cfg="save"' + (ro ? " disabled" : "") + '>Guardar</button></div></div>';
+  }
+  function openCfg() { cfgTp = TP_PCT; cfgBe = SHOW_BE; drawCfg(); cfgDlg.hidden = false; }
+  function closeCfg() { cfgDlg.hidden = true; }
+  $("cfgBtn").addEventListener("click", openCfg);
+  cfgDlg.addEventListener("click", async e => {
+    if (e.target === cfgDlg) return closeCfg();
+    const t = e.target.closest("[data-cfgtp]"); if (t) { cfgTp = +t.dataset.cfgtp; cfgBe = $("cfgBe").checked; drawCfg(); return; }
+    const a = e.target.closest("[data-cfg]"); if (!a) return;
+    if (a.dataset.cfg === "cancel") return closeCfg();
+    if (a.dataset.cfg === "save" && !ro) {
+      TP_PCT = cfgTp; SHOW_BE = $("cfgBe").checked; closeCfg(); render();
+      setStatus("saving", "A guardar…"); const err = await saveCfg(); if (err) setStatus("err", "Não foi guardado, tenta outra vez"); else idleStatus();
+    }
+  });
+  document.addEventListener("keydown", e => { if (e.key === "Escape" && !cfgDlg.hidden) closeCfg(); });
   // "+1" floating up when a TP or SL goes up
   function plusAt(el, n, field) {
     if (!el || (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches)) return;
     const r = el.getBoundingClientRect(), p = document.createElement("b");
-    p.className = "plusd " + (field === "sl" ? "sl" : "tp"); p.textContent = "+" + n;
+    p.className = "plusd " + (field === "sl" ? "sl" : field === "be" ? "be" : "tp"); p.textContent = "+" + n;
     p.style.left = (r.left + r.width / 2) + "px"; p.style.top = (r.top - 4) + "px";
     document.body.appendChild(p); setTimeout(() => p.remove(), 1000);
   }
@@ -4324,7 +4402,7 @@ body.offline .netbar { transform: translate(-50%, 0); }
     // update just this row while typing; the totals refresh when you leave the box
     const row = i.closest(".lrow"), e1 = entry(s, id), p = pctOf(e1), res = row && row.querySelector(".res"), to = row && row.querySelector(".to");
     i.classList.toggle("z", !v);
-    if (to) { to.lastChild.textContent = e1.tp + e1.sl; to.classList.toggle("z", !(e1.tp + e1.sl)); }
+    if (to) { to.lastChild.textContent = e1.tp + e1.sl + (e1.be || 0); to.classList.toggle("z", !(e1.tp + e1.sl + (e1.be || 0))); }
     const before = row ? (row.className.match(/\bd-(pos|neg|zero)\b/) || [""])[0] : "";
     if (row) { row.classList.remove("d-pos", "d-neg", "d-zero"); row.classList.toggle("vazio", !traded(s, id)); if (traded(s, id)) row.classList.add("d-" + cls(p)); }
     // the new colour sweeps across the row like a wave; the numbers roll in
@@ -4435,7 +4513,7 @@ body.offline .netbar { transform: translate(-50%, 0); }
   $("sumClose").addEventListener("click", () => { $("sumdlg").hidden = true; });
   $("sumdlg").addEventListener("click", e => { if (e.target === $("sumdlg")) { $("sumdlg").hidden = true; return; } const f = e.target.closest("[data-fmt]"); if (f && sumS) openSummary(null, f.dataset.fmt); });
   $("bkJson").addEventListener("click", backupJson);
-  $("bkCsv").addEventListener("click", backupCsv);
+  document.addEventListener("click", e => { if (e.target.closest("[data-csv]")) backupCsv(); });
   void installApp;   // the "Instalar como app" button was removed (2026-11-21)
   $("instClose").addEventListener("click", () => { $("instdlg").hidden = true; });
   $("instdlg").addEventListener("click", e => { if (e.target === $("instdlg")) $("instdlg").hidden = true; });
