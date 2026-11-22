@@ -202,7 +202,8 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
 .ledger { display: flex; flex-direction: column; gap: 3px; }
 .lrow { display: grid; grid-template-columns: 58px auto auto minmax(0, 1fr) 26px; align-items: center; gap: 6px; background: var(--row); border-radius: 10px; padding: 3px 5px 3px 10px; scroll-margin: 120px; }
 .lrow.future { background: var(--row-future); }
-.lrow.estr { grid-template-columns: 58px auto auto minmax(0, 1fr); padding-right: 10px; }
+#dlgForm.offonly > div:nth-of-type(2) { display: none; }
+.lrow.estr { grid-template-columns: 58px auto auto minmax(0, 1fr) 26px; padding-right: 6px; }
 .lrow.cta { grid-template-columns: 58px auto auto minmax(0, 1fr) 26px 26px; }
 .res .eur { display: block; font-size: 11px; font-weight: 500; opacity: .85; text-align: right; line-height: 1.1; }
 .calc-day { font-size: 13px; color: var(--soft); }
@@ -244,6 +245,18 @@ body.loading .pbody::after, body.loading .tabbed .slide::after { content: ""; po
   background: linear-gradient(100deg, rgba(251, 243, 238, .06) 20%, rgba(251, 243, 238, .16) 40%, rgba(251, 243, 238, .06) 60%) 0 0 / 250% 100%,
     repeating-linear-gradient(180deg, rgba(251, 243, 238, .08) 0 44px, transparent 44px 52px); animation: shimmer 1.4s linear infinite; }
 @keyframes shimmer { from { background-position: 125% 0, 0 0; } to { background-position: -125% 0, 0 0; } }
+/* computer: a Diário row lifts a little under the mouse */
+@media (hover: hover) and (pointer: fine) { .lrow { transition: transform .18s ease, box-shadow .18s ease; } .lrow:hover { transform: translateY(-2px); box-shadow: 0 10px 18px -12px rgba(0, 0, 0, .7); } }
+/* the month total in gold leaf (rosé leaf when negative) */
+.phead .big { background: radial-gradient(120% 90% at 30% 20%, rgba(255, 255, 255, .55), transparent 45%), var(--paper), linear-gradient(110deg, #B8893A, #F6E2AE 30%, #CDA75E 55%, #FFF1C9 70%, #A8833F); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 1px 0 rgba(0, 0, 0, .35)); }
+.phead .big.neg { background: radial-gradient(120% 90% at 30% 20%, rgba(255, 255, 255, .5), transparent 45%), var(--paper), linear-gradient(110deg, #B7707B, #F4C9C9 30%, #C98A8F 55%, #FBE0DC 70%, #9C5A64); -webkit-background-clip: text; background-clip: text; }
+.phead .big.zero { background: linear-gradient(110deg, #C9B79A, #F3E6CF 40%, #D9C7A8 70%); -webkit-background-clip: text; background-clip: text; }
+/* windows grow in softly from below */
+.dlg:not([hidden]) { animation: dlgFade .25s ease; }
+.dlg:not([hidden]) > .dlg-card:not(.eod-card) { animation: dlgIn .38s cubic-bezier(.2, .9, .3, 1); }
+@keyframes dlgFade { from { opacity: 0; } }
+@keyframes dlgIn { from { opacity: 0; transform: translateY(26px) scale(.97); filter: blur(6px); } }
+@media (prefers-reduced-motion: reduce) { .dlg:not([hidden]), .dlg:not([hidden]) > .dlg-card { animation: none; } }
 #view.enter { animation: viewIn .4s cubic-bezier(.2, .8, .2, 1); }
 @keyframes viewIn { from { opacity: 0; transform: translateY(12px); } }
 .spk-pulse { transform-box: fill-box; transform-origin: center; animation: spkPulse 2.2s ease-out infinite; }
@@ -295,7 +308,8 @@ body.loading .pbody::after, body.loading .tabbed .slide::after { content: ""; po
 @media (prefers-reduced-motion: reduce) { .lrow.today { animation: none; } }
 .lrow.flash { animation: flash 1.6s ease; }
 @keyframes flash { 0%, 45% { box-shadow: inset 0 0 0 2px var(--champ); } }
-.lrow.off { background: repeating-linear-gradient(135deg, rgba(58, 16, 24, .07) 0 6px, transparent 6px 12px), var(--row-future); }
+.lrow.off { background: repeating-linear-gradient(135deg, rgba(205, 167, 94, .22) 0 1px, transparent 1px 8px), linear-gradient(90deg, rgba(205, 167, 94, .08), transparent 60%), var(--row-future) !important; }
+.lrow.off .offlbl::before { content: "🌙 "; font-style: normal; }
 .lrow.off .dn { text-decoration: line-through; text-decoration-color: var(--gold); text-decoration-thickness: 1.5px; opacity: .6; }
 .offlbl { grid-column: 2 / 5; font-family: var(--display); font-style: italic; font-size: 13px; color: var(--soft); }
 .date { display: flex; align-items: baseline; gap: 6px; }
@@ -325,6 +339,9 @@ body.loading .pbody::after, body.loading .tabbed .slide::after { content: ""; po
 .nb.has::after { content: ""; position: absolute; top: 4px; right: 4px; width: 5px; height: 5px; border-radius: 50%; background: #B8913F; }
 
 .wrow { display: flex; justify-content: space-between; align-items: center; gap: 8px; border-radius: 10px; padding: 6px 12px; margin-bottom: 6px; background: var(--weekbg); position: relative; overflow: hidden; }
+/* the week bars look like the leather folder tabs, with a gold stitch */
+.wrow { background-image: var(--leather), linear-gradient(180deg, rgba(90, 24, 40, .35), rgba(20, 4, 10, .25)); background-size: 140px 140px, auto; }
+.wrow::after { content: ""; position: absolute; inset: 3px; border: 1px dashed rgba(205, 167, 94, .38); border-radius: 8px; pointer-events: none; }
 .wrow .wbar { position: absolute; left: 12px; bottom: 3px; height: 3px; width: calc((100% - 24px) * var(--w) / 100); border-radius: 3px; background: linear-gradient(90deg, rgba(127, 211, 160, .35), #7FD3A0); transform-origin: left; animation: wbarIn .9s cubic-bezier(.2, .8, .2, 1); }
 .wrow .wbar.neg { background: linear-gradient(90deg, rgba(240, 138, 160, .35), #F08AA0); } .wrow .wbar.zero { background: linear-gradient(90deg, rgba(230, 205, 146, .3), #E6CD92); }
 @keyframes wbarIn { from { transform: scaleX(0); } }
@@ -518,7 +535,8 @@ button, .cd, .nw-card, .tdr, .lrow { transition: transform .12s ease; }
 .nwmark { border: 0; background: transparent; padding: 0 3px; margin-left: -4px; cursor: pointer; color: #B03F55; font: 700 17px/1 var(--display); align-self: flex-start; }
 /* day numbers take the same width, so seg / ter / qua… line up under each other */
 .lrow .date .dn { min-width: 1.35em; }
-.lrow.estr { grid-template-columns: 68px auto auto auto minmax(0, 1fr); }
+#dlgForm.offonly > div:nth-of-type(2) { display: none; }
+.lrow.estr { grid-template-columns: 68px auto auto auto minmax(0, 1fr) 26px; }
 .lrow.cta { grid-template-columns: 58px auto auto auto minmax(0, 1fr) 26px 26px; }
 .lrow .offlbl { grid-column: 2 / 6; }
 /* TO = total opportunities (TP + SL) */
@@ -527,7 +545,8 @@ button, .cd, .nw-card, .tdr, .lrow { transition: transform .12s ease; }
 .to b { font-weight: 600; font-size: 13.5px; color: var(--ink); min-width: 14px; text-align: center; }
 .to.z b { color: var(--soft); font-weight: 400; }
 @media (max-width: 420px) {
-  .lrow.estr { grid-template-columns: 46px auto auto auto minmax(0, 1fr); }
+  #dlgForm.offonly > div:nth-of-type(2) { display: none; }
+.lrow.estr { grid-template-columns: 46px auto auto auto minmax(0, 1fr) 22px; }
   .lrow.cta { grid-template-columns: 34px auto auto auto minmax(0, 1fr) 22px 22px; }
   .to { padding: 1px 6px 1px 5px; gap: 2px; height: 24px; }
   .to .lb { font-size: 9px; }
@@ -1469,7 +1488,7 @@ body.ses-open .sesbtn { display: none !important; }
     </div>
     <label class="offtoggle" for="offCheck">
       <input type="checkbox" id="offCheck">
-      <span>Não operei neste dia<small>Risca o dia na estratégia e na conta (feriados, Natal, férias).</small></span>
+      <span id="offT">Não operei neste dia<small id="offS">Risca o dia só nesta conta. A Estratégia não muda.</small></span>
     </label>
     <div class="dlg-actions">
       <button type="button" class="btn" id="dlgCancel">Cancelar</button>
@@ -2243,15 +2262,16 @@ body.ses-open .sesbtn { display: none !important; }
         const dateHtml = '<div class="date"><span class="dn">' + d.getDate() + '</span><span class="dw">' + DOW[d.getDay()] + '</span>' + (s.acct ? "" : newsMark(id)) + '</div>';
         const nbHtml = notes ? noteBtn(s.key, id, e, d) : "", ex = notes ? " cta" : " estr";
         const cbHtml = notes ? '<button type="button" class="nb' + (e.risk ? " has" : "") + '" data-calc="' + s.key + '|' + id + '" aria-label="Calculadora de ' + d.getDate() + ' de ' + MONTHS[d.getMonth()] + '"' + (e.risk ? ' data-tip="calc" data-risk="' + EUR.format(e.risk) + '" data-pct="' + fmt(p) + '" data-eur="' + eur(euroOf(e)) + '" data-cls="' + cls(p) + '"' : ' data-tip="empty" data-tv="Calcular em euros"') + '>' + CALC + '</button>' : "";
+        const offB = notes ? "" : '<button type="button" class="nb' + (e.off ? " has" : "") + '" data-offday="' + s.key + '|' + id + '" aria-label="Não era para operar a ' + d.getDate() + ' de ' + MONTHS[d.getMonth()] + '" data-tip="empty" data-tv="' + (e.off ? "Voltar a contar este dia" : "Não era para operar") + '">' + PEN + '</button>';
         if (e.off) {
-          h += '<div class="lrow off' + ex + base + '" data-row="' + s.key + '|' + id + '">' + dateHtml + '<span class="offlbl">Sem operar</span>' + nbHtml + (notes ? "<span></span>" : "") + '</div>';
+          h += '<div class="lrow off' + ex + base + '" data-row="' + s.key + '|' + id + '">' + dateHtml + '<span class="offlbl">' + (notes ? "Sem operar" : "Não era para operar") + '</span>' + nbHtml + (notes ? "<span></span>" : offB) + '</div>';
         } else {
           const eurHtml = notes && e.risk && traded(s.key, id) ? '<span class="eur">' + eur(euroOf(e)) + '</span>' : "";
           const star = !s.acct && traded(s.key, id) && p >= BIG_DAY;
           h += '<div class="lrow' + ex + base + (traded(s.key, id) ? " d-" + cls(p) : " vazio") + (star ? " star" : "") + '" data-row="' + s.key + '|' + id + '"' + (star ? ' title="Dia acima de +' + BIG_DAY + '%"' : '') + '>' + dateHtml +
             stepper(s.key, id, "tp", e.tp, !traded(s.key, id)) + stepper(s.key, id, "sl", e.sl, !traded(s.key, id)) +
             '<span class="to' + (e.tp + e.sl ? "" : " z") + '" data-tip="plain" data-tv="Total de oportunidades (TP + SL)"><span class="lb">TO</span><b>' + (e.tp + e.sl || (traded(s.key, id) ? 0 : "—")) + '</b></span>' +
-            '<span class="res ' + cls(p) + (traded(s.key, id) && p >= 30 ? " hi" : "") + '">' + (traded(s.key, id) ? fmt(p) : "—") + eurHtml + (star ? '<i class="st3"></i>' : '') + '</span>' + nbHtml + cbHtml + '</div>';
+            '<span class="res ' + cls(p) + (traded(s.key, id) && p >= 30 ? " hi" : "") + '">' + (traded(s.key, id) ? fmt(p) : "—") + eurHtml + (star ? '<i class="st3"></i>' : '') + '</span>' + nbHtml + cbHtml + offB + '</div>';
         }
       }
       // the week always counts its 5 real days, also the ones in the month before / after
@@ -3612,29 +3632,30 @@ body.ses-open .sesbtn { display: none !important; }
   // ---------- day dialog (note + day off) ----------
   const dlg = $("dlg");
   let dlgKey = null, lastFocus = null;
-  function openDay(s, id) {
+  function openDay(s, id, offOnly) {
     const [y, m, dd] = id.split("-").map(Number), d = new Date(y, m - 1, dd), e = entry(s, id);
-    dlgKey = { s, id };
+    dlgKey = { s, id, offOnly: !!offOnly };
+    $("dlgForm").classList.toggle("offonly", !!offOnly);
+    $("offT").firstChild.nodeValue = offOnly ? "Não era para operar neste dia" : "Não operei neste dia";
+    $("offS").textContent = offOnly ? "Risca o dia só na Estratégia (feriados, Natal, notícias…). A Fusion e a Prop não mudam." : "Risca o dia só nesta conta. A Estratégia não muda.";
     $("dlgSub").textContent = byKey(s).full;
     $("dlgTitle").textContent = DOWL[d.getDay()] + ", " + d.getDate() + " de " + MONTHS[d.getMonth()];
     $("noteText").value = e.note || "";
-    $("offCheck").checked = SERIES.some(x => entry(x.key, id).off);
+    $("offCheck").checked = !!e.off;
     $("noteText").readOnly = ro; $("offCheck").disabled = ro;
     $("dlgForm").querySelector(".primary").hidden = ro;
     $("dlgCancel").textContent = ro ? "Fechar" : "Cancelar";
     lastFocus = document.activeElement;
     dlg.hidden = false;
-    setTimeout(() => $("noteText").focus(), 30);
+    setTimeout(() => (offOnly ? $("offCheck") : $("noteText")).focus(), 30);
   }
   function closeDay() { dlg.hidden = true; dlgKey = null; render(); if (lastFocus && document.contains(lastFocus)) lastFocus.focus({ preventScroll: true }); }
   $("dlgForm").addEventListener("submit", ev => {
     ev.preventDefault(); if (!dlgKey || ro) return;
-    const { s, id } = dlgKey, note = $("noteText").value.trim().slice(0, 4000), off = $("offCheck").checked;
+    const { s, id, offOnly } = dlgKey, note = offOnly ? (entry(s, id).note || "") : $("noteText").value.trim().slice(0, 4000), off = $("offCheck").checked;
     const before = SERIES.map(x => [x.key, snapD(x.key, id)]);
     if (before.some(([k, p]) => (k === s && p.note !== note) || p.off !== off)) pushUndo("Nota de " + dayName(id) + " guardada", () => { before.forEach(([k, p]) => restoreD(k, id, p)); render(); });
-    setEntry(s, id, { note, off });
-    // a day off counts for the three ledgers
-    for (const x of SERIES) if (x.key !== s && entry(x.key, id).off !== off) setEntry(x.key, id, { off });
+    setEntry(s, id, { note, off });   // each table on its own: the Estratégia and the accounts are marked separately
     closeDay();
   });
   $("dlgCancel").addEventListener("click", closeDay);
@@ -3833,6 +3854,8 @@ body.ses-open .sesbtn { display: none !important; }
     if (b && !b.disabled) { const [s, id, field, delta] = b.dataset.k.split("|"); change(s, id, field, +delta); return; }
     const nb = e.target.closest("button[data-note]");
     if (nb) { const [s, id] = nb.dataset.note.split("|"); openDay(s, id); return; }
+    const ob = e.target.closest("button[data-offday]");
+    if (ob) { const [s, id] = ob.dataset.offday.split("|"); openDay(s, id, true); return; }
     const cb = e.target.closest("button[data-calc]");
     if (cb) { const [s, id] = cb.dataset.calc.split("|"); openCalc(s, id); return; }
     const nm = e.target.closest(".nwmark");
