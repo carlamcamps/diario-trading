@@ -110,7 +110,7 @@ jobs:
               m['url'] = SITE
               for s in subs:
                   try:
-                      webpush(subscription_info=s['sub'], data=json.dumps(m, ensure_ascii=False), vapid_private_key=vapid, vapid_claims={'sub': SITE}, ttl=3600)
+                      webpush(subscription_info=s['sub'], data=json.dumps(m, ensure_ascii=False), vapid_private_key=vapid, vapid_claims={'sub': 'mailto:diario-trading@users.noreply.github.com'}, ttl=3600)
                       print('enviado:', k)
                   except WebPushException as ex:
                       code = ex.response.status_code if ex.response is not None else None
