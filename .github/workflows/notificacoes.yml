@@ -1,6 +1,6 @@
 name: Notificacoes
 
-# De 5 em 5 minutos: as noticias do dia as 5:50 (hora de Portugal) e um aviso 30 min antes de cada noticia forte.
+# De 5 em 5 minutos: as noticias do dia as 5:50 (hora de Portugal), um aviso 30 min antes de cada noticia forte e outro as 20:00 (falta 1 hora).
 # Precisa do segredo VAPID_PRIVATE (Settings > Secrets and variables > Actions).
 on:
   schedule:
@@ -104,6 +104,9 @@ jobs:
                   if hol:
                       body = 'Hoje é feriado nos EUA, o mercado costuma estar mais parado. ' + (body if strong else '')
                   msgs.append((k, {'title': 'Bom dia, Carla ☀️', 'body': body, 'tag': k}))
+              k = 'fim-' + today.isoformat()
+              if k not in sent and loc.hour == 20 and loc.minute < 45:
+                  msgs.append((k, {'title': 'Oi Carla 💛', 'body': 'Falta 1 hora para terminar o dia de trading (21:00). Último esforço, com calma ✨', 'tag': k}))
               for t, g in sorted(slots.items()):
                   k = 'aviso-' + today.isoformat() + '-' + t
                   mins = round((min(when(e) for e in g) - now).total_seconds() / 60)
@@ -115,7 +118,7 @@ jobs:
               m['url'] = SITE
               for s in subs:
                   try:
-                      webpush(subscription_info=s['sub'], data=json.dumps(m, ensure_ascii=False), vapid_private_key=vapid, vapid_claims={'sub': 'mailto:diario-trading@users.noreply.github.com'}, ttl=3600)
+                      webpush(subscription_info=s['sub'], data=json.dumps(m, ensure_ascii=False), vapid_private_key=vapid, vapid_claims={'sub': 'mailto:diario-trading@users.noreply.github.com'}, ttl=3600, headers={'Urgency': 'high'})
                       print('enviado:', k)
                   except WebPushException as ex:
                       code = ex.response.status_code if ex.response is not None else None
