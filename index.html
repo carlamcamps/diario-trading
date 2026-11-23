@@ -1601,11 +1601,7 @@ body.night #dust { display: none; }
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40' fill='none' stroke='%23D9B66C' stroke-width='1.2' stroke-linecap='round'%3E%3Cg transform='matrix(1 0 0 -1 0 40)'%3E%3Cpath d='M2 32V10Q2 2 10 2h22'/%3E%3Cpath d='M6 20v-6q0-8 8-8h6' opacity='.6'/%3E%3Cpath d='M2 10q4.5 0 4.5 4.5M10 2q0 4.5 4.5 4.5' opacity='.6'/%3E%3Ccircle cx='32' cy='2' r='1.3' fill='%23D9B66C' stroke='none'/%3E%3Ccircle cx='2' cy='32' r='1.3' fill='%23D9B66C' stroke='none'/%3E%3C/g%3E%3C/svg%3E") bottom left / 36px no-repeat,
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40' fill='none' stroke='%23D9B66C' stroke-width='1.2' stroke-linecap='round'%3E%3Cg transform='matrix(-1 0 0 -1 40 40)'%3E%3Cpath d='M2 32V10Q2 2 10 2h22'/%3E%3Cpath d='M6 20v-6q0-8 8-8h6' opacity='.6'/%3E%3Cpath d='M2 10q4.5 0 4.5 4.5M10 2q0 4.5 4.5 4.5' opacity='.6'/%3E%3Ccircle cx='32' cy='2' r='1.3' fill='%23D9B66C' stroke='none'/%3E%3Ccircle cx='2' cy='32' r='1.3' fill='%23D9B66C' stroke='none'/%3E%3C/g%3E%3C/svg%3E") bottom right / 36px no-repeat; }
 /* gold buttons with a brushed-metal look: Sessão, Guardar, Hoje */
-.btn.primary, body .sesbtn, #today { background: repeating-linear-gradient(90deg, rgba(255, 250, 230, .1) 0 1px, transparent 1px 3px), linear-gradient(135deg, #EED39A, #CDA75E 38%, #A8833F 68%, #D9B76E); color: #2A0A11; border-color: rgba(246, 224, 164, .85); font-weight: 600; }
-/* the Sessão button stays plain: smooth gold, no stripes, no moving shine */
-body .sesbtn { background: linear-gradient(135deg, #E6C886, #C9A35A 55%, #B08A45); }
-body .sesbtn::after, body .sesbtn::before { display: none !important; animation: none !important; }
-.btn.primary, #today { box-shadow: inset 0 1px 0 rgba(255, 250, 230, .6), inset 0 -1px 0 rgba(90, 60, 20, .4), 0 6px 14px -6px rgba(0, 0, 0, .6); }
+.btn.primary, body .sesbtn, #today { background: repeating-linear-gradient(90deg, rgba(255, 250, 230, .1) 0 1px, transparent 1px 3px), linear-gradient(135deg, #EED39A, #CDA75E 38%, #A8833F 68%, #D9B76E); color: #2A0A11; border-color: rgba(246, 224, 164, .85); font-weight: 600; }.btn.primary, #today { box-shadow: inset 0 1px 0 rgba(255, 250, 230, .6), inset 0 -1px 0 rgba(90, 60, 20, .4), 0 6px 14px -6px rgba(0, 0, 0, .6); }
 #today:hover, .btn.primary:hover { filter: brightness(1.07); }
 /* mood faces jump and shine when chosen */
 .mp-r button.pick .mp-i, .mb-f button.pick .mb-i, .mb-i.pick { animation: moodPick .5s cubic-bezier(.3, 1.6, .5, 1) both; filter: drop-shadow(0 0 8px rgba(243, 217, 142, .95)); }
@@ -4239,11 +4235,10 @@ body.offline .netbar { transform: translate(-50%, 0); }
     if (a === "comdel") { if (ro) return; const l = comList(entry(s.key, id)).slice(); l.splice(+b.dataset.i, 1); setEntry(s.key, id, { coms: l, com: comSum(l) }); drawSes(); return; }
     if (a === "undo") { const h = sesHist.pop(); if (h) { const e0 = entry(h.key, h.id); setEntry(h.key, h.id, { [h.f]: Math.max(0, (e0[h.f] || 0) - 1) }); } drawSes(); return; }
     const e0 = entry(s.key, id); if (e0.off) return;
-    const before = pctOf(e0);
+    // no confetti here: the day is still going, it only celebrates when the result is written in the Diário
     setEntry(s.key, id, { [a]: Math.min(99, (e0[a] || 0) + 1) });
     sesHist.push({ key: s.key, id, f: a });
     haptic();
-    celebrate(before, pctOf(entry(s.key, id)));
     drawSes();
     // the key stays pressed for a moment and a "+1" floats up
     const nb = ses.querySelector('[data-ses="' + a + '"]');
