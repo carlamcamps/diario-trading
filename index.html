@@ -458,6 +458,26 @@ button, .cd, .nw-card, .tdr, .lrow { transition: transform .12s ease; }
 .splash.fly .sp-frame, .splash.fly .sp-stars, .splash.fly .sp-date, .splash.fly .sp-sign, .splash.fly .sp-tips { opacity: 0 !important; transition: opacity .35s ease !important; }
 .splash.fly .sp-icon { -webkit-box-reflect: none; translate: none; }
 @media (prefers-reduced-motion: reduce) { .sp-stars, .sp-tips, .sp-med { display: none; } .splash.in::before, .splash.in .sp-icon { animation: none !important; } .sp-frame i { transform: none !important; } .sp-sign path { stroke-dashoffset: 0 !important; } .sp-date { opacity: 1; transform: none; } }
+/* Sessão: BE key (when BE is on in the Configurações) */
+.ses-be { margin-top: 26px; width: 100%; max-width: 460px; height: 62px; display: flex; align-items: center; justify-content: center; gap: 12px; border: 1px solid rgba(246, 224, 164, .7); border-radius: 16px; cursor: pointer; color: #2A0A11; -webkit-tap-highlight-color: transparent;
+  background: repeating-linear-gradient(90deg, rgba(255, 250, 230, .1) 0 1px, transparent 1px 3px), linear-gradient(135deg, #EED39A, #CDA75E 38%, #A8833F 68%, #D9B76E);
+  box-shadow: 0 6px 0 #6A4C18, 0 12px 20px -8px rgba(0, 0, 0, .8), inset 0 1px 0 rgba(255, 255, 255, .5); transition: transform .06s, box-shadow .06s; }
+.ses-be:active, .ses-be.hit { transform: translateY(5px); box-shadow: 0 1px 0 #6A4C18, inset 0 1px 0 rgba(255, 255, 255, .5); }
+.ses-be b { font: 600 26px/1 var(--display); letter-spacing: .08em; }
+.ses-be small { font: 600 10.5px/1 var(--sans); letter-spacing: .2em; text-transform: uppercase; opacity: .75; }
+.ses-be .cnt { min-width: 44px; padding: 5px 10px; border-radius: 8px; background: rgba(42, 10, 17, .18); font: 700 18px/1 var(--sans); }
+@media (min-width: 861px) { .ses-be { max-width: 340px; height: 50px; margin-top: 20px; } }
+/* phone: weeks that open / close, and bottom bars that slide away while scrolling down */
+.wk-chev { display: none; }
+@media (max-width: 860px) {
+  .lrow.wk-shut { display: none; }
+  .wrow.wk-tog { cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .wk-chev { display: inline-block; width: 8px; height: 8px; margin: 0 8px 2px 0; border-right: 1.6px solid var(--gold); border-bottom: 1.6px solid var(--gold); transform: rotate(45deg); transition: transform .25s ease; vertical-align: middle; }
+  .wrow.wk-tog.shut .wk-chev { transform: rotate(-45deg); }
+  .wrow.wk-tog.shut { margin-bottom: 10px; }
+  .gbar, body .sesbtn { transition: transform .3s cubic-bezier(.3, .8, .3, 1), opacity .3s ease; }
+  body.bars-away .gbar, body.bars-away .sesbtn { transform: translateY(150%); opacity: 0; pointer-events: none; }
+}
 /* Diário: the year, month by month — dark velvet card with a double gold frame and filigree corners */
 .yrc { position: relative; margin-top: 4px; padding: 18px 16px 16px; border-radius: 18px; color: #EFDCC6;
   background: radial-gradient(120% 80% at 50% 0%, rgba(120, 30, 50, .55), transparent 60%), linear-gradient(160deg, #3A0C17, #1C050B 70%);
@@ -2937,19 +2957,20 @@ body.offline .netbar { transform: translate(-50%, 0); }
       // birthday week: wrap its days and its week line in a little confetti frame
       const bd = isBdayWeek(fullWeek(g.days[0]));
       if (bd) h += '<div class="bdw">' + bdConf();
+      const wkKey = view.y + "-" + g.w, wkOpen = wkIsOpen(wkKey, g.days);
       for (const d of g.days) {
         const id = iso(d), e = entry(s.key, id), p = pctOf(e);
-        const base = (SHOW_BE ? " hasbe" : "") + (id === todayId ? " today" : id > todayId ? " future" : "") + (g.w === wkNow && id !== todayId && Math.abs(d - now) < 8 * 864e5 ? " wk-now" : "");
+        const base = (wkOpen ? "" : " wk-shut") + (SHOW_BE ? " hasbe" : "") + (id === todayId ? " today" : id > todayId ? " future" : "") + (g.w === wkNow && id !== todayId && Math.abs(d - now) < 8 * 864e5 ? " wk-now" : "");
         const dateHtml = '<div class="date"><span class="dn">' + d.getDate() + '</span><span class="dw">' + DOW[d.getDay()] + '</span>' + (s.acct ? "" : newsMark(id)) + '</div>';
         const nbHtml = notes ? noteBtn(s.key, id, e, d) : "", ex = notes ? " cta" : " estr";
         const cbHtml = notes ? '<button type="button" class="nb' + (e.risk ? " has" : "") + '" data-calc="' + s.key + '|' + id + '" aria-label="Calculadora de ' + d.getDate() + ' de ' + MONTHS[d.getMonth()] + '"' + (e.risk ? ' data-tip="calc" data-risk="' + EUR.format(e.risk) + '" data-pct="' + fmt(p) + '"' + (e.com ? ' data-com="−' + EUR.format(e.com) + '"' : '') + ' data-eur="' + eur(euroOf(e)) + '" data-cls="' + cls(euroOf(e)) + '"' : ' data-tip="empty" data-tv="Calcular em euros"') + '>' + CALC + '</button>' : "";
         const offB = notes ? "" : '<button type="button" class="nb' + (e.off ? " has" : "") + '" data-offday="' + s.key + '|' + id + '" aria-label="Não era para operar a ' + d.getDate() + ' de ' + MONTHS[d.getMonth()] + '" data-tip="empty" data-tv="' + (e.off ? "Voltar a contar este dia" : "Não era para operar") + '">' + PEN + '</button>';
         if (e.off) {
-          h += '<div class="lrow off' + ex + base + '" data-row="' + s.key + '|' + id + '">' + dateHtml + '<span class="offlbl">' + (notes ? "Sem operar" : "Não era para operar") + '</span>' + nbHtml + (notes ? "<span></span>" : offB) + '</div>';
+          h += '<div class="lrow off' + ex + base + '" data-wk="' + wkKey + '" data-row="' + s.key + '|' + id + '">' + dateHtml + '<span class="offlbl">' + (notes ? "Sem operar" : "Não era para operar") + '</span>' + nbHtml + (notes ? "<span></span>" : offB) + '</div>';
         } else {
           const eurHtml = (notes && e.risk && traded(s.key, id) ? '<span class="eur">' + eur(euroOf(e)) + '</span>' : "") + (notes && e.com ? '<span class="com" title="Comissão deste dia">−' + EUR.format(e.com) + ' com.</span>' : "");
           const star = !s.acct && traded(s.key, id) && p >= BIG_DAY;
-          h += '<div class="lrow' + ex + base + (traded(s.key, id) ? " d-" + cls(p) : " vazio") + (star ? " star" : "") + '" data-row="' + s.key + '|' + id + '"' + (star ? ' title="Dia acima de +' + BIG_DAY + '%"' : '') + '>' + dateHtml +
+          h += '<div class="lrow' + ex + base + (traded(s.key, id) ? " d-" + cls(p) : " vazio") + (star ? " star" : "") + '" data-wk="' + wkKey + '" data-row="' + s.key + '|' + id + '"' + (star ? ' title="Dia acima de +' + BIG_DAY + '%"' : '') + '>' + dateHtml +
             stepper(s.key, id, "tp", e.tp, !traded(s.key, id)) + stepper(s.key, id, "sl", e.sl, !traded(s.key, id)) + (SHOW_BE ? stepper(s.key, id, "be", e.be || 0, !traded(s.key, id)) : "") +
             '<span class="to' + (e.tp + e.sl + (e.be || 0) ? "" : " z") + '" data-tip="plain" data-tv="Total de oportunidades (TP + SL' + (SHOW_BE ? " + BE" : "") + ')"><span class="lb">TO</span><b>' + (e.tp + e.sl + (e.be || 0) || (traded(s.key, id) ? 0 : "—")) + '</b></span>' +
             '<span class="res ' + cls(p) + (traded(s.key, id) && p >= 30 ? " hi" : "") + '">' + (traded(s.key, id) ? fmt(p) : "—") + eurHtml + (star ? '<i class="st3"></i>' : '') + '</span>' + nbHtml + cbHtml + offB + '</div>';
@@ -2960,7 +2981,7 @@ body.offline .netbar { transform: translate(-50%, 0); }
       const we = notes ? eurSum(s.key, wids) : { n: 0 };
       const weHtml = we.n ? '<span class="weur ' + cls(we.v) + '" data-tip="plain" data-tv="Soma das calculadoras da semana (' + we.n + (we.n === 1 ? " dia" : " dias") + ')">' + CALC_SM + eur(we.v) + '</span>' : "";
       const split = wk5.some(x => x.getMonth() !== view.m);
-      h += '<div class="wrow"' + (split ? ' data-tip="plain" data-tv="Semana completa (' + weekLabel(wk5) + '), conta também os dias do outro mês"' : '') + '><div class="wl"><b>Semana ' + g.w + '</b>' + weekLabel(wk5) + '</div>' +
+      h += '<div class="wrow wk-tog' + (wkOpen ? "" : " shut") + '" data-wkt="' + wkKey + '"' + (split ? ' data-tip="plain" data-tv="Semana completa (' + weekLabel(wk5) + '), conta também os dias do outro mês"' : '') + '><div class="wl"><i class="wk-chev" aria-hidden="true"></i><b>Semana ' + g.w + '</b>' + weekLabel(wk5) + '</div>' +
         '<div class="wr"><span class="wtx">' + wt.tp + ' TP, ' + wt.sl + ' SL, ' + (SHOW_BE && wt.be ? wt.be + ' BE, ' : '') + wt.to + ' TO</span>' + weHtml + '<span class="wp ' + cls(wt.pct) + '">' + fmt(wt.pct) + '</span></div>' + (wt.tp + wt.sl ? '<i class="wbar ' + cls(wt.pct) + '" style="--w:' + Math.max(6, Math.min(100, Math.abs(wt.pct) * 1.4)) + '%" aria-hidden="true"></i>' : '') + '</div>';
       if (bd) h += '</div>';
     }
@@ -3202,7 +3223,8 @@ body.offline .netbar { transform: translate(-50%, 0); }
       '<div class="st-hr"><button type="button" class="sumbtn" data-sum="' + s.role + '">✦ Resumo de ' + MONTHS[view.m] + '</button><button type="button" class="sumbtn xlsbtn" data-csv="1"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="2.5" width="11" height="11" rx="1.5"/><path d="M2.5 6.2h11M2.5 9.8h11M6.2 2.5v11"/></svg>Exportar para Excel</button><div class="per pslide" role="group" data-pi="' + ["m", "y", "all"].indexOf(perPrev) + '|' + ["m", "y", "all"].indexOf(per) + '" aria-label="Período">' + [["m", "Mês"], ["y", "Ano"], ["all", "Tudo"]].map(([k, l]) => '<button type="button" data-per="' + k + '" aria-pressed="' + (per === k) + '">' + l + '</button>').join("") + '</div></div></div>';
     setTimeout(() => { perPrev = per; }, 0);
     // no days yet: still show the NFP / CPI / FOMC table of the year (handy for backtesting)
-    if (!r.n) { h += '<div class="ch-empty big-empty">Ainda não há dias registados neste período.</div><div class="sec"><span>Notícias</span><small>NFP, CPI e FOMC de ' + view.y + '</small></div><div class="charts">' + newsTables(s) + '</div></section></div>'; return h; }
+    // no days yet: show everything at 0 (same layout as with data)
+    if (!r.n) { const d0 = days[0] || new Date(view.y, view.m, 1); r.best = r.worst = { p: 0, d: d0 }; r.win = 0; r.curve = days.length > 1 ? days.map(d => ({ l: d.getDate() + " " + MON3[d.getMonth()], v: 0 })) : [{ l: "", v: 0 }, { l: "", v: 0 }]; r.daily = days.map(d => ({ l: String(d.getDate()), v: 0, n: 0, tip: dShort(d) + ": sem registo" })); }
     // headline: the result, the green / red days ring and the hit rate
     const pd = r.n ? r.pos / r.n * 100 : 0;
     h += '<div class="hero"><div class="hero-main"><span class="sl">Resultado</span><b class="' + cls(r.pct) + '">' + fmt(r.pct) + '</b><small>' + r.tp + ' TP, ' + r.sl + ' SL em ' + r.n + (r.n === 1 ? ' dia' : ' dias') + (s.acct && r.eurN ? ' · ' + eur(r.eur) : '') + '</small></div>' +
@@ -3350,6 +3372,8 @@ body.offline .netbar { transform: translate(-50%, 0); }
   const acName = a => a === "fusion" ? "Fusion" : ((props.find(x => x.id === a) || {}).nome || "Prop");
   const acDk = a => a === "fusion" ? "conta" : "prop_conta";   // the Diário table shown next to each day
   const ACC_ALL = () => ["fusion", ...props.map(x => x.id)];
+  // the risk written in the Conta for that day (Fusion, or the Prop chosen in the Conta): the calculator suggests it
+  const acRiskFor = (dk, id) => { try { const a = dk === "conta" ? "fusion" : dk === "prop_conta" ? propSel : null; const r = a && cstore[a] ? centry(a, id).risco : null; return r > 0 ? r : null; } catch (_) { return null; } };
   // a bag of per-account things that creates the account's entry the first time it is asked for
   const accBag = (mk, init) => new Proxy(init || {}, { get: (t, k) => (typeof k === "string" && !(k in t) && isAcc(k)) ? (t[k] = mk()) : t[k] });
   const AC = new Proxy({}, { get: (_, k) => acName(k) }); void AC;
@@ -4039,8 +4063,9 @@ body.offline .netbar { transform: translate(-50%, 0); }
       '<i class="ses-frame" aria-hidden="true"></i><i class="ses-grab" aria-hidden="true"></i>' + sesWatch() +
       '<div class="ses-par">' + ((isPropKey(s.key) ? PAR_P : PAR_F) ? '<b>' + esc(isPropKey(s.key) ? PAR_P : PAR_F) + '</b>' : '') + '<span>1:' + tpOf(s.key) + '</span></div>' + '<div class="ses-date">' + DOWL[d.getDay()] + ', ' + d.getDate() + ' de ' + MONTHS[d.getMonth()] + '</div><div class="ses-clock" id="sesClock">' + dayClock().short + '</div><div class="ses-news" id="sesNews"' + (sesNewsTxt() ? '' : ' hidden') + '>' + sesNewsTxt() + '</div>' +
       (we ? '<p class="ses-we">Hoje é fim de semana. O Diário só tem dias úteis.</p>' : e.off ? '<p class="ses-we">Este dia está marcado como "sem operar".</p>' :
-        '<div class="ses-res ' + cls(p) + '">' + fmt(p) + '</div><div class="ses-cnt">' + e.tp + ' TP · ' + e.sl + ' SL' + (s.acct && e.risk ? ' · ' + eur(euroOf(e)) : '') + '</div>' +
+        '<div class="ses-res ' + cls(p) + '">' + fmt(p) + '</div><div class="ses-cnt">' + e.tp + ' TP · ' + e.sl + ' SL' + (SHOW_BE ? ' · ' + (e.be || 0) + ' BE' : '') + (s.acct && e.risk ? ' · ' + eur(euroOf(e)) : '') + '</div>' +
         '<div class="ses-btns"><button type="button" class="key ses-tp" data-ses="tp" aria-label="Mais um TP">' + sesRing(e.tp, e.tp + e.sl, "tp") + '<span class="cap"><b>TP</b><small>Take profit</small><span class="cnt">' + e.tp + '</span></span></button><button type="button" class="key ses-sl" data-ses="sl" aria-label="Mais um SL">' + sesRing(e.sl, e.tp + e.sl, "sl") + '<span class="cap"><b>SL</b><small>Stop loss</small><span class="cnt">' + e.sl + '</span></span></button></div>' +
+        (SHOW_BE ? '<button type="button" class="ses-be" data-ses="be" aria-label="Mais um BE (break-even)"><b>BE</b><small>break-even</small><span class="cnt">' + (e.be || 0) + '</span></button>' : '') +
         '<button type="button" class="ses-undo" data-ses="undo"' + (sesHist.length ? '' : ' disabled') + '>↶ Desfazer o último toque</button>' +
         '') +
       '<p class="ses-help">Toca em cada operação. Fica guardado no Diário de hoje, na ' + s.full + '.</p>' + moodBarHtml();
@@ -4063,10 +4088,10 @@ body.offline .netbar { transform: translate(-50%, 0); }
     }
     if (a === "comlist") { sesComList = !sesComList; drawSes(); return; }
     if (a === "comdel") { if (ro) return; const l = comList(entry(s.key, id)).slice(); l.splice(+b.dataset.i, 1); setEntry(s.key, id, { coms: l, com: comSum(l) }); drawSes(); return; }
-    if (a === "undo") { const h = sesHist.pop(); if (h) { const e0 = entry(h.key, h.id); setEntry(h.key, h.id, { [h.f]: Math.max(0, e0[h.f] - 1) }); } drawSes(); return; }
+    if (a === "undo") { const h = sesHist.pop(); if (h) { const e0 = entry(h.key, h.id); setEntry(h.key, h.id, { [h.f]: Math.max(0, (e0[h.f] || 0) - 1) }); } drawSes(); return; }
     const e0 = entry(s.key, id); if (e0.off) return;
     const before = pctOf(e0);
-    setEntry(s.key, id, { [a]: Math.min(99, e0[a] + 1) });
+    setEntry(s.key, id, { [a]: Math.min(99, (e0[a] || 0) + 1) });
     sesHist.push({ key: s.key, id, f: a });
     haptic();
     celebrate(before, pctOf(entry(s.key, id)));
@@ -4417,7 +4442,7 @@ body.offline .netbar { transform: translate(-50%, 0); }
     t += "No total fizeste <b class=\"" + cls(r.pct) + "\">" + fmt(r.pct) + "</b>, ou seja, em média <b>" + fmt1(r.avg) + "</b> por dia. ";
     if (r.win != null) t += "De cada 10 operações, cerca de <b>" + Math.round(r.win / 10) + "</b> " + (Math.round(r.win / 10) === 1 ? "acabou" : "acabaram") + " em TP. ";
     if (r.win != null && r.win < 50 && r.pct > 0 && r.tpv > SL_PCT) t += "Mesmo acertando menos de metade, ganhas, porque cada TP vale " + (r.tpv / SL_PCT === 2 ? "o dobro" : r.tpv / SL_PCT + " vezes") + " de um SL. ";
-    if (r.best) t += "O melhor dia foi <b>" + dShort(r.best.d) + "</b> (" + fmt(r.best.p) + ")" + (r.worst && r.worst.p < 0 ? " e o pior <b>" + dShort(r.worst.d) + "</b> (" + fmt(r.worst.p) + ")" : "") + ".";
+    if (r.best && r.n) t += "O melhor dia foi <b>" + dShort(r.best.d) + "</b> (" + fmt(r.best.p) + ")" + (r.worst && r.worst.p < 0 ? " e o pior <b>" + dShort(r.worst.d) + "</b> (" + fmt(r.worst.p) + ")" : "") + ".";
     return '<div class="story"><span class="story-k">Em poucas palavras</span><p>' + t + '</p></div>';
   }
   const hint = t => '<p class="hint">' + t + '</p>';  // the trading week (Monday to Friday) as a thin line, with a gold dot on today
@@ -4464,6 +4489,31 @@ body.offline .netbar { transform: translate(-50%, 0); }
     window.addEventListener("mousemove", e => { mx = e.clientX; my = e.clientY; if (!tk) tk = requestAnimationFrame(check); }, { passive: true });
     window.addEventListener("scroll", () => { if (!tk) tk = requestAnimationFrame(check); }, { passive: true });
   })();  // a soft entrance when the tab / month changes, and the big totals count up from 0
+  // phone: the weeks of the Diário open / close with a tap on their "Semana" bar.
+  // The current week starts open, the others closed; what you open stays open until the app is closed (sessionStorage).
+  var wkState;   // var + lazy load: the Diário may be drawn before this line runs
+  function wkLoad() { if (!wkState) { try { wkState = JSON.parse(sessionStorage.getItem("diario-semanas") || "{}") || {}; } catch (_) { wkState = {}; } } return wkState; }
+  function wkIsOpen(key, days) {
+    const st = wkLoad(); if (key in st) return !!st[key];
+    const n = new Date(); return days.some(d => Math.abs(d - n) < 7 * 864e5 && isoWeek(d) === isoWeek(n));
+  }
+  document.addEventListener("click", e => {
+    const w = e.target.closest("[data-wkt]"); if (!w || !(window.matchMedia && window.matchMedia("(max-width: 860px)").matches)) return;
+    if (e.target.closest("[data-tip]") && e.target.closest("[data-tip]") !== w) return;
+    const key = w.dataset.wkt, open = w.classList.contains("shut");
+    wkLoad()[key] = open; try { sessionStorage.setItem("diario-semanas", JSON.stringify(wkState)); } catch (_) {}
+    document.querySelectorAll('[data-wkt="' + key + '"]').forEach(x => x.classList.toggle("shut", !open));
+    document.querySelectorAll('.lrow[data-wk="' + key + '"]').forEach(x => x.classList.toggle("wk-shut", !open));
+  });
+  // phone: the Fusion/Prop bar and the Sessão button slide away while scrolling down, and come back when scrolling up
+  (function () {
+    let lastY = window.scrollY;
+    window.addEventListener("scroll", () => {
+      const y = window.scrollY, dy = y - lastY, nearEnd = window.innerHeight + y > document.documentElement.scrollHeight - 140;
+      if (Math.abs(dy) < 8 && !nearEnd) return;
+      document.body.classList.toggle("bars-away", dy > 0 && y > 160 && !nearEnd); lastY = y;
+    }, { passive: true });
+  })();
   // Conta: the balance on the card counts up while little gold coins fall
   function coinRain(card) {
     if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -4645,7 +4695,8 @@ body.offline .netbar { transform: translate(-50%, 0); }
     $("calcTitle").textContent = DOWL[d.getDay()] + ", " + d.getDate() + " de " + MONTHS[d.getMonth()];
     $("calcDay").innerHTML = "Resultado do dia (" + e.tp + " TP, " + e.sl + " SL) <b class=\"" + cls(p) + "\">" + fmt(p) + "</b>";
     let last = ""; try { last = localStorage.getItem(LS_RISK) || ""; } catch (_) {}
-    $("riskIn").value = e.risk ? String(e.risk) : last;
+    const ckRisk = acRiskFor(s, id);
+    $("riskIn").value = e.risk ? String(e.risk) : ckRisk ? String(ckRisk) : last;
     $("riskIn").readOnly = ro; $("comIn").value = e.com ? String(e.com) : ""; $("comIn").readOnly = ro;
     { const l = comList(e); $("calcComL").innerHTML = l.length > 1 || (l[0] && l[0].h) ? '<small>Uma a uma:</small>' + l.map(c => '<span>' + (c.h === "fim" ? 'fim do dia' + (c.real != null ? ' (deu ' + eur(c.real) + ')' : '') + ' · ' : c.h ? c.h + ' · ' : '') + '−' + EUR.format(c.v) + '</span>').join("") : ""; }
     $("calcForm").querySelector(".primary").hidden = ro; $("calcClear").hidden = ro;
