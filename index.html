@@ -1193,9 +1193,9 @@ body.view-diario .gbar, body.view-stats .gbar, body.view-cal .gbar { position: f
 body.ses-open .gbar { display: none !important; }
 /* live session (phone and computer) */
 .sesbtn { display: none; }
-body.view-diario .sesbtn { position: fixed; z-index: 15; right: 16px; bottom: max(18px, env(safe-area-inset-bottom, 0px)); display: inline-flex; align-items: center; gap: 6px; border: 1px solid rgba(205, 167, 94, .6); background: linear-gradient(135deg, #CDA75E, #A8833F); color: #2A0A11; border-radius: 999px; padding: 11px 16px 11px 13px; font: 600 14px/1 var(--sans); box-shadow: 0 12px 26px -8px rgba(0, 0, 0, .75); cursor: pointer; }
+body .sesbtn { position: fixed; z-index: 15; right: 16px; bottom: max(18px, env(safe-area-inset-bottom, 0px)); display: inline-flex; align-items: center; gap: 6px; border: 1px solid rgba(205, 167, 94, .6); background: linear-gradient(135deg, #CDA75E, #A8833F); color: #2A0A11; border-radius: 999px; padding: 11px 16px 11px 13px; font: 600 14px/1 var(--sans); box-shadow: 0 12px 26px -8px rgba(0, 0, 0, .75); cursor: pointer; }
 .sesbtn svg { width: 18px; height: 18px; }
-body.view-diario .sesbtn { overflow: hidden; }
+body .sesbtn { overflow: hidden; }
 .sesbtn::after { content: ""; position: absolute; top: -20%; bottom: -20%; width: 40%; left: -60%; background: linear-gradient(100deg, transparent, rgba(255, 250, 230, .75), transparent); transform: skewX(-18deg); animation: sesShine 4s ease-in-out 1.5s infinite; pointer-events: none; }
 @keyframes sesShine { 0%, 70% { left: -60%; } 100% { left: 130%; } }
 @media (prefers-reduced-motion: reduce) { .sesbtn::after { display: none; } }
@@ -1207,7 +1207,7 @@ body.view-diario .sesbtn { overflow: hidden; }
 .ses-news { margin-top: 8px; padding: 6px 12px; border-radius: 999px; background: rgba(205, 167, 94, .12); border: 1px solid rgba(205, 167, 94, .35); color: var(--champ); font: 500 12.5px/1.3 var(--sans); text-align: center; max-width: 92%; }
 .ses-news b { color: var(--gold); font-weight: 600; }
 body.ses-open .sesbtn { display: none !important; }
-@media (min-width: 861px) { body.view-diario .sesbtn { right: 28px; bottom: 28px; padding: 13px 20px 13px 16px; font-size: 15px; } }
+@media (min-width: 861px) { body .sesbtn { right: 28px; bottom: 28px; padding: 13px 20px 13px 16px; font-size: 15px; } }
 .ses { position: fixed; inset: 0; z-index: 35; background: radial-gradient(120% 70% at 50% 0%, #4A0E1E, #170307 70%); color: var(--champ); display: flex; flex-direction: column; align-items: center; padding: max(16px, env(safe-area-inset-top, 0px)) 16px max(18px, env(safe-area-inset-bottom, 0px)); overflow-y: auto; }
 /* the day's result tints the session screen very lightly: green up, yellow at 0%, red down */
 .ses::before { content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: 0; transition: opacity .7s ease; background: var(--sesTint, transparent); }
@@ -1356,7 +1356,7 @@ body.night #dust { display: none; }
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40' fill='none' stroke='%23D9B66C' stroke-width='1.2' stroke-linecap='round'%3E%3Cg transform='matrix(1 0 0 -1 0 40)'%3E%3Cpath d='M2 32V10Q2 2 10 2h22'/%3E%3Cpath d='M6 20v-6q0-8 8-8h6' opacity='.6'/%3E%3Cpath d='M2 10q4.5 0 4.5 4.5M10 2q0 4.5 4.5 4.5' opacity='.6'/%3E%3Ccircle cx='32' cy='2' r='1.3' fill='%23D9B66C' stroke='none'/%3E%3Ccircle cx='2' cy='32' r='1.3' fill='%23D9B66C' stroke='none'/%3E%3C/g%3E%3C/svg%3E") bottom left / 36px no-repeat,
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40' fill='none' stroke='%23D9B66C' stroke-width='1.2' stroke-linecap='round'%3E%3Cg transform='matrix(-1 0 0 -1 40 40)'%3E%3Cpath d='M2 32V10Q2 2 10 2h22'/%3E%3Cpath d='M6 20v-6q0-8 8-8h6' opacity='.6'/%3E%3Cpath d='M2 10q4.5 0 4.5 4.5M10 2q0 4.5 4.5 4.5' opacity='.6'/%3E%3Ccircle cx='32' cy='2' r='1.3' fill='%23D9B66C' stroke='none'/%3E%3Ccircle cx='2' cy='32' r='1.3' fill='%23D9B66C' stroke='none'/%3E%3C/g%3E%3C/svg%3E") bottom right / 36px no-repeat; }
 /* gold buttons with a brushed-metal look: Sessão, Guardar, Hoje */
-.btn.primary, body.view-diario .sesbtn, #today { background: repeating-linear-gradient(90deg, rgba(255, 250, 230, .1) 0 1px, transparent 1px 3px), linear-gradient(135deg, #EED39A, #CDA75E 38%, #A8833F 68%, #D9B76E); color: #2A0A11; border-color: rgba(246, 224, 164, .85); font-weight: 600; }
+.btn.primary, body .sesbtn, #today { background: repeating-linear-gradient(90deg, rgba(255, 250, 230, .1) 0 1px, transparent 1px 3px), linear-gradient(135deg, #EED39A, #CDA75E 38%, #A8833F 68%, #D9B76E); color: #2A0A11; border-color: rgba(246, 224, 164, .85); font-weight: 600; }
 .btn.primary, #today { box-shadow: inset 0 1px 0 rgba(255, 250, 230, .6), inset 0 -1px 0 rgba(90, 60, 20, .4), 0 6px 14px -6px rgba(0, 0, 0, .6); }
 #today:hover, .btn.primary:hover { filter: brightness(1.07); }
 /* mood faces jump and shine when chosen */
@@ -1610,6 +1610,20 @@ body.offline .netbar { transform: translate(-50%, 0); }
 .cfg-ro { color: #F29AAE; font-size: 13px; margin: 0; }
 .xlsbtn { display: inline-flex; align-items: center; gap: 6px; }
 .xlsbtn svg { width: 14px; height: 14px; }
+/* ---------- Sessão: window on the computer, pull down to close on the phone ---------- */
+.ses-scrim { position: fixed; inset: 0; z-index: 34; background: rgba(8, 1, 4, .6); backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); animation: scrimIn .25s ease; }
+.ses-scrim[hidden] { display: none; }
+@keyframes scrimIn { from { opacity: 0; } }
+@media (max-width: 860px) { .ses-scrim { display: none !important; } }
+@media (min-width: 861px) {
+  .ses { inset: auto; top: 50%; left: 50%; width: min(500px, calc(100vw - 48px)); height: min(880px, calc(100vh - 48px)); transform: translate(-50%, -50%); border-radius: 30px; border: 1px solid rgba(205, 167, 94, .5); box-shadow: 0 40px 90px -20px rgba(0, 0, 0, .9); overflow: hidden auto; padding-top: 26px !important; animation: sesWin .3s cubic-bezier(.2, .9, .3, 1); }
+  .ses::before, .ses::after { border-radius: 30px; }
+  .ses-frame { top: 10px !important; left: 10px; right: 10px; bottom: 10px; border-radius: 22px; }
+  .ses-grab { display: none !important; }
+  @keyframes sesWin { from { opacity: 0; transform: translate(-50%, -46%) scale(.97); } }
+}
+.ses > .ses-grab { position: absolute !important; top: calc(max(8px, env(safe-area-inset-top, 0px)) + 2px); left: 50%; width: 46px; height: 5px; margin-left: -23px; border-radius: 3px; background: rgba(205, 167, 94, .6); z-index: 2; }
+.ses.dragging { overflow: hidden; }
 /* ---------- commission ---------- */
 .res .com { display: block; font-size: 10.5px; font-weight: 500; color: #9C4A5C; text-align: right; line-height: 1.1; opacity: .9; }
 @media (max-width: 860px) { .res .com { display: none; } }
@@ -3769,8 +3783,8 @@ body.offline .netbar { transform: translate(-50%, 0); }
   // a wave of light across the screen on each tap
   function sesWave(btn, k) {
     if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const r = btn.getBoundingClientRect(), w = document.createElement("i");
-    w.className = "ses-wave " + k; w.style.left = (r.left + r.width / 2) + "px"; w.style.top = (r.top + r.height / 2) + "px";
+    const r = btn.getBoundingClientRect(), o = ses.getBoundingClientRect(), w = document.createElement("i");
+    w.className = "ses-wave " + k; w.style.left = (r.left - o.left + r.width / 2) + "px"; w.style.top = (r.top - o.top + r.height / 2) + "px";
     ses.appendChild(w); setTimeout(() => w.remove(), 900);
   }
   function drawSes() {
@@ -3778,7 +3792,7 @@ body.offline .netbar { transform: translate(-50%, 0); }
     const d = new Date(), id = iso(d), s = byRole(sesRole), e = entry(s.key, id), p = pctOf(e), we = d.getDay() === 0 || d.getDay() === 6;
     ses.dataset.res = !we && !e.off && traded(s.key, id) ? cls(p) : "";   // soft green / yellow / red glow behind the keys
     ses.innerHTML = '<div class="ses-top"><div class="ses-tabs">' + SES().map(x => '<button type="button" data-sesr="' + x.role + '" aria-pressed="' + (x.role === sesRole) + '">' + x.label + '</button>').join("") + '</div><button type="button" class="ses-x" data-ses="close" aria-label="Fechar">✕</button></div>' +
-      '<i class="ses-frame" aria-hidden="true"></i>' + sesWatch() +
+      '<i class="ses-frame" aria-hidden="true"></i><i class="ses-grab" aria-hidden="true"></i>' + sesWatch() +
       '<div class="ses-date">' + DOWL[d.getDay()] + ', ' + d.getDate() + ' de ' + MONTHS[d.getMonth()] + '</div><div class="ses-clock" id="sesClock">' + dayClock().short + '</div><div class="ses-news" id="sesNews"' + (sesNewsTxt() ? '' : ' hidden') + '>' + sesNewsTxt() + '</div>' +
       (we ? '<p class="ses-we">Hoje é fim de semana. O Diário só tem dias úteis.</p>' : e.off ? '<p class="ses-we">Este dia está marcado como "sem operar".</p>' :
         '<div class="ses-res ' + cls(p) + '">' + fmt(p) + '</div><div class="ses-cnt">' + e.tp + ' TP · ' + e.sl + ' SL' + (s.acct && e.risk ? ' · ' + eur(euroOf(e)) : '') + '</div>' +
@@ -3790,13 +3804,13 @@ body.offline .netbar { transform: translate(-50%, 0); }
     sesWatchTick();
   }
   ses.addEventListener("keydown", e => { if (e.key === "Enter" && e.target.id === "sesComIn") { e.preventDefault(); const b = ses.querySelector('[data-ses="comadd"]'); if (b) b.click(); } });
-  sesBtn.addEventListener("click", () => { sesHist = []; sesComOpen = false; drawSes(); ses.hidden = false; sesWatchTick(); document.body.classList.add("ses-open"); ses.classList.remove("enter"); void ses.offsetWidth; ses.classList.add("enter"); setTimeout(() => ses.classList.remove("enter"), 900); });
+  sesBtn.addEventListener("click", () => { sesHist = []; sesComOpen = false; drawSes(); ses.hidden = false; sesScrim.hidden = false; ses.style.transform = ""; sesWatchTick(); document.body.classList.add("ses-open"); ses.classList.remove("enter"); void ses.offsetWidth; ses.classList.add("enter"); setTimeout(() => ses.classList.remove("enter"), 900); });
   ses.addEventListener("click", e => {
     const r = e.target.closest("[data-sesr]");
     if (r) { sesRole = r.dataset.sesr; sesHist = []; try { localStorage.setItem("diario-trading-sessao", sesRole); } catch (_) {} drawSes(); return; }
     const b = e.target.closest("[data-ses]"); if (!b) return;
     const a = b.dataset.ses, id = iso(new Date()), s = byRole(sesRole);
-    if (a === "close") { ses.hidden = true; document.body.classList.remove("ses-open"); render(); return; }
+    if (a === "close") { closeSes(); return; }
     if (a === "com") { sesComOpen = !sesComOpen; drawSes(); if (sesComOpen) setTimeout(() => { const i = $("sesComIn"); if (i) i.focus(); }, 30); return; }
     if (a === "comadd" || a === "comclr") {
       if (ro) return; const e0 = entry(s.key, id), v = Math.max(0, parseFloat(String(($("sesComIn") || {}).value || "").replace(",", ".")) || 0);
@@ -3816,7 +3830,31 @@ body.offline .netbar { transform: translate(-50%, 0); }
     const nb = ses.querySelector('[data-ses="' + a + '"]');
     if (nb) { nb.classList.add("hit"); setTimeout(() => nb.classList.remove("hit"), 170); nb.insertAdjacentHTML("beforeend", '<i class="plus1">+1</i>'); sesWave(nb, a); }
   });
-  document.addEventListener("keydown", e => { if (e.key === "Escape" && !ses.hidden) { ses.hidden = true; document.body.classList.remove("ses-open"); render(); } });
+  document.addEventListener("keydown", e => { if (e.key === "Escape" && !ses.hidden) closeSes(); });
+  // computer: a dark backdrop behind the Sessão window; a click outside closes it
+  const sesScrim = document.createElement("div"); sesScrim.className = "ses-scrim"; sesScrim.hidden = true; document.body.appendChild(sesScrim);
+  sesScrim.addEventListener("click", () => closeSes());
+  function closeSes() {
+    if (ses.hidden) return;
+    ses.hidden = true; sesScrim.hidden = true; ses.style.transform = ""; ses.style.transition = ""; ses.classList.remove("dragging");
+    document.body.classList.remove("ses-open"); render();
+  }
+  // phone: pull the Sessão down to close it
+  (function () {
+    let y0 = null, x0 = 0, dy = 0, drag = false;
+    ses.addEventListener("touchstart", e => { if (e.touches.length !== 1 || ses.scrollTop > 0 || e.target.closest("input, .moodbar")) { y0 = null; return; } y0 = e.touches[0].clientY; x0 = e.touches[0].clientX; dy = 0; drag = false; }, { passive: true });
+    ses.addEventListener("touchmove", e => {
+      if (y0 == null) return; const t = e.touches[0]; dy = t.clientY - y0;
+      if (!drag) { if (dy > 12 && Math.abs(dy) > Math.abs(t.clientX - x0) * 1.3) { drag = true; ses.classList.add("dragging"); } else if (dy < -6) { y0 = null; return; } else return; }
+      if (e.cancelable) e.preventDefault();
+      ses.style.transition = "none"; ses.style.transform = "translateY(" + Math.max(0, dy) + "px)";
+    }, { passive: false });
+    ses.addEventListener("touchend", () => {
+      if (y0 == null) return; y0 = null; if (!drag) return; drag = false; ses.classList.remove("dragging");
+      ses.style.transition = "transform .28s cubic-bezier(.2, .8, .2, 1)";
+      if (dy > 120) { ses.style.transform = "translateY(100%)"; setTimeout(closeSes, 260); } else ses.style.transform = "";
+    });
+  })();
 
   // ---------- end-of-day card: after 21:00 on a trading day, shown once per day on each phone/computer ----------
   const LS_EOD = "diario-fimdia";
