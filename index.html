@@ -611,7 +611,7 @@ button, .cd, .nw-card, .tdr, .lrow { transition: transform .12s ease; }
 .cmp td.pos { color: var(--pos); font-weight: 600; } .cmp td.neg { color: var(--neg); font-weight: 600; }
 
 /* account ledger */
-.ahead, .arow { display: grid; grid-template-columns: 52px minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.1fr) minmax(0, .8fr) 26px; gap: 8px; align-items: center; }
+.ahead, .arow { display: grid; grid-template-columns: 52px minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.1fr) 26px; gap: 8px; align-items: center; }
 .ahead { background: transparent; color: var(--soft); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; padding: 0 8px 0 12px; position: relative; z-index: 1; color: #C7A9A3; }
 .aledger { display: flex; flex-direction: column; gap: 3px; position: relative; z-index: 1; }
 .arow { background: var(--row); border-radius: 10px; padding: 5px 6px 5px 12px; scroll-margin: 120px; }
@@ -1636,6 +1636,22 @@ body.offline .netbar { transform: translate(-50%, 0); }
   .ses-undo { margin-top: 12px; padding: 8px 14px; font-size: 13px; }
   .ses-help { font-size: 11.5px; margin-top: 10px; }
 }
+/* the pair of each account (Fusion / Prop) */
+.parchip { display: inline-flex; align-items: center; gap: 6px; border: 1px solid rgba(205, 167, 94, .6); background: linear-gradient(135deg, rgba(205, 167, 94, .22), rgba(0, 0, 0, .25)); color: #F3D98E; border-radius: 999px; padding: 5px 12px 5px 9px; font: 700 12.5px/1 var(--sans); letter-spacing: .08em; cursor: pointer; white-space: nowrap; }
+.parchip svg { width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.parchip.empty { border-style: dashed; color: var(--soft); font-weight: 600; letter-spacing: .03em; }
+.parchip:hover { background: rgba(205, 167, 94, .25); }
+.ptabrow .parchip { margin: 0 auto 7px 8px; }
+.ses-par { display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 12px; }
+.ses-par span { color: var(--soft); font: 600 12px/1 var(--sans); letter-spacing: .06em; }
+.cfg-note { margin: 6px 0 0; color: var(--soft); font-size: 12.5px; line-height: 1.4; }
+.cfg-ah { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.cfg-ah > b { font-family: var(--display); font-size: 19px; font-weight: 500; color: var(--champ); }
+.cfg-par { display: flex; align-items: center; gap: 6px; }
+.cfg-par span { font-size: 11.5px; color: var(--soft); }
+.cfg-par input { width: 120px; height: 34px; border-radius: 10px; border: 1px solid rgba(205, 167, 94, .45); background: rgba(0, 0, 0, .3); color: #F3D98E; font: 700 14px/1 var(--sans); letter-spacing: .08em; text-transform: uppercase; padding: 0 10px; }
+.cfg-par input:focus { outline: 1.5px solid var(--gold); }
+.cfg-card { max-height: calc(100vh - 40px); overflow-y: auto; }
 /* phone: the calculator moves into the pencil (day window), so the result has room in the Fusion / Prop rows */
 .dlg-calc { display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px 14px; border-radius: 14px; border: 1px solid rgba(205, 167, 94, .45); background: rgba(0, 0, 0, .22); color: var(--champ); cursor: pointer; text-align: left; font: inherit; }
 .dlg-calc[hidden] { display: none; }
@@ -2369,8 +2385,11 @@ body.offline .netbar { transform: translate(-50%, 0); }
   // ---------- data ----------
   // settings: how much a TP is worth (1 to 10 %) and whether to show the BE (break-even) box. Kept on the device and in Supabase.
   const LS_CFG = "diario-trading-config";
-  let TP_PCT = 2, SHOW_BE = false; const SL_PCT = 1;
-  try { const c = JSON.parse(localStorage.getItem(LS_CFG) || "{}"); if (c.tp >= 1 && c.tp <= 10) TP_PCT = Math.round(c.tp); SHOW_BE = c.be === true; } catch (_) {}
+  let TP_PCT = 2, TP_PROP = 2, SHOW_BE = false, PAR_F = "", PAR_P = ""; const SL_PCT = 1;
+  const okTp = v => { v = Math.round(+v); return v >= 1 && v <= 10 ? v : null; };
+  try { const c = JSON.parse(localStorage.getItem(LS_CFG) || "{}"); TP_PCT = okTp(c.tp) || 2; TP_PROP = okTp(c.tpProp) || TP_PCT; SHOW_BE = c.be === true; PAR_F = String(c.parF || ""); PAR_P = String(c.parP || ""); } catch (_) {}
+  const isPropKey = k => /^prop/.test(String(k || ""));
+  const tpOf = k => isPropKey(k) ? TP_PROP : TP_PCT;   // how much a TP is worth in this table
   // three ledgers: one Estratégia, the Conta (Fusion Markets) and the Prop Firm. prop_estrategia is old data, kept but not shown.
   const ALLKEYS = ["estrategia", "conta", "prop_estrategia", "prop_conta"];
   // two pairs of tables: Fusion Markets (Estratégia + Conta) and Prop Firm (its own Estratégia + Conta).
@@ -2411,7 +2430,7 @@ body.offline .netbar { transform: translate(-50%, 0); }
   const pad = n => String(n).padStart(2, "0");
   const iso = d => d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate());
   const todayId = iso(now);
-  const pctOf = e => e.tp * TP_PCT - e.sl * SL_PCT;
+  const pctOf = e => e.tp * tpOf(e.ser) - e.sl * SL_PCT;   // each saved day knows its table (ser)
   const fmt = v => (v > 0 ? "+" : v < 0 ? "−" : "") + Math.abs(v) + "%";
   const cls = v => v > 0 ? "pos" : v < 0 ? "neg" : "zero";
   const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
@@ -2442,7 +2461,7 @@ body.offline .netbar { transform: translate(-50%, 0); }
   function sum(s, ids) {
     let tp = 0, sl = 0, be = 0;
     for (const id of ids) { const e = entry(s, id); if (e.off) continue; tp += e.tp; sl += e.sl; be += e.be || 0; }
-    return { tp, sl, be, to: tp + sl + be, pct: tp * TP_PCT - sl * SL_PCT };
+    return { tp, sl, be, to: tp + sl + be, pct: tp * tpOf(s) - sl * SL_PCT };
   }
 
   const statusEl = document.getElementById("status");
@@ -2455,7 +2474,7 @@ body.offline .netbar { transform: translate(-50%, 0); }
     try {
       const raw = localStorage.getItem(LS_KEY); if (!raw) return;
       const o = JSON.parse(raw);
-      for (const key of ALLKEYS) for (const [id, e] of Object.entries(o[key] || {})) { const n = norm(e); if (!isEmpty(n)) store[key].set(id, n); }
+      for (const key of ALLKEYS) for (const [id, e] of Object.entries(o[key] || {})) { const n = norm(e); n.ser = key; if (!isEmpty(n)) store[key].set(id, n); }
       const c = JSON.parse(localStorage.getItem(LS_CKEY) || "{}");
       for (const a of Object.keys(c).filter(isAcc)) for (const [id, e] of Object.entries(c[a] || {})) { const n = cnorm(e); if (!cIsEmpty(n)) cstore[a].set(id, n); }
       const mm = JSON.parse(localStorage.getItem(LS_MOOD) || "{}");
@@ -2491,7 +2510,7 @@ body.offline .netbar { transform: translate(-50%, 0); }
   window.addEventListener("online", async () => { setStatus("saving", "A enviar o que ficou guardado…"); await syncPending(); try { await loadRemote(); cacheAll(); } catch (_) {} if (!pendCount()) idleStatus(); });
   window.addEventListener("offline", () => { if (mode === "db") offlineStatus(); });
   function setEntry(s, id, patch) {
-    const e = { ...entry(s, id), ...patch };
+    const e = { ...entry(s, id), ...patch, ser: s };
     if (isEmpty(e)) store[s].delete(id); else store[s].set(id, e);
     const k = s + "/" + id; dirty.add(k);
     clearTimeout(timers.get(k));
@@ -2529,11 +2548,11 @@ body.offline .netbar { transform: translate(-50%, 0); }
   const SUPABASE_URL = "https://nexskfugwtmtwsexlhos.supabase.co";
   const SUPABASE_KEY = "sb_publishable_-OiT0kTGfY4MmMgD28LrEg_9cQ6kMXW";
   let sb = null, beCol = false, comCol = false, cfgDirty = false;
-  function saveCfgLocal() { try { localStorage.setItem(LS_CFG, JSON.stringify({ tp: TP_PCT, be: SHOW_BE })); } catch (_) {} }
+  function saveCfgLocal() { try { localStorage.setItem(LS_CFG, JSON.stringify({ tp: TP_PCT, tpProp: TP_PROP, be: SHOW_BE, parF: PAR_F, parP: PAR_P })); } catch (_) {} }
   async function saveCfg() {
     saveCfgLocal(); if (mode !== "db" || !sb) return;
     cfgDirty = true;
-    const r = await sb.from("dias").upsert({ serie: "config", dia: "2000-01-01", tp: TP_PCT, sl: SHOW_BE ? 1 : 0, nota: "configurações do Diário (valor do TP e BE)", sem_operar: false, risco: 0 });
+    const r = await sb.from("dias").upsert({ serie: "config", dia: "2000-01-01", tp: TP_PCT, sl: SHOW_BE ? 1 : 0, nota: JSON.stringify({ tpProp: TP_PROP, parFusion: PAR_F, parProp: PAR_P }), sem_operar: false, risco: 0 });
     cfgDirty = false; return r.error;
   }
   async function loadRemote() {
@@ -2541,12 +2560,16 @@ body.offline .netbar { transform: translate(-50%, 0); }
     if (error) { beCol = comCol = false; ({ data, error } = await sb.from("dias").select("serie,dia,tp,sl,nota,sem_operar,risco").limit(10000)); } else beCol = comCol = true;
     if (error) throw error;
     const cfgRow = (data || []).find(r => r.serie === "config");
-    if (cfgRow && !cfgDirty) { const t = Math.round(+cfgRow.tp); if (t >= 1 && t <= 10) TP_PCT = t; SHOW_BE = +cfgRow.sl === 1; saveCfgLocal(); }
+    if (cfgRow && !cfgDirty) {
+      TP_PCT = okTp(cfgRow.tp) || 2; SHOW_BE = +cfgRow.sl === 1;
+      let x = {}; try { x = JSON.parse(cfgRow.nota || "{}") || {}; } catch (_) {}
+      TP_PROP = okTp(x.tpProp) || TP_PCT; PAR_F = String(x.parFusion || "").slice(0, 20); PAR_P = String(x.parProp || "").slice(0, 20); saveCfgLocal();
+    }
     const maps = { estrategia: new Map(), conta: new Map(), prop_estrategia: new Map(), prop_conta: new Map() };
     for (const r of data || []) {
       if (!maps[r.serie]) continue;
       const n = norm({ tp: r.tp, sl: r.sl, be: r.be, com: r.comissao, coms: r.comissoes, note: r.nota || "", off: r.sem_operar === true, risk: r.risco });
-      if (!isEmpty(n)) maps[r.serie].set(String(r.dia).slice(0, 10), n);
+      n.ser = r.serie; if (!isEmpty(n)) maps[r.serie].set(String(r.dia).slice(0, 10), n);
     }
     for (const k of dirty) {
       const i = k.indexOf("/"), s = k.slice(0, i), id = k.slice(i + 1), local = store[s].get(id);
@@ -2701,8 +2724,10 @@ body.offline .netbar { transform: translate(-50%, 0); }
   function ftabs(items, active, attr, label) {
     return '<div class="ftabs" role="tablist" aria-label="' + label + '">' + items.map(([k, l]) => '<button type="button" role="tab" class="ftab" ' + attr + '="' + k + '" aria-selected="' + (k === active) + '">' + l + '</button>').join("") + '</div>';
   }
+  // the pair being traded in this account (written in the settings); tap it to change it
+  const parChip = key => { const par = isPropKey(key) ? PAR_P : PAR_F; return '<button type="button" class="parchip' + (par ? "" : " empty") + '" data-paredit="' + (isPropKey(key) ? "p" : "f") + '" aria-label="' + (par ? "Par: " + esc(par) + ". Tocar para mudar" : "Escrever o par") + '"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 5.5h8.5l-2-2M13 10.5H4.5l2 2"/></svg>' + (par ? esc(par) : "Par") + '</button>'; };
   function ptabHtml(s) {
-    return '<div class="ptabrow">' + ftabs([[s.role, s.label]], s.role, "data-noop", s.full) + grpDots() + '</div>';
+    return '<div class="ptabrow">' + ftabs([[s.role, s.label]], s.role, "data-noop", s.full) + (s.acct ? parChip(s.key) : "") + grpDots() + '</div>';
   }
   // the whole Monday–Friday week of a day, even when part of it falls in another month
   function fullWeek(d) {
@@ -2968,7 +2993,7 @@ body.offline .netbar { transform: translate(-50%, 0); }
       const mk = d.getFullYear() + "-" + pad(d.getMonth() + 1), M = r.months.get(mk) || { v: 0, n: 0, d }; M.v += p; M.n++; r.months.set(mk, M);
     }
     r.win = r.tp + r.sl ? r.tp / (r.tp + r.sl) * 100 : null;
-    r.pf = r.sl ? (r.tp * TP_PCT) / (r.sl * SL_PCT) : null;
+    r.tpv = tpOf(s.key); r.pf = r.sl ? (r.tp * r.tpv) / (r.sl * SL_PCT) : null;
     r.avg = r.n ? r.pct / r.n : 0;
     const wl = [...r.weeks.values()];
     r.bw = wl.length ? wl.reduce((a, b) => b.v > a.v ? b : a) : null; r.ww = wl.length ? wl.reduce((a, b) => b.v < a.v ? b : a) : null;
@@ -3269,13 +3294,13 @@ body.offline .netbar { transform: translate(-50%, 0); }
     tl += '</div>';
     h += '<div class="chc wide"><div class="cht">Saldo no fim de cada dia</div>' + lineChart(pts, { f: (v, ax) => ax ? EUR0.format(v) : EUR.format(v), base: null, aria: "Saldo no fim de cada dia" }) + '</div>';
     // ledger
-    h += '<div class="ahead" aria-hidden="true"><span>Dia</span><span>Início</span><span>Fim</span><span>Lucro</span><span>Risco</span><span>Diário</span><span></span></div><div class="aledger">';
+    h += '<div class="ahead" aria-hidden="true"><span>Dia</span><span>Início</span><span>Fim</span><span>Lucro</span><span>Risco</span><span></span></div><div class="aledger">';
     const groups = [];
     for (const d of days) { const w = isoWeek(d); const g = groups[groups.length - 1]; if (g && g.w === w) g.days.push(d); else groups.push({ w, days: [d] }); }
     for (const g of groups) {
       let wp = 0, wStart = null, wn = 0;
       for (const d of g.days) {
-        const id = iso(d), e = centry(a, id), r = C.rows.get(id), de = entry(dk, id), dp = pctOf(de), dtr = traded(dk, id);
+        const id = iso(d), e = centry(a, id), r = C.rows.get(id);
         const ph = r ? (r.auto ? inVal(r.start) : "") : inVal(lastBefore(a, id, C));
         if (r && r.start != null && wStart == null) wStart = r.start;
         if (r && r.profit != null) { wp += r.profit; wn++; }
@@ -3287,7 +3312,6 @@ body.offline .netbar { transform: translate(-50%, 0); }
           fld("inicio", e.inicio, "Início", ph) + fld("fim", e.fim, "Fim") +
           '<div class="apr ' + (r && r.profit != null ? cls(r.profit) : "zero") + '"><b>' + (r && r.profit != null ? eur(r.profit) : "—") + '</b><small>' + (r ? pctS(r.pct) : "") + '</small></div>' +
           '<div class="ark">' + fld("risco", e.risco, "Risco") + '<small>' + (r && r.rpct != null ? NUM1.format(r.rpct) + "% do saldo" : "") + '</small></div>' +
-          '<div class="adi" title="Resultado no Diário (' + (isProp(a) ? "Prop" : "Fusion") + ')">' + (de.off ? '<i>sem operar</i>' : dtr ? '<b class="' + cls(dp) + '">' + fmt(dp) + '</b><small>' + de.tp + ' TP, ' + de.sl + ' SL</small>' : '<small>—</small>') + '</div>' +
           '<button type="button" class="nb' + (extra ? " has" : "") + '" data-acday="' + a + '|' + id + '" aria-label="Depósitos, levantamentos e nota de ' + d.getDate() + ' de ' + MONTHS[d.getMonth()] + '"' + (r && r.nota ? ' data-tip="note" data-tv="' + esc(r.nota.slice(0, 600)) + '"' : ' data-tip="empty" data-tv="Depósito, levantamento ou nota"') + '>' + PEN + '</button>' +
           (r && (r.dep || r.lev) ? '<div class="amov">' + (r.dep ? '<span>+ depósito ' + EUR.format(r.dep) + '</span>' : '') + (r.lev ? '<span>− levantamento ' + EUR.format(r.lev) + '</span>' : '') + '</div>' : '') +
           '</div>';
@@ -3860,7 +3884,7 @@ body.offline .netbar { transform: translate(-50%, 0); }
     ses.dataset.res = !we && !e.off && traded(s.key, id) ? cls(p) : "";   // soft green / yellow / red glow behind the keys
     ses.innerHTML = '<div class="ses-top"><div class="ses-tabs">' + SES().map(x => '<button type="button" data-sesr="' + x.role + '" aria-pressed="' + (x.role === sesRole) + '">' + x.label + '</button>').join("") + '</div><button type="button" class="ses-x" data-ses="close" aria-label="Fechar">✕</button></div>' +
       '<i class="ses-frame" aria-hidden="true"></i><i class="ses-grab" aria-hidden="true"></i>' + sesWatch() +
-      '<div class="ses-date">' + DOWL[d.getDay()] + ', ' + d.getDate() + ' de ' + MONTHS[d.getMonth()] + '</div><div class="ses-clock" id="sesClock">' + dayClock().short + '</div><div class="ses-news" id="sesNews"' + (sesNewsTxt() ? '' : ' hidden') + '>' + sesNewsTxt() + '</div>' +
+      '<div class="ses-par">' + parChip(s.key) + '<span>1:' + tpOf(s.key) + '</span></div>' + '<div class="ses-date">' + DOWL[d.getDay()] + ', ' + d.getDate() + ' de ' + MONTHS[d.getMonth()] + '</div><div class="ses-clock" id="sesClock">' + dayClock().short + '</div><div class="ses-news" id="sesNews"' + (sesNewsTxt() ? '' : ' hidden') + '>' + sesNewsTxt() + '</div>' +
       (we ? '<p class="ses-we">Hoje é fim de semana. O Diário só tem dias úteis.</p>' : e.off ? '<p class="ses-we">Este dia está marcado como "sem operar".</p>' :
         '<div class="ses-res ' + cls(p) + '">' + fmt(p) + '</div><div class="ses-cnt">' + e.tp + ' TP · ' + e.sl + ' SL' + (s.acct && e.risk ? ' · ' + eur(euroOf(e)) : '') + '</div>' +
         '<div class="ses-btns"><button type="button" class="key ses-tp" data-ses="tp" aria-label="Mais um TP">' + sesRing(e.tp, e.tp + e.sl, "tp") + '<span class="cap"><b>TP</b><small>Take profit</small><span class="cnt">' + e.tp + '</span></span></button><button type="button" class="key ses-sl" data-ses="sl" aria-label="Mais um SL">' + sesRing(e.sl, e.tp + e.sl, "sl") + '<span class="cap"><b>SL</b><small>Stop loss</small><span class="cnt">' + e.sl + '</span></span></button></div>' +
@@ -4233,7 +4257,7 @@ body.offline .netbar { transform: translate(-50%, 0); }
     let t = when + " operaste <b>" + r.n + "</b> " + (r.n === 1 ? "dia" : "dias") + ": <b class=\"pos\">" + r.pos + "</b> " + (r.pos === 1 ? "verde" : "verdes") + (r.zero ? ", " + r.zero + " a 0%" : "") + " e <b class=\"neg\">" + r.neg + "</b> " + (r.neg === 1 ? "vermelho" : "vermelhos") + ". ";
     t += "No total fizeste <b class=\"" + cls(r.pct) + "\">" + fmt(r.pct) + "</b>, ou seja, em média <b>" + fmt1(r.avg) + "</b> por dia. ";
     if (r.win != null) t += "De cada 10 operações, cerca de <b>" + Math.round(r.win / 10) + "</b> " + (Math.round(r.win / 10) === 1 ? "acabou" : "acabaram") + " em TP. ";
-    if (r.win != null && r.win < 50 && r.pct > 0 && TP_PCT > SL_PCT) t += "Mesmo acertando menos de metade, ganhas, porque cada TP vale " + (TP_PCT / SL_PCT === 2 ? "o dobro" : (TP_PCT / SL_PCT).toFixed(1) + " vezes") + " de um SL. ";
+    if (r.win != null && r.win < 50 && r.pct > 0 && r.tpv > SL_PCT) t += "Mesmo acertando menos de metade, ganhas, porque cada TP vale " + (r.tpv / SL_PCT === 2 ? "o dobro" : r.tpv / SL_PCT + " vezes") + " de um SL. ";
     if (r.best) t += "O melhor dia foi <b>" + dShort(r.best.d) + "</b> (" + fmt(r.best.p) + ")" + (r.worst && r.worst.p < 0 ? " e o pior <b>" + dShort(r.worst.d) + "</b> (" + fmt(r.worst.p) + ")" : "") + ".";
     return '<div class="story"><span class="story-k">Em poucas palavras</span><p>' + t + '</p></div>';
   }
@@ -4306,30 +4330,39 @@ body.offline .netbar { transform: translate(-50%, 0); }
   });
   // ---------- Configurações: how much a TP is worth and the BE (break-even) box ----------
   const cfgDlg = document.createElement("div"); cfgDlg.className = "dlg"; cfgDlg.id = "cfgdlg"; cfgDlg.hidden = true; document.body.appendChild(cfgDlg);
-  let cfgTp = TP_PCT, cfgBe = SHOW_BE;
+  let cfg = {};
+  // one block per account: how much a TP is worth there, and the pair being traded
+  const cfgAcc = (k, name, tp, par) => '<div class="cfg-sec cfg-acc"><div class="cfg-ah"><b>' + name + '</b><label class="cfg-par"><span>Par</span><input type="text" data-cfgpar="' + k + '" value="' + esc(par) + '" maxlength="20" placeholder="ex.: EURUSD" autocomplete="off" autocapitalize="characters" spellcheck="false"></label></div>' +
+    '<small>Quanto vale um TP na ' + name + '? (o SL vale sempre −1%)</small><div class="cfg-tp" role="radiogroup" aria-label="Valor do TP na ' + name + '">' +
+    [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(v => '<button type="button" role="radio" data-cfgtp="' + k + '|' + v + '" aria-checked="' + (v === tp) + '">1:' + v + '</button>').join("") + '</div>' +
+    '<div class="cfg-ex">1 TP = <b>+' + tp + '%</b> · 1 SL = <b>−1%</b> · ex.: 3 TP e 2 SL = <b>' + fmt(3 * tp - 2) + '</b></div></div>';
   function drawCfg() {
-    cfgDlg.innerHTML = '<div class="dlg-card cfg-card" role="dialog" aria-modal="true" aria-labelledby="cfgT"><div><div class="sub">Diário</div><h3 id="cfgT">Configurações</h3></div>' +
-      '<div class="cfg-sec"><b>Quanto vale um TP?</b><small>O SL vale sempre −1%. Ao mudar, o resultado de todos os dias é recalculado.</small><div class="cfg-tp" role="radiogroup" aria-label="Valor do TP">' +
-      [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(v => '<button type="button" role="radio" data-cfgtp="' + v + '" aria-checked="' + (v === cfgTp) + '">' + v + '%</button>').join("") + '</div>' +
-      '<div class="cfg-ex">1 TP = <b>+' + cfgTp + '%</b> · 1 SL = <b>−1%</b> · ex.: 3 TP e 2 SL = <b>' + fmt(3 * cfgTp - 2) + '</b></div></div>' +
-      '<div class="cfg-sec"><label class="cfg-sw"><input type="checkbox" id="cfgBe"' + (cfgBe ? " checked" : "") + '><span class="sw" aria-hidden="true"></span><span><b>Bolinha BE (break-even)</b><small>Para as operações que fecharam a zero, no preço de entrada. Contam no TO, mas não mexem no resultado.</small></span></label></div>' +
+    cfgDlg.innerHTML = '<div class="dlg-card cfg-card" role="dialog" aria-modal="true" aria-labelledby="cfgT"><div><div class="sub">Diário</div><h3 id="cfgT">Configurações</h3><p class="cfg-note">A Fusion e a Prop podem ter valores diferentes. A Estratégia de cada uma usa o mesmo valor da sua conta. Ao mudar, os resultados são recalculados.</p></div>' +
+      cfgAcc("f", "Fusion", cfg.tpF, cfg.parF) + cfgAcc("p", "Prop", cfg.tpP, cfg.parP) +
+      '<div class="cfg-sec"><label class="cfg-sw"><input type="checkbox" id="cfgBe"' + (cfg.be ? " checked" : "") + '><span class="sw" aria-hidden="true"></span><span><b>Bolinha BE (break-even)</b><small>Para as operações que fecharam a zero, no preço de entrada. Contam no TO, mas não mexem no resultado.</small></span></label></div>' +
       (ro ? '<p class="cfg-ro">Só leitura: entra na tua conta para mudar as configurações.</p>' : '') +
       '<div class="dlg-actions"><button type="button" class="btn" data-cfg="cancel">Cancelar</button><button type="button" class="btn primary" data-cfg="save"' + (ro ? " disabled" : "") + '>Guardar</button></div></div>';
   }
-  function openCfg() { cfgTp = TP_PCT; cfgBe = SHOW_BE; drawCfg(); cfgDlg.hidden = false; }
+  const cfgRead = () => { const g = k => { const i = cfgDlg.querySelector('[data-cfgpar="' + k + '"]'); return i ? i.value.trim().toUpperCase().slice(0, 20) : ""; }; cfg.parF = g("f"); cfg.parP = g("p"); const b = $("cfgBe"); if (b) cfg.be = b.checked; };
+  function openCfg(focusPar) {
+    cfg = { tpF: TP_PCT, tpP: TP_PROP, be: SHOW_BE, parF: PAR_F, parP: PAR_P }; drawCfg(); cfgDlg.hidden = false;
+    if (focusPar) setTimeout(() => { const i = cfgDlg.querySelector('[data-cfgpar="' + focusPar + '"]'); if (i) { i.focus(); i.select(); } }, 60);
+  }
   function closeCfg() { cfgDlg.hidden = true; }
-  $("cfgBtn").addEventListener("click", openCfg);
+  $("cfgBtn").addEventListener("click", () => openCfg());
+  // the pair chip on the Fusion / Prop tables and in the Sessão opens the settings on that pair
+  document.addEventListener("click", e => { const c = e.target.closest("[data-paredit]"); if (c) { e.preventDefault(); e.stopPropagation(); openCfg(c.dataset.paredit); } }, true);
   cfgDlg.addEventListener("click", async e => {
     if (e.target === cfgDlg) return closeCfg();
-    const t = e.target.closest("[data-cfgtp]"); if (t) { cfgTp = +t.dataset.cfgtp; cfgBe = $("cfgBe").checked; drawCfg(); return; }
+    const t = e.target.closest("[data-cfgtp]"); if (t) { const [k, v] = t.dataset.cfgtp.split("|"); cfgRead(); if (k === "f") cfg.tpF = +v; else cfg.tpP = +v; drawCfg(); return; }
     const a = e.target.closest("[data-cfg]"); if (!a) return;
     if (a.dataset.cfg === "cancel") return closeCfg();
     if (a.dataset.cfg === "save" && !ro) {
-      TP_PCT = cfgTp; SHOW_BE = $("cfgBe").checked; closeCfg(); render();
+      cfgRead(); TP_PCT = cfg.tpF; TP_PROP = cfg.tpP; SHOW_BE = !!cfg.be; PAR_F = cfg.parF; PAR_P = cfg.parP; closeCfg(); render(); if (typeof ses !== "undefined" && !ses.hidden) drawSes();
       setStatus("saving", "A guardar…"); const err = await saveCfg(); if (err) setStatus("err", "Não foi guardado, tenta outra vez"); else idleStatus();
     }
   });
-  document.addEventListener("keydown", e => { if (e.key === "Escape" && !cfgDlg.hidden) closeCfg(); });
+  cfgDlg.addEventListener("keydown", e => { if (e.key === "Enter" && e.target.matches("[data-cfgpar]")) { e.preventDefault(); const b = cfgDlg.querySelector('[data-cfg="save"]'); if (b) b.click(); } });  document.addEventListener("keydown", e => { if (e.key === "Escape" && !cfgDlg.hidden) closeCfg(); });
   // "+1" floating up when a TP or SL goes up
   function plusAt(el, n, field) {
     if (!el || (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches)) return;
