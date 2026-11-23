@@ -385,6 +385,39 @@ button, .cd, .nw-card, .tdr, .lrow { transition: transform .12s ease; }
 .mc .mn { font-size: 10.5px; color: var(--soft); }
 .mc .mv { font-weight: 500; font-size: 11.5px; font-variant-numeric: tabular-nums; }
 
+/* Diário: the year, month by month — dark velvet card with a double gold frame and filigree corners */
+.yrc { position: relative; margin-top: 4px; padding: 18px 16px 16px; border-radius: 18px; color: #EFDCC6;
+  background: radial-gradient(120% 80% at 50% 0%, rgba(120, 30, 50, .55), transparent 60%), linear-gradient(160deg, #3A0C17, #1C050B 70%);
+  box-shadow: inset 0 0 0 1px rgba(205, 167, 94, .55), inset 0 0 0 5px rgba(23, 3, 7, .5), inset 0 0 0 6px rgba(205, 167, 94, .22), 0 18px 34px -18px rgba(0, 0, 0, .8); }
+.yrc-c { position: absolute; width: 24px; height: 24px; pointer-events: none; background: var(--fc-tl) center / 24px no-repeat; opacity: .95; }
+.yrc-c.tl { top: 7px; left: 7px; } .yrc-c.tr { top: 7px; right: 7px; background-image: var(--fc-tr); } .yrc-c.bl { bottom: 7px; left: 7px; background-image: var(--fc-bl); } .yrc-c.br { bottom: 7px; right: 7px; background-image: var(--fc-br); }
+.yrc-h { display: flex; justify-content: space-between; align-items: flex-end; gap: 10px; padding: 0 8px; }
+.yrc-k { display: block; font-family: var(--script); font-size: 26px; line-height: 1; color: var(--gold); }
+.yrc-h b { display: block; font: 500 26px/1.1 var(--display); color: #EFDCC6; letter-spacing: .02em; }
+.yrc-t { text-align: right; } .yrc-t small { display: block; font-size: 11px; color: #C7A9A3; letter-spacing: .04em; }
+.yrc-t span { font: 600 30px/1.05 var(--display); }
+.yrc-t .pos { background: linear-gradient(110deg, #8FD4A8, #E8F7EC 45%, #6FBF8F 70%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.yrc-t .neg { background: linear-gradient(110deg, #E68A9C, #FBE0E5 45%, #C9667B 70%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.yrc-t .zero { color: #E6CD92; }
+.yrc-rule { display: flex; align-items: center; gap: 10px; margin: 12px 8px 12px; }
+.yrc-rule span { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, rgba(205, 167, 94, .7)); } .yrc-rule span:last-child { background: linear-gradient(90deg, rgba(205, 167, 94, .7), transparent); }
+.yrc-rule i { width: 6px; height: 6px; transform: rotate(45deg); border: 1px solid var(--gold); }
+.yrc-g { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 7px; padding: 0 4px; }
+.yrc-m { position: relative; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 9px 4px 8px; border-radius: 12px; cursor: pointer; font: inherit; color: inherit; min-width: 0;
+  background: linear-gradient(180deg, rgba(255, 240, 220, .06), rgba(0, 0, 0, .18)); border: 1px solid rgba(205, 167, 94, .28); transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease; }
+.yrc-m:hover { transform: translateY(-2px); border-color: rgba(227, 189, 106, .75); }
+.yrc-m .yn { font: 600 10.5px/1 var(--sans); letter-spacing: .14em; text-transform: uppercase; color: #C7A9A3; }
+.yrc-m .yv { font: 600 15px/1.1 var(--display); font-variant-numeric: tabular-nums; }
+.yrc-m .yv.pos { color: #8FD4A8; } .yrc-m .yv.neg { color: #F29AAE; } .yrc-m .yv.zero { color: #E6CD92; }
+.yrc-m.none .yv { color: rgba(199, 169, 163, .5); }
+.yrc-m .yb { width: 70%; height: 3px; border-radius: 3px; background: rgba(255, 255, 255, .08); overflow: hidden; }
+.yrc-m .yb i { display: block; height: 100%; width: var(--w); border-radius: inherit; background: linear-gradient(90deg, #CDA75E, #F3D98E); }
+.yrc-m .yb i.pos { background: linear-gradient(90deg, #3C7859, #8FD4A8); } .yrc-m .yb i.neg { background: linear-gradient(90deg, #8E2A40, #F29AAE); }
+.yrc-m.sel { border-color: rgba(227, 189, 106, .95); background: linear-gradient(180deg, rgba(205, 167, 94, .22), rgba(0, 0, 0, .2)); box-shadow: 0 0 0 1px rgba(227, 189, 106, .35), 0 0 16px -2px rgba(227, 189, 106, .45); }
+.yrc-m.sel .yn { color: var(--gold); }
+.yrc-m.now::after { content: ""; position: absolute; top: 5px; right: 6px; width: 5px; height: 5px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 6px rgba(227, 189, 106, .9); }
+@media (max-width: 560px) { .yrc-g { grid-template-columns: repeat(4, minmax(0, 1fr)); } .yrc-k { font-size: 22px; } .yrc-h b { font-size: 22px; } .yrc-t span { font-size: 26px; } }
+@media (prefers-reduced-motion: reduce) { .yrc-m { transition: none; } }
 /* ---------- calendário ---------- */
 .calwrap { padding-block: 22px 70px; display: flex; flex-direction: column; gap: 16px; }
 .cal { padding: 22px; position: relative; border-radius: 24px; }
@@ -2715,13 +2748,25 @@ body.offline .netbar { transform: translate(-50%, 0); }
     g += '<circle class="spk-pulse" cx="' + x(li) + '" cy="' + y(pts[li]) + '" r="3.5" fill="#CDA75E"/><circle cx="' + x(li) + '" cy="' + y(pts[li]) + '" r="3.5" fill="#3A1018"/>';
     return '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Resultado acumulado no mês">' + g + '</svg>';
   }
-  function yearBox(s) {
+  // the year month by month; in the Diário it is a dark, gold-framed card (dark = true), in the Calendário the light one
+  function yearBox(s, dark) {
+    if (dark) return yearCard(s);
     let mh = "", yt = 0;
     for (let m = 0; m < 12; m++) {
       const v = sum(s.key, weekdays(view.y, m).map(iso)).pct; yt += v;
       mh += '<button type="button" class="mc' + (m === view.m ? " sel" : "") + '" data-m="' + m + '" aria-label="Abrir ' + MONTHS[m] + '"><span class="mn">' + MON3[m] + '</span><span class="mv ' + cls(v) + '">' + fmt(v) + '</span></button>';
     }
     return '<div class="yr"><div class="yr-head"><b>Ano ' + view.y + '</b><span class="yt ' + cls(yt) + '">' + fmt(yt) + '</span></div><div class="months">' + mh + '</div></div>';
+  }
+  function yearCard(s) {
+    const ms = []; let yt = 0, n = 0;
+    for (let m = 0; m < 12; m++) { const ids = weekdays(view.y, m).map(iso), t = sum(s.key, ids), has = ids.some(id => traded(s.key, id)); ms.push({ v: t.pct, has }); yt += t.pct; if (has) n++; }
+    const mx = Math.max(1, ...ms.map(x => Math.abs(x.v))), cur = view.y === now.getFullYear() ? now.getMonth() : -1;
+    let h = '<div class="yrc" aria-label="O teu ano ' + view.y + ': ' + fmt(yt) + '"><i class="yrc-c tl"></i><i class="yrc-c tr"></i><i class="yrc-c bl"></i><i class="yrc-c br"></i>' +
+      '<div class="yrc-h"><div><span class="yrc-k">O teu ano</span><b>' + view.y + '</b></div><div class="yrc-t"><small>' + n + (n === 1 ? ' mês' : ' meses') + ' com trades</small><span class="' + cls(yt) + '">' + fmt(yt) + '</span></div></div>' +
+      '<div class="yrc-rule" aria-hidden="true"><span></span><i></i><span></span></div><div class="yrc-g">';
+    ms.forEach((x, m) => { h += '<button type="button" class="yrc-m' + (m === view.m ? " sel" : "") + (m === cur ? " now" : "") + (x.has ? "" : " none") + '" data-m="' + m + '" aria-label="' + cap(MONTHS[m]) + ': ' + (x.has ? fmt(x.v) : 'sem trades') + '"><span class="yn">' + MON3[m] + '</span><span class="yv ' + (x.has ? cls(x.v) : 'zero') + '">' + (x.has ? fmt(x.v) : '—') + '</span><span class="yb"><i class="' + cls(x.v) + '" style="--w:' + (x.has ? Math.max(8, Math.round(Math.abs(x.v) / mx * 100)) : 0) + '%"></i></span></button>'; });
+    return h + '</div></div>';
   }
   function monthTotal(s, t, days) {
     const work = days.filter(d => !entry(s.key, iso(d)).off).length;
@@ -2830,7 +2875,7 @@ body.offline .netbar { transform: translate(-50%, 0); }
         '<div class="wr"><span class="wtx">' + wt.tp + ' TP, ' + wt.sl + ' SL, ' + (SHOW_BE && wt.be ? wt.be + ' BE, ' : '') + wt.to + ' TO</span>' + weHtml + '<span class="wp ' + cls(wt.pct) + '">' + fmt(wt.pct) + '</span></div>' + (wt.tp + wt.sl ? '<i class="wbar ' + cls(wt.pct) + '" style="--w:' + Math.max(6, Math.min(100, Math.abs(wt.pct) * 1.4)) + '%" aria-hidden="true"></i>' : '') + '</div>';
       if (bd) h += '</div>';
     }
-    h += '</div>' + monthTotal(s, t, days) + yearBox(s) + '</div>';
+    h += '</div>' + monthTotal(s, t, days) + yearBox(s, true) + '</div>';
     return h;
   }
 
