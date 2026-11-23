@@ -219,7 +219,7 @@ jobs:
           ]
           for hh in (10, 17):
               k = 'frase-' + today.isoformat() + '-' + str(hh)
-              if k not in sent and loc.hour == hh and loc.minute < 45:
+              if k not in sent and hh <= loc.hour < hh + 3:   # GitHub only runs about once an hour: send at the first run after the time
                   frase = FRASES[(today.toordinal() * 2 + (1 if hh == 17 else 0)) % len(FRASES)]
                   msgs.append((k, {'title': 'Oi Carla 💛' if hh == 10 else 'Força, Carla ✨', 'body': frase, 'tag': k}))
 
@@ -234,7 +234,7 @@ jobs:
                       body = 'Hoje é feriado nos EUA, o mercado costuma estar mais parado. ' + (body if strong else '')
                   msgs.append((k, {'title': 'Bom dia, Carla ☀️', 'body': body, 'tag': k}))
               k = 'fim-' + today.isoformat()
-              if k not in sent and loc.hour == 20 and loc.minute < 45:
+              if k not in sent and loc.hour == 20:
                   msgs.append((k, {'title': 'Oi Carla 💛', 'body': 'Falta 1 hora para terminar o dia de trading (21:00). Último esforço, com calma ✨', 'tag': k}))
               # what she really traded: only the Fusion and Prop tables count (the Estratégias are backtesting). TP = +TPV%, SL = -1%
               NAMES = {'conta': 'Fusion', 'prop_conta': 'Prop'}
@@ -254,7 +254,7 @@ jobs:
                   return out
               def pct(v): return ('+' if v > 0 else '') + str(v) + '%'
               k = 'resumo-dia-' + today.isoformat()
-              if k not in sent and loc.hour == 21 and 5 <= loc.minute < 50:
+              if k not in sent and (loc.hour, loc.minute) >= (21, 5) and loc.hour <= 23:
                   R = results(today.isoformat(), today.isoformat())
                   if R and sum(v[2] for v in R.values()) > 0:
                       body = ' e '.join('na ' + NAMES[s0] + ' foi ' + pct(v[2]) + ' (' + str(v[0]) + ' TP, ' + str(v[1]) + ' SL)' for s0, v in sorted(R.items()))
@@ -262,7 +262,7 @@ jobs:
                   else:
                       sent.append(k)   # negative or empty day: nothing is sent
               k = 'resumo-semana-' + today.isoformat()
-              if k not in sent and loc.weekday() == 4 and loc.hour == 22 and loc.minute < 50:
+              if k not in sent and loc.weekday() == 4 and 22 <= loc.hour <= 23:
                   mon = today - datetime.timedelta(days=4)
                   R = results(mon.isoformat(), today.isoformat())
                   if R:
@@ -273,7 +273,7 @@ jobs:
               for t, g in sorted(slots.items()):
                   k = 'aviso-' + today.isoformat() + '-' + t
                   mins = round((min(when(e) for e in g) - now).total_seconds() / 60)
-                  if k not in sent and 1 <= mins <= 35:
+                  if k not in sent and 1 <= mins <= 90:
                       body = 'Faltam ' + str(mins) + ' minutos para ' + short(g) + ' (' + t + '). Respira fundo e segue o plano 💛'
                       msgs.append((k, {'title': 'Oi Carla 💛', 'body': body, 'tag': k}))
 
