@@ -4575,7 +4575,7 @@ body.offline .netbar { transform: translate(-50%, 0); }
   function wkLoad() { if (!wkState) { try { wkState = JSON.parse(sessionStorage.getItem("diario-semanas") || "{}") || {}; } catch (_) { wkState = {}; } } return wkState; }
   function wkIsOpen(key, days) {
     const st = wkLoad(); if (key in st) return !!st[key];
-    const n = new Date(); return days.some(d => Math.abs(d - n) < 7 * 864e5 && isoWeek(d) === isoWeek(n));
+    return true;   // every week starts open; only the ones she closes stay closed (until the app is closed)
   }
   document.addEventListener("click", e => {
     const w = e.target.closest("[data-wkt]"); if (!w || !(window.matchMedia && window.matchMedia("(max-width: 860px)").matches)) return;
