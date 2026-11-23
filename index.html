@@ -1636,6 +1636,24 @@ body.offline .netbar { transform: translate(-50%, 0); }
   .ses-undo { margin-top: 12px; padding: 8px 14px; font-size: 13px; }
   .ses-help { font-size: 11.5px; margin-top: 10px; }
 }
+/* 21:00 question: how much did the day make (the commission is the difference) */
+.com-card { max-width: 460px; }
+.com-help { margin: 6px 0 0; color: var(--soft); font-size: 13px; line-height: 1.45; }
+.cq { padding: 12px 0 4px; border-top: 1px solid rgba(205, 167, 94, .22); display: flex; flex-direction: column; gap: 8px; }
+.cq-h { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.cq-h > b { font-family: var(--display); font-size: 19px; font-weight: 500; color: var(--champ); }
+.cq-h span { color: var(--soft); font-size: 12.5px; } .cq-h span b.pos { color: #8FD4A8; } .cq-h span b.neg { color: #F29AAE; }
+.cq-g { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: 10px; }
+.cq-g label > span { display: block; font-size: 11.5px; color: var(--soft); margin-bottom: 4px; }
+.cq-g .calc-in input { font-size: 18px; }
+.cq-vw { display: flex; gap: 6px; align-items: stretch; }
+.cq-vw .calc-in { flex: 1; min-width: 0; }
+.cq-sg { display: flex; flex-direction: column; gap: 3px; }
+.cq-sg button { width: 34px; flex: 1; border-radius: 9px; border: 1px solid rgba(205, 167, 94, .4); background: rgba(0, 0, 0, .25); color: var(--champ); font: 700 16px/1 var(--sans); cursor: pointer; }
+.cq-sg button[data-sg="+"][aria-pressed="true"] { background: #2F7D55; border-color: #6FD39B; color: #fff; }
+.cq-sg button[data-sg="-"][aria-pressed="true"] { background: #8E2A40; border-color: #F08AA0; color: #fff; }
+.cq-o { font-size: 13px; color: var(--champ); line-height: 1.45; } .cq-o b { color: var(--gold); } .cq-o b.neg { color: #F29AAE; } .cq-o small { color: var(--soft); }
+.cq.miss .calc-in { outline: 1.5px solid #F29AAE; }
 /* the commissions, one by one */
 .ses-comb.lst { border-style: dashed; }
 .ses-coml { margin-top: 10px; width: 100%; max-width: 340px; display: flex; flex-direction: column; gap: 5px; }
@@ -2388,9 +2406,9 @@ body.offline .netbar { transform: translate(-50%, 0); }
   const entry = (s, id) => store[s].get(id) || EMPTY;
   const traded = (s, id) => { const e = store[s].get(id); return !!e && !e.off && (e.tp > 0 || e.sl > 0 || e.be > 0); };
   const isEmpty = e => !e.tp && !e.sl && !e.be && !e.note && !e.off && !e.risk && !e.com;
-  const norm = v => ({ tp: Math.max(0, +v.tp || 0), sl: Math.max(0, +v.sl || 0), be: Math.max(0, +v.be || 0), note: typeof v.note === "string" ? v.note.slice(0, 4000) : "", off: v.off === true, risk: Math.max(0, Math.min(1e7, +v.risk || 0)), com: Math.max(0, Math.min(1e6, Math.round((+v.com || 0) * 100) / 100)), coms: Array.isArray(v.coms) ? v.coms.filter(c => c && +c.v > 0).slice(0, 60).map(c => ({ v: Math.round(+c.v * 100) / 100, h: String(c.h || "").slice(0, 5) })) : [] });
+  const norm = v => ({ tp: Math.max(0, +v.tp || 0), sl: Math.max(0, +v.sl || 0), be: Math.max(0, +v.be || 0), note: typeof v.note === "string" ? v.note.slice(0, 4000) : "", off: v.off === true, risk: Math.max(0, Math.min(1e7, +v.risk || 0)), com: Math.max(0, Math.min(1e6, Math.round((+v.com || 0) * 100) / 100)), coms: Array.isArray(v.coms) ? v.coms.filter(c => c && (+c.v > 0 || c.h === "fim")).slice(0, 60).map(c => Object.assign({ v: Math.max(0, Math.round(+c.v * 100) / 100 || 0), h: String(c.h || "").slice(0, 5) }, isFinite(+c.real) && c.real !== null && c.real !== "" ? { real: Math.round(+c.real * 100) / 100 } : {})) : [] });
   // the commissions one by one (old days only have the total: then it is one item without a time)
-  const comList = e => e.coms && e.coms.length ? e.coms : e.com ? [{ v: e.com, h: "" }] : [];
+  const comList = e => e.coms && e.coms.length ? e.coms.filter(c => c.v > 0) : e.com ? [{ v: e.com, h: "" }] : [];
   const comSum = l => Math.round(l.reduce((a, c) => a + c.v, 0) * 100) / 100;
   function isoWeek(d) {
     const t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
@@ -3829,9 +3847,7 @@ body.offline .netbar { transform: translate(-50%, 0); }
         '<div class="ses-res ' + cls(p) + '">' + fmt(p) + '</div><div class="ses-cnt">' + e.tp + ' TP · ' + e.sl + ' SL' + (s.acct && e.risk ? ' · ' + eur(euroOf(e)) : '') + '</div>' +
         '<div class="ses-btns"><button type="button" class="key ses-tp" data-ses="tp" aria-label="Mais um TP">' + sesRing(e.tp, e.tp + e.sl, "tp") + '<span class="cap"><b>TP</b><small>Take profit</small><span class="cnt">' + e.tp + '</span></span></button><button type="button" class="key ses-sl" data-ses="sl" aria-label="Mais um SL">' + sesRing(e.sl, e.tp + e.sl, "sl") + '<span class="cap"><b>SL</b><small>Stop loss</small><span class="cnt">' + e.sl + '</span></span></button></div>' +
         '<button type="button" class="ses-undo" data-ses="undo"' + (sesHist.length ? '' : ' disabled') + '>↶ Desfazer o último toque</button>' +
-        '<div class="ses-com"><span>Comissão de hoje <b>' + (e.com ? '−' + EUR.format(e.com) : '0,00 €') + '</b></span><button type="button" class="ses-comb" data-ses="com" aria-expanded="' + sesComOpen + '">＋ Comissão</button>' + (comList(e).length ? '<button type="button" class="ses-comb lst" data-ses="comlist" aria-expanded="' + sesComList + '">' + (sesComList ? 'Esconder' : 'Ver uma a uma (' + comList(e).length + ')') + '</button>' : '') + '</div>' +
-        (sesComList && comList(e).length ? '<div class="ses-coml">' + comList(e).map((c, i) => '<div class="ses-ci"><span class="ci-n">' + (i + 1) + 'ª</span><span class="ci-h">' + (c.h ? 'às ' + c.h : 'sem hora') + '</span><b>−' + EUR.format(c.v) + '</b><button type="button" data-ses="comdel" data-i="' + i + '" aria-label="Apagar esta comissão">✕</button></div>').join("") + '<div class="ses-ci tot"><span>Total</span><b>−' + EUR.format(comSum(comList(e))) + '</b></div></div>' : '') +
-        (sesComOpen ? '<div class="ses-comf"><div class="calc-in"><input id="sesComIn" type="number" inputmode="decimal" min="0" step="any" placeholder="ex.: 5" aria-label="Comissão a acrescentar, em euros"><span>€</span></div><button type="button" class="btn primary" data-ses="comadd">Acrescentar</button>' + (e.com ? '<button type="button" class="btn ghost" data-ses="comclr">Pôr a zero</button>' : '') + '</div>' : '')) +
+        '') +
       '<p class="ses-help">Toca em cada operação. Fica guardado no Diário de hoje, na ' + s.full + '.</p>' + moodBarHtml();
     sesWatchTick();
   }
@@ -3919,6 +3935,61 @@ body.offline .netbar { transform: translate(-50%, 0); }
   document.addEventListener("keydown", e => { if (e.key === "Escape" && !eod.hidden) eod.hidden = true; });
   setTimeout(() => { maybeEod(); setInterval(maybeEod, 20000); }, 4000);
   try { if (new URLSearchParams(location.search).has("fimdia")) setTimeout(() => maybeEod(true), 3000); } catch (_) {}
+
+  // ---------- 21:00: "how much did the account really make today?" (Fusion / Prop). The commission is the difference. ----------
+  // It stays on screen until the value is written. Saved in the day as coms = [{ v: commission, h: "fim", real: € in the account }].
+  const COM_START = "2026-11-23";
+  const comDone = e => (e.coms || []).some(c => c.h === "fim");
+  const comDlg = document.createElement("div"); comDlg.className = "dlg"; comDlg.id = "comdlg"; comDlg.hidden = true; document.body.appendChild(comDlg);
+  let comQ = [];   // days waiting: [{ s, id }]
+  function comPending() {
+    const n = new Date(), out = [];
+    for (let k = 6; k >= 0; k--) {
+      const d = new Date(n.getFullYear(), n.getMonth(), n.getDate() - k), id = iso(d), wd = d.getDay();
+      if (wd === 0 || wd === 6 || id < COM_START || (k === 0 && n.getHours() < DAY_END)) continue;
+      for (const s of SES()) { const e = entry(s.key, id); if (traded(s.key, id) && !comDone(e)) out.push({ s, id }); }
+    }
+    return out;
+  }
+  function comSign(btnEl) { const w = btnEl.closest(".cq"); w.querySelectorAll("[data-sg]").forEach(b => b.setAttribute("aria-pressed", String(b === btnEl))); comCalc(w); }
+  function comCalc(w) {
+    const e = entry(w.dataset.s, w.dataset.id), p = pctOf(e), num = el => Math.max(0, parseFloat(String(el.value).replace(",", ".")) || 0);
+    const r = num(w.querySelector(".cq-r")), raw = w.querySelector(".cq-v").value.trim(), v = num(w.querySelector(".cq-v")), neg = w.querySelector('[data-sg="-"]').getAttribute("aria-pressed") === "true";
+    const real = neg ? -v : v, exp = p * r, out = w.querySelector(".cq-o");
+    if (!r || raw === "") { out.innerHTML = r ? "Pelo Diário, com " + fmt(p) + ", devia dar <b>" + eur(exp) + "</b>. Escreve quanto deu." : "Escreve o risco por trade."; return null; }
+    const c = Math.round((exp - real) * 100) / 100;
+    out.innerHTML = "Pelo Diário devia dar <b>" + eur(exp) + "</b>, disseste <b>" + eur(real) + "</b> → comissão <b class=\"neg\">" + (c > 0 ? "−" + EUR.format(c) : EUR.format(0)) + "</b>" + (c < 0 ? " <small>(ficou acima do esperado)</small>" : "");
+    return { r, real, c: Math.max(0, c) };
+  }
+  function drawComDlg() {
+    let last = ""; try { last = localStorage.getItem(LS_RISK) || ""; } catch (_) {}
+    comDlg.innerHTML = '<div class="dlg-card com-card" role="dialog" aria-modal="true" aria-labelledby="comT"><div><div class="sub">Fim do dia · comissões</div><h3 id="comT">Quanto deu o dia?</h3><p class="com-help">Diz-me quanto ganhaste ou perdeste hoje, em euros. Eu comparo com o resultado do Diário e a diferença é a comissão.</p></div>' +
+      comQ.map(({ s, id }) => { const e = entry(s.key, id), p = pctOf(e), [y, m, dd] = id.split("-").map(Number), d = new Date(y, m - 1, dd);
+        return '<div class="cq" data-s="' + s.key + '" data-id="' + id + '"><div class="cq-h"><b>' + s.label + '</b><span>' + (id === todayId ? "Hoje" : DOWL[d.getDay()] + ", " + dd + " " + MON3[m - 1]) + ' · ' + e.tp + ' TP, ' + e.sl + ' SL = <b class="' + cls(p) + '">' + fmt(p) + '</b></span></div>' +
+          '<div class="cq-g"><label><span>Risco por trade</span><div class="calc-in"><input class="cq-r" type="text" inputmode="decimal" value="' + esc(String(e.risk || last)) + '" placeholder="50"><span>€</span></div></label>' +
+          '<label><span>Quanto deu hoje</span><div class="cq-vw"><div class="cq-sg" role="group" aria-label="Ganhou ou perdeu"><button type="button" data-sg="+" aria-pressed="' + (p >= 0) + '">+</button><button type="button" data-sg="-" aria-pressed="' + (p < 0) + '">−</button></div><div class="calc-in"><input class="cq-v" type="text" inputmode="decimal" placeholder="0,00"><span>€</span></div></div></label></div>' +
+          '<div class="cq-o"></div></div>'; }).join("") +
+      '<div class="dlg-actions"><button type="button" class="btn primary" id="comSave">Guardar</button></div></div>';
+    comDlg.querySelectorAll(".cq").forEach(comCalc);
+  }
+  function maybeCom() {
+    if (ro || mode !== "db" || !comDlg.hidden) return;
+    if (document.getElementById("splash") || document.querySelector(".dlg:not([hidden])") || !ses.hidden) return;
+    comQ = comPending(); if (!comQ.length) return;
+    drawComDlg(); comDlg.hidden = false;
+  }
+  comDlg.addEventListener("input", e => { const w = e.target.closest(".cq"); if (w) comCalc(w); });
+  comDlg.addEventListener("click", e => {
+    const sg = e.target.closest("[data-sg]"); if (sg) { comSign(sg); return; }
+    if (!e.target.closest("#comSave")) return;
+    let ok = true; const res = [];
+    comDlg.querySelectorAll(".cq").forEach(w => { const r = comCalc(w); if (!r) { ok = false; w.classList.add("miss"); } else { w.classList.remove("miss"); res.push([w, r]); } });
+    if (!ok) { const m = comDlg.querySelector(".cq.miss input"); if (m) m.focus(); return; }
+    for (const [w, r] of res) { setEntry(w.dataset.s, w.dataset.id, { risk: r.r, com: r.c, coms: [{ v: r.c, h: "fim", real: r.real }] }); try { localStorage.setItem(LS_RISK, String(r.r)); } catch (_) {} }
+    comDlg.hidden = true; render();
+  });
+  setTimeout(() => { maybeCom(); setInterval(maybeCom, 20000); }, 6000);
+  try { if (new URLSearchParams(location.search).has("fimcom")) setTimeout(() => { comQ = SES().filter(s => traded(s.key, todayId)).map(s => ({ s, id: todayId })); if (comQ.length) { drawComDlg(); comDlg.hidden = false; } }, 3500); } catch (_) {}
 
   // ---------- search in the notes ----------
   const norm0 = t => String(t || "").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "");
@@ -4359,7 +4430,7 @@ body.offline .netbar { transform: translate(-50%, 0); }
     let last = ""; try { last = localStorage.getItem(LS_RISK) || ""; } catch (_) {}
     $("riskIn").value = e.risk ? String(e.risk) : last;
     $("riskIn").readOnly = ro; $("comIn").value = e.com ? String(e.com) : ""; $("comIn").readOnly = ro;
-    { const l = comList(e); $("calcComL").innerHTML = l.length > 1 || (l[0] && l[0].h) ? '<small>Uma a uma:</small>' + l.map(c => '<span>' + (c.h ? c.h + ' · ' : '') + '−' + EUR.format(c.v) + '</span>').join("") : ""; }
+    { const l = comList(e); $("calcComL").innerHTML = l.length > 1 || (l[0] && l[0].h) ? '<small>Uma a uma:</small>' + l.map(c => '<span>' + (c.h === "fim" ? 'fim do dia' + (c.real != null ? ' (deu ' + eur(c.real) + ')' : '') + ' · ' : c.h ? c.h + ' · ' : '') + '−' + EUR.format(c.v) + '</span>').join("") : ""; }
     $("calcForm").querySelector(".primary").hidden = ro; $("calcClear").hidden = ro;
     $("calcCancel").textContent = ro ? "Fechar" : "Cancelar";
     calcUpdate();
@@ -4373,7 +4444,7 @@ body.offline .netbar { transform: translate(-50%, 0); }
     const r = Math.max(0, Math.min(1e7, parseFloat(String($("riskIn").value).replace(",", ".")) || 0));
     const c = Math.max(0, Math.min(1e6, parseFloat(String($("comIn").value).replace(",", ".")) || 0));
     { const s0 = calcS, id0 = calcId, p0 = snapD(s0, id0); if (p0.risk !== r || (p0.com || 0) !== c) pushUndo("Calculadora de " + dayName(id0) + " guardada", () => { restoreD(s0, id0, p0); render(); }); }
-    { const e1 = entry(calcS, calcId); setEntry(calcS, calcId, Math.abs(c - (e1.com || 0)) < .005 ? { risk: r } : { risk: r, com: c, coms: c ? [{ v: c, h: "" }] : [] }); }
+    { const e1 = entry(calcS, calcId); setEntry(calcS, calcId, Math.abs(c - (e1.com || 0)) < .005 ? { risk: r } : { risk: r, com: c, coms: (e1.coms || []).some(x => x.h === "fim") ? [Object.assign({}, e1.coms.find(x => x.h === "fim"), { v: c })] : c ? [{ v: c, h: "" }] : [] }); }
     if (r) { try { localStorage.setItem(LS_RISK, String(r)); } catch (_) {} }
     closeCalc();
   });
