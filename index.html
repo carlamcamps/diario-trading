@@ -1636,6 +1636,14 @@ body.offline .netbar { transform: translate(-50%, 0); }
   .ses-undo { margin-top: 12px; padding: 8px 14px; font-size: 13px; }
   .ses-help { font-size: 11.5px; margin-top: 10px; }
 }
+/* the pairs of the two accounts, on their own line at the top */
+.pairs { order: 10; flex-basis: 100%; display: flex; justify-content: center; align-items: center; gap: 14px; margin-top: 4px; }
+.pairs[hidden] { display: none; }
+.pairs button { display: inline-flex; align-items: baseline; gap: 7px; border: 0; background: none; padding: 4px 6px; cursor: pointer; color: var(--champ); }
+.pairs small { font: 500 11px/1 var(--sans); letter-spacing: .14em; text-transform: uppercase; color: var(--soft); }
+.pairs b { font: 600 16px/1 var(--display); letter-spacing: .06em; background: linear-gradient(110deg, #B8893A, #F6E2AE 45%, #CDA75E 70%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+.pairs i { width: 1px; height: 18px; background: linear-gradient(180deg, transparent, var(--gold), transparent); }
+.ses-par b { font: 600 15px/1 var(--display); letter-spacing: .06em; color: #F3D98E; }
 /* the pair of each account (Fusion / Prop) */
 .parchip { display: inline-flex; align-items: center; gap: 6px; border: 1px solid rgba(205, 167, 94, .6); background: linear-gradient(135deg, rgba(205, 167, 94, .22), rgba(0, 0, 0, .25)); color: #F3D98E; border-radius: 999px; padding: 5px 12px 5px 9px; font: 700 12.5px/1 var(--sans); letter-spacing: .08em; cursor: pointer; white-space: nowrap; }
 .parchip svg { width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
@@ -1813,6 +1821,7 @@ body.offline .netbar { transform: translate(-50%, 0); }
           <button class="circ" id="next" aria-label="Mês seguinte">›</button>
         </div>
         <button class="todaybtn" id="today">Hoje</button>
+        <div class="pairs" id="pairsBar" hidden></div>
         <button class="todaybtn srchbtn" id="searchBtn" aria-label="Pesquisar nas notas"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><circle cx="7" cy="7" r="4.6"/><path d="M10.4 10.4 14 14"/></svg></button>
       </div>
     </header>
@@ -2727,7 +2736,7 @@ body.offline .netbar { transform: translate(-50%, 0); }
   // the pair being traded in this account (written in the settings); tap it to change it
   const parChip = key => { const par = isPropKey(key) ? PAR_P : PAR_F; return '<button type="button" class="parchip' + (par ? "" : " empty") + '" data-paredit="' + (isPropKey(key) ? "p" : "f") + '" aria-label="' + (par ? "Par: " + esc(par) + ". Tocar para mudar" : "Escrever o par") + '"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 5.5h8.5l-2-2M13 10.5H4.5l2 2"/></svg>' + (par ? esc(par) : "Par") + '</button>'; };
   function ptabHtml(s) {
-    return '<div class="ptabrow">' + ftabs([[s.role, s.label]], s.role, "data-noop", s.full) + (s.acct ? parChip(s.key) : "") + grpDots() + '</div>';
+    return '<div class="ptabrow">' + ftabs([[s.role, s.label]], s.role, "data-noop", s.full) + grpDots() + '</div>';
   }
   // the whole Monday–Friday week of a day, even when part of it falls in another month
   function fullWeek(d) {
@@ -3884,7 +3893,7 @@ body.offline .netbar { transform: translate(-50%, 0); }
     ses.dataset.res = !we && !e.off && traded(s.key, id) ? cls(p) : "";   // soft green / yellow / red glow behind the keys
     ses.innerHTML = '<div class="ses-top"><div class="ses-tabs">' + SES().map(x => '<button type="button" data-sesr="' + x.role + '" aria-pressed="' + (x.role === sesRole) + '">' + x.label + '</button>').join("") + '</div><button type="button" class="ses-x" data-ses="close" aria-label="Fechar">✕</button></div>' +
       '<i class="ses-frame" aria-hidden="true"></i><i class="ses-grab" aria-hidden="true"></i>' + sesWatch() +
-      '<div class="ses-par">' + parChip(s.key) + '<span>1:' + tpOf(s.key) + '</span></div>' + '<div class="ses-date">' + DOWL[d.getDay()] + ', ' + d.getDate() + ' de ' + MONTHS[d.getMonth()] + '</div><div class="ses-clock" id="sesClock">' + dayClock().short + '</div><div class="ses-news" id="sesNews"' + (sesNewsTxt() ? '' : ' hidden') + '>' + sesNewsTxt() + '</div>' +
+      '<div class="ses-par">' + ((isPropKey(s.key) ? PAR_P : PAR_F) ? '<b>' + esc(isPropKey(s.key) ? PAR_P : PAR_F) + '</b>' : '') + '<span>1:' + tpOf(s.key) + '</span></div>' + '<div class="ses-date">' + DOWL[d.getDay()] + ', ' + d.getDate() + ' de ' + MONTHS[d.getMonth()] + '</div><div class="ses-clock" id="sesClock">' + dayClock().short + '</div><div class="ses-news" id="sesNews"' + (sesNewsTxt() ? '' : ' hidden') + '>' + sesNewsTxt() + '</div>' +
       (we ? '<p class="ses-we">Hoje é fim de semana. O Diário só tem dias úteis.</p>' : e.off ? '<p class="ses-we">Este dia está marcado como "sem operar".</p>' :
         '<div class="ses-res ' + cls(p) + '">' + fmt(p) + '</div><div class="ses-cnt">' + e.tp + ' TP · ' + e.sl + ' SL' + (s.acct && e.risk ? ' · ' + eur(euroOf(e)) : '') + '</div>' +
         '<div class="ses-btns"><button type="button" class="key ses-tp" data-ses="tp" aria-label="Mais um TP">' + sesRing(e.tp, e.tp + e.sl, "tp") + '<span class="cap"><b>TP</b><small>Take profit</small><span class="cnt">' + e.tp + '</span></span></button><button type="button" class="key ses-sl" data-ses="sl" aria-label="Mais um SL">' + sesRing(e.sl, e.tp + e.sl, "sl") + '<span class="cap"><b>SL</b><small>Stop loss</small><span class="cnt">' + e.sl + '</span></span></button></div>' +
@@ -4168,6 +4177,7 @@ body.offline .netbar { transform: translate(-50%, 0); }
     const days = weekdays(view.y, view.m);
     CHARTS = []; PENDING = []; slideCtl = null; hideTip();
     $("mlabel").textContent = cap(MONTHS[view.m]) + " " + view.y;
+    { const pb = $("pairsBar"); if (pb) { pb.hidden = !(PAR_F || PAR_P); pb.innerHTML = '<button type="button" data-paredit="f" aria-label="Par da Fusion: ' + esc(PAR_F || "por escrever") + '"><small>Fusion</small><b>' + esc(PAR_F || "—") + '</b></button><i aria-hidden="true"></i><button type="button" data-paredit="p" aria-label="Par da Prop: ' + esc(PAR_P || "por escrever") + '"><small>Prop</small><b>' + esc(PAR_P || "—") + '</b></button>'; } }
     ["cal", "news", "stats", "acct", "diario"].forEach(v => document.body.classList.toggle("view-" + v, tab === v));
     document.querySelectorAll(".tabs button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.view === tab)));
     markSwitch();
