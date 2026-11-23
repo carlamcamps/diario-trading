@@ -259,6 +259,19 @@ jobs:
                       o = out.setdefault(r['serie'], [0, 0, 0]); o[0] += r['tp'] or 0; o[1] += r['sl'] or 0; o[2] += (r['tp'] or 0) * TPV[r['serie']] - (r['sl'] or 0)
                   return out
               def pct(v): return ('+' if v > 0 else '') + str(v) + '%'
+              # 21:00: "how much did the day make?" (only if Fusion/Prop were traded today and it was not answered yet in the site)
+              k = 'fimdia-' + today.isoformat()
+              if k not in sent and 21 <= loc.hour <= 22:
+                  try:
+                      rows = json.loads(sb('/dias?select=serie,tp,sl,comissoes&dia=eq.' + today.isoformat() + '&serie=in.(conta,prop_conta)'))
+                  except Exception:
+                      rows = []
+                  traded = [r for r in rows if (r.get('tp') or 0) + (r.get('sl') or 0) > 0]
+                  answered = all(any((c or {}).get('h') == 'fim' for c in (r.get('comissoes') or [])) for r in traded)
+                  if traded and not answered:
+                      msgs.append((k, {'title': 'Oi Carla 💛 Quanto deu o dia?', 'body': 'Diz-me quanto ganhaste ou perdeste hoje, para eu calcular a comissão ✨', 'tag': k}))
+                  elif traded or loc.hour == 22:
+                      sent.append(k)
               k = 'resumo-dia-' + today.isoformat()
               if k not in sent and (loc.hour, loc.minute) >= (21, 5) and loc.hour <= 23:
                   R = results(today.isoformat(), today.isoformat())
