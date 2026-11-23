@@ -878,8 +878,9 @@ body.ses-open .pendbub { display: none; }
 .adi i { font-size: 11px; color: var(--soft); }
 .amov { grid-column: 2 / -1; display: flex; gap: 12px; flex-wrap: wrap; font-size: 11px; color: #6B1A2C; }
 .achelp { margin: 0; font-size: 12px; color: var(--soft); position: relative; z-index: 1; }
-.ac2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.ac2 .calc-in input { font-size: 18px; }
+.ac2 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px; }
+.ac2 > div { min-width: 0; }
+.ac2 .calc-in input { font-size: 18px; width: 100%; }
 .acc-card .wrow, .acc-card .mtotal { position: relative; z-index: 1; }
 .acc-card .wrow { margin: 3px 0 6px; }
 
@@ -1601,6 +1602,9 @@ body.night #dust { display: none; }
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40' fill='none' stroke='%23D9B66C' stroke-width='1.2' stroke-linecap='round'%3E%3Cg transform='matrix(-1 0 0 -1 40 40)'%3E%3Cpath d='M2 32V10Q2 2 10 2h22'/%3E%3Cpath d='M6 20v-6q0-8 8-8h6' opacity='.6'/%3E%3Cpath d='M2 10q4.5 0 4.5 4.5M10 2q0 4.5 4.5 4.5' opacity='.6'/%3E%3Ccircle cx='32' cy='2' r='1.3' fill='%23D9B66C' stroke='none'/%3E%3Ccircle cx='2' cy='32' r='1.3' fill='%23D9B66C' stroke='none'/%3E%3C/g%3E%3C/svg%3E") bottom right / 36px no-repeat; }
 /* gold buttons with a brushed-metal look: Sessão, Guardar, Hoje */
 .btn.primary, body .sesbtn, #today { background: repeating-linear-gradient(90deg, rgba(255, 250, 230, .1) 0 1px, transparent 1px 3px), linear-gradient(135deg, #EED39A, #CDA75E 38%, #A8833F 68%, #D9B76E); color: #2A0A11; border-color: rgba(246, 224, 164, .85); font-weight: 600; }
+/* the Sessão button stays plain: smooth gold, no stripes, no moving shine */
+body .sesbtn { background: linear-gradient(135deg, #E6C886, #C9A35A 55%, #B08A45); }
+body .sesbtn::after, body .sesbtn::before { display: none !important; animation: none !important; }
 .btn.primary, #today { box-shadow: inset 0 1px 0 rgba(255, 250, 230, .6), inset 0 -1px 0 rgba(90, 60, 20, .4), 0 6px 14px -6px rgba(0, 0, 0, .6); }
 #today:hover, .btn.primary:hover { filter: brightness(1.07); }
 /* mood faces jump and shine when chosen */
@@ -2159,7 +2163,7 @@ body.offline .netbar { transform: translate(-50%, 0); }
         <div class="calc-in"><input id="acLev" type="text" inputmode="decimal" placeholder="0"><span>€</span></div>
       </div>
     </div>
-    <p class="achelp">Os depósitos e levantamentos não contam como lucro nem como perda.</p>
+    <p class="achelp">Os depósitos e levantamentos não contam como lucro nem como perda. O levantamento sai no fim do dia: o dia seguinte começa já sem esse valor.</p>
     <div>
       <label for="acNote">Nota do dia</label>
       <textarea id="acNote" placeholder="Como correu o dia na conta…"></textarea>
@@ -3538,18 +3542,21 @@ body.offline .netbar { transform: translate(-50%, 0); }
   // walk all saved days in order, carrying the closing balance into the next day
   function acCompute(a) {
     const ids = [...cstore[a].keys()].sort(), rows = new Map();
-    let last = null, peak = null, maxDD = 0, first = null, dep = 0, lev = 0;
+    let last = null, peak = null, maxDD = 0, first = null, dep = 0, lev = 0, nlev = 0;
     for (const id of ids) {
       const e = cstore[a].get(id), start = e.inicio != null ? e.inicio : last;
-      const profit = e.fim != null && start != null ? e.fim - start - (e.dep || 0) + (e.lev || 0) : null;
-      rows.set(id, { start, auto: e.inicio == null && start != null, fim: e.fim, profit, pct: profit != null && start ? profit / start * 100 : null, risk: e.risco, rpct: e.risco != null && start ? e.risco / start * 100 : null, dep: e.dep || 0, lev: e.lev || 0, nota: e.nota || "" });
+      // a withdrawal leaves the account after the day closes: the day's "fim" is before it, the next day starts with fim − withdrawal
+      const profit = e.fim != null && start != null ? e.fim - start - (e.dep || 0) : null;
+      const after = e.fim != null ? e.fim - (e.lev || 0) : null;
+      rows.set(id, { start, auto: e.inicio == null && start != null, fim: e.fim, after, profit, pct: profit != null && start ? profit / start * 100 : null, risk: e.risco, rpct: e.risco != null && start ? e.risco / start * 100 : null, dep: e.dep || 0, lev: e.lev || 0, nota: e.nota || "" });
       if (first == null && start != null) first = start;
-      dep += e.dep || 0; lev += e.lev || 0;
-      if (e.fim != null) { last = e.fim; peak = peak == null ? e.fim : Math.max(peak, e.fim); maxDD = Math.max(maxDD, peak ? (peak - e.fim) / peak * 100 : 0); }
+      dep += e.dep || 0; lev += e.lev || 0; if (e.lev) nlev++;
+      if (e.fim != null) { peak = peak == null ? e.fim : Math.max(peak, e.fim); maxDD = Math.max(maxDD, peak ? (peak - e.fim) / peak * 100 : 0); last = after; if (e.lev) peak -= e.lev; }
+      else if (e.lev && last != null) last -= e.lev;
     }
-    return { rows, ids, first, last, peak, maxDD, dep, lev };
+    return { rows, ids, first, last, peak, maxDD, dep, lev, nlev };
   }
-  function lastBefore(a, id, C) { let v = null; for (const k of C.ids) { if (k >= id) break; const r = C.rows.get(k); if (r.fim != null) v = r.fim; } return v; }
+  function lastBefore(a, id, C) { let v = null; for (const k of C.ids) { if (k >= id) break; const r = C.rows.get(k); if (r.fim != null) v = r.after; else if (r.lev && v != null) v -= r.lev; } return v; }
   const eurS = v => v == null ? "—" : eur(v);
   const pctS = v => v == null ? "" : fmt1(v);
   function acHtml(a) {
@@ -3575,7 +3582,7 @@ body.offline .netbar { transform: translate(-50%, 0); }
     h += '<div class="achips">' +
       '<div class="achip"><span>Este mês</span><b class="' + cls(mp) + '">' + (mStart != null ? eur(mp) : "—") + '</b><small>' + (mStart ? fmt1(mp / mStart * 100) : "escreve o início e o fim do dia") + '</small></div>' +
       '<div class="achip"><span>Desde o início</span><b class="' + cls(growth || 0) + '">' + eurS(growth) + '</b><small>' + (C.first && growth != null ? fmt1(growth / C.first * 100) + " desde " + EUR0.format(C.first) : "") + '</small></div>' +
-      '<div class="achip pay" data-tip="plain" data-tv="Ver os pagamentos"><span>Já levantaste</span><b>' + EUR.format(paid.rec) + '</b><small>' + paid.n + (paid.n === 1 ? " pagamento" : " pagamentos") + (paid.wait ? " · " + EUR0.format(paid.wait) + " à espera" : "") + '</small></div>' +
+      '<div class="achip lev"><span>Já levantaste</span><b>' + EUR.format(C.lev) + '</b><small>' + (C.nlev ? C.nlev + (C.nlev === 1 ? " levantamento" : " levantamentos") + " desta conta" : "põe-nos no lápis de cada dia") + '</small></div>' +
       '</div>';
     let tl = '<div class="cht ondark">Resumo da conta</div><div class="tiles">';
     tl += tile("Lucro do mês", eurS(mp || (mStart != null ? 0 : null)), mStart ? fmt1(mp / mStart * 100) + " do saldo do início do mês" : "escreve o início e o fim de cada dia", cls(mp));
@@ -3731,19 +3738,20 @@ body.offline .netbar { transform: translate(-50%, 0); }
   function acMonth(a) {
     const C = acCompute(a); let mp = 0, mStart = null, n = 0;
     for (const d of weekdays(view.y, view.m)) { const r = C.rows.get(iso(d)); if (!r) continue; if (mStart == null && r.start != null) mStart = r.start; if (r.profit != null) { mp += r.profit; n++; } }
-    return { mp, mStart, n, last: C.last, pay: payTotals(a) };
+    return { mp, mStart, n, last: C.last, lev: C.lev, pay: payTotals(a) };
   }
   function tudoHtml() {
     const live = ["fusion", ...props.filter(x => !x.arquivada).map(x => x.id)], arch = props.filter(x => x.arquivada);
     const M = Object.fromEntries(ACC_ALL().map(a => [a, acMonth(a)]));
     let mp = 0, ms = 0, bal = 0, hasBal = false, rec = 0, wait = 0;
     for (const a of live) { mp += M[a].mp; if (M[a].mStart) ms += M[a].mStart; if (M[a].last != null) { bal += M[a].last; hasBal = true; } }
-    for (const a of ACC_ALL()) { rec += M[a].pay.rec; wait += M[a].pay.wait; }
+    let levAll = 0;
+    for (const a of ACC_ALL()) { rec += M[a].pay.rec; wait += M[a].pay.wait; levAll += M[a].lev; }
     let pRec = 0, pCost = 0; for (const x of props) { pRec += M[x.id].pay.rec; pCost += x.custo || 0; }
     let h = '<section class="acc-card tudo glass g-conta"><div class="st-head"><div><div class="kind">Tudo junto</div><h2>' + cap(MONTHS[view.m]) + ' <em>' + view.y + '</em></h2></div><div class="ac-now"><small>Saldo de todas</small><b>' + (hasBal ? EUR.format(bal) : "—") + '</b></div></div>';
     h += '<div class="achips">' +
       '<div class="achip"><span>Lucro do mês</span><b class="' + cls(mp) + '">' + eur(mp) + '</b><small>' + (ms ? fmt1(mp / ms * 100) + " · Fusion + props ativas" : "Fusion + props ativas") + '</small></div>' +
-      '<div class="achip pay"><span>Já levantaste</span><b>' + EUR.format(rec) + '</b><small>de todas as contas' + (wait ? " · " + EUR0.format(wait) + " à espera" : "") + '</small></div>' +
+      '<div class="achip lev"><span>Já levantaste</span><b>' + EUR.format(levAll) + '</b><small>de todas as contas</small></div>' +
       '<div class="achip"><span>Props: recebido − pago</span><b class="' + cls(pRec - pCost) + '">' + eur(pRec - pCost) + '</b><small>' + EUR0.format(pRec) + ' recebidos, ' + EUR0.format(pCost) + ' pagos</small></div></div>';
     const row = (a, x) => { const m = M[a]; return '<button type="button" class="tdr" data-tgo="' + a + '"><span class="tl-n">' + esc(acName(a)) + (x && x.tamanho != null ? '<small>' + EUR0.format(x.tamanho) + '</small>' : '') + '</span>' +
       '<span class="tl-c"><small>Saldo</small><b>' + (m.last != null ? EUR0.format(m.last) : "—") + '</b></span>' +
@@ -5015,6 +5023,26 @@ body.offline .netbar { transform: translate(-50%, 0); }
     if (res) { const eu = res.querySelector(".eur"); res.className = "res " + cls(p); res.firstChild.nodeValue = fmt(p); if (eu) eu.textContent = eur(euroOf(e1)); }
     dirtyView = true;
   });
+  // confetti only once the day has both TP and SL: typing the TP alone never celebrates
+  let rowCel = null;
+  function rowCelCheck() {
+    if (!rowCel) return;
+    const [s, id] = rowCel.k.split("|"), e1 = entry(s, id);
+    if (rowCel.slSeen || e1.sl > 0) { celebrate(rowCel.before, pctOf(e1)); rowCel.before = pctOf(e1); }
+  }
+  $("view").addEventListener("focusin", e => {
+    const i = e.target.closest("input[data-in]"); if (!i) return;
+    const [s, id, f] = i.dataset.in.split("|"), k = s + "|" + id;
+    if (rowCel && rowCel.k !== k) { rowCelCheck(); rowCel = null; }
+    if (!rowCel) rowCel = { k, before: pctOf(entry(s, id)), slSeen: false };
+    if (f === "sl") rowCel.slSeen = true;
+  });
+  $("view").addEventListener("focusout", e => {
+    const i = e.target.closest("input[data-in]"); if (!i || !rowCel) return;
+    const nx = e.relatedTarget && e.relatedTarget.closest ? e.relatedTarget.closest("input[data-in]") : null;
+    if (nx && nx.dataset.in.split("|").slice(0, 2).join("|") === rowCel.k) return;
+    rowCelCheck(); rowCel = null;
+  });
   // remember the day as it was before typing, so the change can be undone
   let inSnap = null;
   $("view").addEventListener("focusin", e => { const i = e.target.closest("input[data-in]"); if (!i) return; const [s, id] = i.dataset.in.split("|"); if (!inSnap || inSnap.k !== s + "|" + id) inSnap = { k: s + "|" + id, s, id, prev: snapD(s, id) }; });
@@ -5024,7 +5052,7 @@ body.offline .netbar { transform: translate(-50%, 0); }
     const [s, id] = i.dataset.in.split("|"), now1 = entry(s, id);
     if (inSnap && inSnap.k === s + "|" + id && (inSnap.prev.tp !== now1.tp || inSnap.prev.sl !== now1.sl)) {
       const snap = inSnap; inSnap = { k: snap.k, s, id, prev: snapD(s, id) };
-      celebrate(pctOf(snap.prev), pctOf(now1));
+      rowCelCheck();
       pushUndo(byKey(s).label + ", " + dayName(id) + " alterado", () => { restoreD(snap.s, snap.id, snap.prev); inSnap = null; render(); });
     }
     setTimeout(render, 0);
