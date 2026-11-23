@@ -1646,7 +1646,10 @@ body.offline .netbar { transform: translate(-50%, 0); }
 @media (max-width: 860px) {
   .ledger .lrow.cta [data-calc] { display: none; }
   .ledger .lrow.cta { grid-template-columns: 50px auto auto auto minmax(0, 1fr) 26px; }
-  .ledger .lrow.cta .res .eur { display: none; }
+  /* the € value stays in the row, under the %, without touching the TO */
+  .ledger .lrow.cta .res { justify-self: end; text-align: right; white-space: nowrap; }
+  .ledger .lrow.cta.d-pos .res, .ledger .lrow.cta.d-neg .res, .ledger .lrow.cta.d-zero .res { padding: 2px 8px; border-radius: 12px; }
+  .ledger .lrow.cta .res .eur { display: block; font-size: 10.5px; }
 }
 @media (max-width: 420px) { .ledger .lrow.cta { grid-template-columns: 34px auto auto auto minmax(0, 1fr) 22px; } }
 @media (max-width: 520px) { .ledger .lrow.cta.hasbe { grid-template-columns: 28px auto auto auto auto minmax(0, 1fr) 20px; } }
