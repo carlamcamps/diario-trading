@@ -1636,6 +1636,20 @@ body.offline .netbar { transform: translate(-50%, 0); }
   .ses-undo { margin-top: 12px; padding: 8px 14px; font-size: 13px; }
   .ses-help { font-size: 11.5px; margin-top: 10px; }
 }
+/* phone: the calculator moves into the pencil (day window), so the result has room in the Fusion / Prop rows */
+.dlg-calc { display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px 14px; border-radius: 14px; border: 1px solid rgba(205, 167, 94, .45); background: rgba(0, 0, 0, .22); color: var(--champ); cursor: pointer; text-align: left; font: inherit; }
+.dlg-calc[hidden] { display: none; }
+.dlg-calc:hover { background: rgba(205, 167, 94, .12); }
+.dlg-calc svg { width: 26px; height: 26px; color: var(--gold); flex: 0 0 auto; }
+.dlg-calc span { flex: 1; min-width: 0; } .dlg-calc b { display: block; font-family: var(--display); font-weight: 500; font-size: 16px; } .dlg-calc small { display: block; color: var(--soft); font-size: 12px; margin-top: 2px; }
+.dlg-calc i { font-style: normal; color: var(--gold); font-size: 22px; }
+@media (max-width: 860px) {
+  .ledger .lrow.cta [data-calc] { display: none; }
+  .ledger .lrow.cta { grid-template-columns: 50px auto auto auto minmax(0, 1fr) 26px; }
+  .ledger .lrow.cta .res .eur { display: none; }
+}
+@media (max-width: 420px) { .ledger .lrow.cta { grid-template-columns: 34px auto auto auto minmax(0, 1fr) 22px; } }
+@media (max-width: 520px) { .ledger .lrow.cta.hasbe { grid-template-columns: 28px auto auto auto auto minmax(0, 1fr) 20px; } }
 /* 21:00 question: how much did the day make (the commission is the difference) */
 .com-card { max-width: 460px; }
 .com-help { margin: 6px 0 0; color: var(--soft); font-size: 13px; line-height: 1.45; }
@@ -1934,6 +1948,7 @@ body.offline .netbar { transform: translate(-50%, 0); }
       <label for="noteText">Nota do dia</label>
       <textarea id="noteText" placeholder="Escreve aqui uma observação sobre este dia…"></textarea>
     </div>
+    <button type="button" class="dlg-calc" id="dlgCalc" hidden><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="1.8" width="10" height="12.4" rx="1.8"/><rect x="5" y="3.8" width="6" height="2.6" rx=".6"/><path d="M5.6 8.8h.01M8 8.8h.01M10.4 8.8h.01M5.6 11.4h.01M8 11.4h.01M10.4 11.4h.01" stroke-width="1.8"/></svg><span><b>Calculadora em euros</b><small id="dlgCalcS">Risco, resultado em € e comissão</small></span><i aria-hidden="true">›</i></button>
     <label class="offtoggle" for="offCheck">
       <input type="checkbox" id="offCheck">
       <span id="offT">Não operei neste dia<small id="offS">Risca o dia só nesta conta. A Estratégia não muda.</small></span>
@@ -4391,6 +4406,9 @@ body.offline .netbar { transform: translate(-50%, 0); }
     $("dlgTitle").textContent = DOWL[d.getDay()] + ", " + d.getDate() + " de " + MONTHS[d.getMonth()];
     $("noteText").value = e.note || "";
     $("offCheck").checked = !!e.off;
+    // Fusion / Prop: the calculator is also here (on the phone it is no longer in the row)
+    $("dlgCalc").hidden = !byKey(s).acct || !!offOnly;
+    $("dlgCalcS").textContent = e.risk ? "Risco " + EUR.format(e.risk) + " · " + eur(euroOf(e)) + (e.com ? " (com. −" + EUR.format(e.com) + ")" : "") : "Risco, resultado em € e comissão";
     $("noteText").readOnly = ro; $("offCheck").disabled = ro;
     $("dlgForm").querySelector(".primary").hidden = ro;
     $("dlgCancel").textContent = ro ? "Fechar" : "Cancelar";
@@ -4408,6 +4426,7 @@ body.offline .netbar { transform: translate(-50%, 0); }
     closeDay();
   });
   $("dlgCancel").addEventListener("click", closeDay);
+  $("dlgCalc").addEventListener("click", () => { if (!dlgKey) return; const { s, id } = dlgKey; dlg.hidden = true; dlgKey = null; openCalc(s, id); });
   dlg.addEventListener("click", e => { if (e.target === dlg) closeDay(); });
   document.addEventListener("keydown", e => { if (e.key === "Escape" && !dlg.hidden) closeDay(); if (e.key === "Escape" && !calc.hidden) closeCalc(); });
 
