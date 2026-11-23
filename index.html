@@ -1610,6 +1610,19 @@ body.offline .netbar { transform: translate(-50%, 0); }
 .cfg-ro { color: #F29AAE; font-size: 13px; margin: 0; }
 .xlsbtn { display: inline-flex; align-items: center; gap: 6px; }
 .xlsbtn svg { width: 14px; height: 14px; }
+/* ---------- commission ---------- */
+.res .com { display: block; font-size: 10.5px; font-weight: 500; color: #9C4A5C; text-align: right; line-height: 1.1; opacity: .9; }
+@media (max-width: 860px) { .res .com { display: none; } }
+.ses-com { margin-top: 14px; display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; color: var(--soft); font-size: 13.5px; }
+.ses-com b { color: #F29AAE; font-weight: 600; margin-left: 4px; font-variant-numeric: tabular-nums; }
+.ses-comb { border: 1px solid rgba(205, 167, 94, .55); background: rgba(0, 0, 0, .25); color: var(--gold); border-radius: 999px; padding: 8px 14px; font: 600 13px/1 var(--sans); cursor: pointer; }
+.ses-comb[aria-expanded="true"] { background: rgba(205, 167, 94, .18); }
+.ses-comf { margin-top: 10px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: center; width: 100%; max-width: 360px; }
+.ses-comf .calc-in { flex: 1 1 140px; }
+.ses-comf .calc-in input { font-size: 20px; }
+.calc-com input { font-size: 18px !important; }
+.calback { border: 1px solid rgba(205, 167, 94, .55); background: rgba(0, 0, 0, .25); color: var(--gold); border-radius: 999px; padding: 8px 14px; font: 600 13px/1 var(--sans); cursor: pointer; align-self: center; }
+.calback:hover { background: rgba(205, 167, 94, .15); }
 /* ---------- Sessão ---------- */
 .ses::after { content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none; background: repeating-linear-gradient(45deg, rgba(255, 255, 255, .02) 0 1px, transparent 1px 3px), repeating-linear-gradient(-45deg, rgba(0, 0, 0, .06) 0 1px, transparent 1px 3px), radial-gradient(70% 45% at 30% 15%, rgba(255, 220, 230, .07), transparent 70%); }
 .ses[data-res="pos"] { --sesTint: radial-gradient(120% 85% at 50% 60%, rgba(40, 150, 90, .48), rgba(20, 90, 55, .26) 55%, rgba(10, 50, 30, .12) 85%, transparent); }
@@ -1746,6 +1759,10 @@ body.offline .netbar { transform: translate(-50%, 0); }
       <label for="riskIn">Risco por trade (valor de 1%)</label>
       <div class="calc-in"><input id="riskIn" type="number" inputmode="decimal" min="0" step="any" placeholder="50"><span>€</span></div>
       <div class="ckeys" role="group" aria-label="Valores rápidos"><button type="button" data-rk="25">25 €</button><button type="button" data-rk="50">50 €</button><button type="button" data-rk="100">100 €</button><button type="button" data-rk="200">200 €</button><button type="button" data-rk="500">500 €</button></div>
+    </div>
+    <div>
+      <label for="comIn">Comissão do dia (opcional)</label>
+      <div class="calc-in calc-com"><input id="comIn" type="number" inputmode="decimal" min="0" step="any" placeholder="0"><span>€</span></div>
     </div>
     <div class="calc-out"><div><small id="calcHow">3 × 50 €</small><small>Resultado em euros</small></div><span class="v" id="calcOut">+150,00 €</span></div>
     <div class="dlg-actions">
@@ -2321,15 +2338,15 @@ body.offline .netbar { transform: translate(-50%, 0); }
   const cls = v => v > 0 ? "pos" : v < 0 ? "neg" : "zero";
   const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
   const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
-  const EMPTY = { tp: 0, sl: 0, be: 0, note: "", off: false, risk: 0 };
+  const EMPTY = { tp: 0, sl: 0, be: 0, note: "", off: false, risk: 0, com: 0 };
   const EUR = new Intl.NumberFormat("pt-PT", { style: "currency", currency: "EUR" });
   const eur = v => (v > 0 ? "+" : v < 0 ? "−" : "") + EUR.format(Math.abs(v));
-  const euroOf = e => pctOf(e) * (e.risk || 0);
+  const euroOf = e => pctOf(e) * (e.risk || 0) - (e.com || 0);   // the commission (€) comes off the result
   const CALC = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="1.8" width="10" height="12.4" rx="1.8"/><rect x="5" y="3.8" width="6" height="2.6" rx=".6"/><path d="M5.6 8.8h.01M8 8.8h.01M10.4 8.8h.01M5.6 11.4h.01M8 11.4h.01M10.4 11.4h.01" stroke-width="1.8"/></svg>';
   const entry = (s, id) => store[s].get(id) || EMPTY;
   const traded = (s, id) => { const e = store[s].get(id); return !!e && !e.off && (e.tp > 0 || e.sl > 0 || e.be > 0); };
-  const isEmpty = e => !e.tp && !e.sl && !e.be && !e.note && !e.off && !e.risk;
-  const norm = v => ({ tp: Math.max(0, +v.tp || 0), sl: Math.max(0, +v.sl || 0), be: Math.max(0, +v.be || 0), note: typeof v.note === "string" ? v.note.slice(0, 4000) : "", off: v.off === true, risk: Math.max(0, Math.min(1e7, +v.risk || 0)) });
+  const isEmpty = e => !e.tp && !e.sl && !e.be && !e.note && !e.off && !e.risk && !e.com;
+  const norm = v => ({ tp: Math.max(0, +v.tp || 0), sl: Math.max(0, +v.sl || 0), be: Math.max(0, +v.be || 0), note: typeof v.note === "string" ? v.note.slice(0, 4000) : "", off: v.off === true, risk: Math.max(0, Math.min(1e7, +v.risk || 0)), com: Math.max(0, Math.min(1e6, Math.round((+v.com || 0) * 100) / 100)) });
   function isoWeek(d) {
     const t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
     const day = t.getUTCDay() || 7; t.setUTCDate(t.getUTCDate() + 4 - day);
@@ -2411,7 +2428,7 @@ body.offline .netbar { transform: translate(-50%, 0); }
     const e = store[s].get(id);
     let p;
     const chk = r => { if (r.error) throw r.error; };
-    if (mode === "db") { p = e ? sb.from("dias").upsert(Object.assign({ serie: s, dia: id, tp: e.tp, sl: e.sl, nota: e.note, sem_operar: e.off, risco: e.risk || 0 }, beCol ? { be: e.be || 0 } : {})).then(chk) : sb.from("dias").delete().eq("serie", s).eq("dia", id).then(chk); }
+    if (mode === "db") { p = e ? sb.from("dias").upsert(Object.assign({ serie: s, dia: id, tp: e.tp, sl: e.sl, nota: e.note, sem_operar: e.off, risco: e.risk || 0 }, beCol ? { be: e.be || 0 } : {}, comCol ? { comissao: e.com || 0 } : {})).then(chk) : sb.from("dias").delete().eq("serie", s).eq("dia", id).then(chk); }
     else { saveLocal(); p = Promise.resolve(); }
     inflight.set(k, p);
     try {
@@ -2430,7 +2447,7 @@ body.offline .netbar { transform: translate(-50%, 0); }
   // ---------- Supabase: everyone reads, only the signed-in owner writes (enforced by the database rules) ----------
   const SUPABASE_URL = "https://nexskfugwtmtwsexlhos.supabase.co";
   const SUPABASE_KEY = "sb_publishable_-OiT0kTGfY4MmMgD28LrEg_9cQ6kMXW";
-  let sb = null, beCol = false, cfgDirty = false;
+  let sb = null, beCol = false, comCol = false, cfgDirty = false;
   function saveCfgLocal() { try { localStorage.setItem(LS_CFG, JSON.stringify({ tp: TP_PCT, be: SHOW_BE })); } catch (_) {} }
   async function saveCfg() {
     saveCfgLocal(); if (mode !== "db" || !sb) return;
@@ -2439,15 +2456,15 @@ body.offline .netbar { transform: translate(-50%, 0); }
     cfgDirty = false; return r.error;
   }
   async function loadRemote() {
-    let { data, error } = await sb.from("dias").select("serie,dia,tp,sl,be,nota,sem_operar,risco").limit(10000);
-    if (error) { beCol = false; ({ data, error } = await sb.from("dias").select("serie,dia,tp,sl,nota,sem_operar,risco").limit(10000)); } else beCol = true;
+    let { data, error } = await sb.from("dias").select("serie,dia,tp,sl,be,comissao,nota,sem_operar,risco").limit(10000);
+    if (error) { beCol = comCol = false; ({ data, error } = await sb.from("dias").select("serie,dia,tp,sl,nota,sem_operar,risco").limit(10000)); } else beCol = comCol = true;
     if (error) throw error;
     const cfgRow = (data || []).find(r => r.serie === "config");
     if (cfgRow && !cfgDirty) { const t = Math.round(+cfgRow.tp); if (t >= 1 && t <= 10) TP_PCT = t; SHOW_BE = +cfgRow.sl === 1; saveCfgLocal(); }
     const maps = { estrategia: new Map(), conta: new Map(), prop_estrategia: new Map(), prop_conta: new Map() };
     for (const r of data || []) {
       if (!maps[r.serie]) continue;
-      const n = norm({ tp: r.tp, sl: r.sl, be: r.be, note: r.nota || "", off: r.sem_operar === true, risk: r.risco });
+      const n = norm({ tp: r.tp, sl: r.sl, be: r.be, com: r.comissao, note: r.nota || "", off: r.sem_operar === true, risk: r.risco });
       if (!isEmpty(n)) maps[r.serie].set(String(r.dia).slice(0, 10), n);
     }
     for (const k of dirty) {
@@ -2666,12 +2683,12 @@ body.offline .netbar { transform: translate(-50%, 0); }
         const base = (SHOW_BE ? " hasbe" : "") + (id === todayId ? " today" : id > todayId ? " future" : "") + (g.w === wkNow && id !== todayId && Math.abs(d - now) < 8 * 864e5 ? " wk-now" : "");
         const dateHtml = '<div class="date"><span class="dn">' + d.getDate() + '</span><span class="dw">' + DOW[d.getDay()] + '</span>' + (s.acct ? "" : newsMark(id)) + '</div>';
         const nbHtml = notes ? noteBtn(s.key, id, e, d) : "", ex = notes ? " cta" : " estr";
-        const cbHtml = notes ? '<button type="button" class="nb' + (e.risk ? " has" : "") + '" data-calc="' + s.key + '|' + id + '" aria-label="Calculadora de ' + d.getDate() + ' de ' + MONTHS[d.getMonth()] + '"' + (e.risk ? ' data-tip="calc" data-risk="' + EUR.format(e.risk) + '" data-pct="' + fmt(p) + '" data-eur="' + eur(euroOf(e)) + '" data-cls="' + cls(p) + '"' : ' data-tip="empty" data-tv="Calcular em euros"') + '>' + CALC + '</button>' : "";
+        const cbHtml = notes ? '<button type="button" class="nb' + (e.risk ? " has" : "") + '" data-calc="' + s.key + '|' + id + '" aria-label="Calculadora de ' + d.getDate() + ' de ' + MONTHS[d.getMonth()] + '"' + (e.risk ? ' data-tip="calc" data-risk="' + EUR.format(e.risk) + '" data-pct="' + fmt(p) + '"' + (e.com ? ' data-com="−' + EUR.format(e.com) + '"' : '') + ' data-eur="' + eur(euroOf(e)) + '" data-cls="' + cls(euroOf(e)) + '"' : ' data-tip="empty" data-tv="Calcular em euros"') + '>' + CALC + '</button>' : "";
         const offB = notes ? "" : '<button type="button" class="nb' + (e.off ? " has" : "") + '" data-offday="' + s.key + '|' + id + '" aria-label="Não era para operar a ' + d.getDate() + ' de ' + MONTHS[d.getMonth()] + '" data-tip="empty" data-tv="' + (e.off ? "Voltar a contar este dia" : "Não era para operar") + '">' + PEN + '</button>';
         if (e.off) {
           h += '<div class="lrow off' + ex + base + '" data-row="' + s.key + '|' + id + '">' + dateHtml + '<span class="offlbl">' + (notes ? "Sem operar" : "Não era para operar") + '</span>' + nbHtml + (notes ? "<span></span>" : offB) + '</div>';
         } else {
-          const eurHtml = notes && e.risk && traded(s.key, id) ? '<span class="eur">' + eur(euroOf(e)) + '</span>' : "";
+          const eurHtml = (notes && e.risk && traded(s.key, id) ? '<span class="eur">' + eur(euroOf(e)) + '</span>' : "") + (notes && e.com ? '<span class="com" title="Comissão deste dia">−' + EUR.format(e.com) + ' com.</span>' : "");
           const star = !s.acct && traded(s.key, id) && p >= BIG_DAY;
           h += '<div class="lrow' + ex + base + (traded(s.key, id) ? " d-" + cls(p) : " vazio") + (star ? " star" : "") + '" data-row="' + s.key + '|' + id + '"' + (star ? ' title="Dia acima de +' + BIG_DAY + '%"' : '') + '>' + dateHtml +
             stepper(s.key, id, "tp", e.tp, !traded(s.key, id)) + stepper(s.key, id, "sl", e.sl, !traded(s.key, id)) + (SHOW_BE ? stepper(s.key, id, "be", e.be || 0, !traded(s.key, id)) : "") +
@@ -3494,7 +3511,7 @@ body.offline .netbar { transform: translate(-50%, 0); }
   function hideUndo() { undoEl.classList.remove("on"); undoFn = null; setTimeout(() => { if (!undoEl.classList.contains("on")) undoEl.hidden = true; }, 260); }
   undoEl.addEventListener("click", e => { if (!e.target.closest("button") || !undoFn) return; const f = undoFn; hideUndo(); f(); });
   const snapD = (s, id) => ({ ...entry(s, id) });
-  const restoreD = (s, id, p) => setEntry(s, id, { tp: p.tp, sl: p.sl, note: p.note, off: p.off, risk: p.risk });
+  const restoreD = (s, id, p) => setEntry(s, id, { tp: p.tp, sl: p.sl, be: p.be || 0, note: p.note, off: p.off, risk: p.risk, com: p.com || 0 });
   const dayName = id => { const [y, m, d] = id.split("-").map(Number); return d + " " + MON3[m - 1]; };
 
   // ---------- gold confetti when a day reaches +30% ----------
@@ -3681,7 +3698,8 @@ body.offline .netbar { transform: translate(-50%, 0); }
     h += '</div><div class="cal-foot"><div class="legend"><span><i style="background:var(--d-pos)"></i>Positivo</span><span><i style="background:var(--d-neg)"></i>Negativo</span><span><i style="background:var(--d-zero)"></i>0%</span></div><div class="mtotal"><div class="ml"><b>Total de ' + view.y + '</b><span>toca num mês para o abrir</span></div><div class="mr"><div class="mp ' + cls(yt) + '">' + fmt(yt) + '</div></div></div></div></div>';
     return h;
   }
-  function calModeBtns() { return '<div class="per" role="group" aria-label="Ver">' + [["m", "Mês"], ["y", "Ano"]].map(([k, l]) => '<button type="button" data-calm="' + k + '" aria-pressed="' + (calMode === k) + '">' + l + '</button>').join("") + '</div>'; }
+  // month view: nothing here (the year is the tab on top); year view: a button back to the month
+  function calModeBtns() { return calMode === "y" ? '<button type="button" class="calback" data-calm="m">← Ver ' + MONTHS[view.m] + '</button>' : ""; }
 
   // ---------- trading day clock: 6:00 to 21:00, Monday to Friday ----------
   const DAY_START = 6, DAY_END = 21;
@@ -3727,7 +3745,7 @@ body.offline .netbar { transform: translate(-50%, 0); }
   sesBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 3 5 13.5h6L10 21l8-10.5h-6z"/></svg><span>Sessão</span>';
   document.body.appendChild(sesBtn);
   const ses = document.createElement("div"); ses.className = "ses"; ses.hidden = true; ses.setAttribute("role", "dialog"); ses.setAttribute("aria-modal", "true"); ses.setAttribute("aria-label", "Modo sessão"); document.body.appendChild(ses);
-  let sesRole = "estrategia", sesHist = [];
+  let sesRole = "estrategia", sesHist = [], sesComOpen = false;
   // only the two accounts (the strategies are filled in by hand)
   const SES = () => SERIES.filter(x => x.acct);
   sesRole = "conta";
@@ -3765,17 +3783,27 @@ body.offline .netbar { transform: translate(-50%, 0); }
       (we ? '<p class="ses-we">Hoje é fim de semana. O Diário só tem dias úteis.</p>' : e.off ? '<p class="ses-we">Este dia está marcado como "sem operar".</p>' :
         '<div class="ses-res ' + cls(p) + '">' + fmt(p) + '</div><div class="ses-cnt">' + e.tp + ' TP · ' + e.sl + ' SL' + (s.acct && e.risk ? ' · ' + eur(euroOf(e)) : '') + '</div>' +
         '<div class="ses-btns"><button type="button" class="key ses-tp" data-ses="tp" aria-label="Mais um TP">' + sesRing(e.tp, e.tp + e.sl, "tp") + '<span class="cap"><b>TP</b><small>Take profit</small><span class="cnt">' + e.tp + '</span></span></button><button type="button" class="key ses-sl" data-ses="sl" aria-label="Mais um SL">' + sesRing(e.sl, e.tp + e.sl, "sl") + '<span class="cap"><b>SL</b><small>Stop loss</small><span class="cnt">' + e.sl + '</span></span></button></div>' +
-        '<button type="button" class="ses-undo" data-ses="undo"' + (sesHist.length ? '' : ' disabled') + '>↶ Desfazer o último toque</button>') +
+        '<button type="button" class="ses-undo" data-ses="undo"' + (sesHist.length ? '' : ' disabled') + '>↶ Desfazer o último toque</button>' +
+        '<div class="ses-com"><span>Comissão de hoje <b>' + (e.com ? '−' + EUR.format(e.com) : '0,00 €') + '</b></span><button type="button" class="ses-comb" data-ses="com" aria-expanded="' + sesComOpen + '">＋ Comissão</button></div>' +
+        (sesComOpen ? '<div class="ses-comf"><div class="calc-in"><input id="sesComIn" type="number" inputmode="decimal" min="0" step="any" placeholder="ex.: 5" aria-label="Comissão a acrescentar, em euros"><span>€</span></div><button type="button" class="btn primary" data-ses="comadd">Acrescentar</button>' + (e.com ? '<button type="button" class="btn ghost" data-ses="comclr">Pôr a zero</button>' : '') + '</div>' : '')) +
       '<p class="ses-help">Toca em cada operação. Fica guardado no Diário de hoje, na ' + s.full + '.</p>' + moodBarHtml();
     sesWatchTick();
   }
-  sesBtn.addEventListener("click", () => { sesHist = []; drawSes(); ses.hidden = false; sesWatchTick(); document.body.classList.add("ses-open"); ses.classList.remove("enter"); void ses.offsetWidth; ses.classList.add("enter"); setTimeout(() => ses.classList.remove("enter"), 900); });
+  ses.addEventListener("keydown", e => { if (e.key === "Enter" && e.target.id === "sesComIn") { e.preventDefault(); const b = ses.querySelector('[data-ses="comadd"]'); if (b) b.click(); } });
+  sesBtn.addEventListener("click", () => { sesHist = []; sesComOpen = false; drawSes(); ses.hidden = false; sesWatchTick(); document.body.classList.add("ses-open"); ses.classList.remove("enter"); void ses.offsetWidth; ses.classList.add("enter"); setTimeout(() => ses.classList.remove("enter"), 900); });
   ses.addEventListener("click", e => {
     const r = e.target.closest("[data-sesr]");
     if (r) { sesRole = r.dataset.sesr; sesHist = []; try { localStorage.setItem("diario-trading-sessao", sesRole); } catch (_) {} drawSes(); return; }
     const b = e.target.closest("[data-ses]"); if (!b) return;
     const a = b.dataset.ses, id = iso(new Date()), s = byRole(sesRole);
     if (a === "close") { ses.hidden = true; document.body.classList.remove("ses-open"); render(); return; }
+    if (a === "com") { sesComOpen = !sesComOpen; drawSes(); if (sesComOpen) setTimeout(() => { const i = $("sesComIn"); if (i) i.focus(); }, 30); return; }
+    if (a === "comadd" || a === "comclr") {
+      if (ro) return; const e0 = entry(s.key, id), v = Math.max(0, parseFloat(String(($("sesComIn") || {}).value || "").replace(",", ".")) || 0);
+      if (a === "comadd" && !v) { const i = $("sesComIn"); if (i) i.focus(); return; }
+      const nv = a === "comclr" ? 0 : Math.min(1e6, Math.round(((e0.com || 0) + v) * 100) / 100);
+      setEntry(s.key, id, { com: nv }); haptic(); sesComOpen = false; drawSes(); return;
+    }
     if (a === "undo") { const h = sesHist.pop(); if (h) { const e0 = entry(h.key, h.id); setEntry(h.key, h.id, { [h.f]: Math.max(0, e0[h.f] - 1) }); } drawSes(); return; }
     const e0 = entry(s.key, id); if (e0.off) return;
     const before = pctOf(e0);
@@ -3861,8 +3889,8 @@ body.offline .netbar { transform: translate(-50%, 0); }
   }
   function backupCsv() {
     const q = v => '"' + String(v == null ? "" : v).replace(/"/g, '""') + '"', n2 = v => v == null || v === "" ? "" : String(Math.round(v * 100) / 100).replace(".", ",");
-    let csv = "﻿" + ["Tabela", "Dia", "TP", "SL", "BE", "Resultado %", "Risco €", "Resultado €", "Sem operar", "Humor", "Nota"].join(";") + "\n";
-    for (const s of SERIES) for (const id of [...store[s.key].keys()].sort()) { const e = store[s.key].get(id); csv += [q(s.full), id, e.tp, e.sl, e.be || 0, pctOf(e), n2(e.risk || ""), e.risk ? n2(euroOf(e)) : "", e.off ? "sim" : "", q(moods.get(id) ? MOOD[moods.get(id)][2] : ""), q(e.note)].join(";") + "\n"; }
+    let csv = "﻿" + ["Tabela", "Dia", "TP", "SL", "BE", "Resultado %", "Risco €", "Comissão €", "Resultado €", "Sem operar", "Humor", "Nota"].join(";") + "\n";
+    for (const s of SERIES) for (const id of [...store[s.key].keys()].sort()) { const e = store[s.key].get(id); csv += [q(s.full), id, e.tp, e.sl, e.be || 0, pctOf(e), n2(e.risk || ""), n2(e.com || ""), e.risk || e.com ? n2(euroOf(e)) : "", e.off ? "sim" : "", q(moods.get(id) ? MOOD[moods.get(id)][2] : ""), q(e.note)].join(";") + "\n"; }
     csv += "\n" + ["Conta", "Dia", "Início €", "Fim €", "Lucro €", "Risco €", "Depósito €", "Levantamento €", "", "Nota"].join(";") + "\n";
     for (const a of ACC_ALL()) { const C = acCompute(a); for (const id of C.ids) { const r = C.rows.get(id); csv += [q(acName(a)), id, n2(r.start), n2(r.fim), n2(r.profit), n2(r.risk), n2(r.dep), n2(r.lev), "", q(r.nota)].join(";") + "\n"; } }
     download("diario-trading-" + iso(new Date()) + ".csv", csv, "text/csv;charset=utf-8");
@@ -3918,7 +3946,7 @@ body.offline .netbar { transform: translate(-50%, 0); }
   });
   let slideCtl = null;
   function markSwitch() {
-    document.querySelectorAll(".ftab[data-show]").forEach(b => b.setAttribute("aria-selected", String(b.dataset.show === (stab.startsWith("y") && tab === "stats" ? stab : String(side)))));
+    document.querySelectorAll(".ftab[data-show]").forEach(b => b.setAttribute("aria-selected", String(b.dataset.show === "cy" ? calMode === "y" : b.dataset.show === String(side))));
     document.querySelectorAll(".ftab[data-ac]").forEach(b => b.setAttribute("aria-selected", String(b.dataset.ac === acView)));
   }
   const saveShown = () => { try { localStorage.setItem(LS_VIEW, String(side)); localStorage.setItem(LS_GRP, grp); } catch (_) {} };
@@ -3964,11 +3992,11 @@ body.offline .netbar { transform: translate(-50%, 0); }
     } else if (tab === "cal" || tab === "stats") {
       // folder tabs on top (+ the year tabs in the statistics); the boxes slide (swipe on a phone, tabs or drag on a computer)
       const items = GS().map((s, i) => [String(i), s.label]);
-      const yearTab = tab === "stats" && stab.startsWith("y");
+      const yearTab = false; stab = "s";
       // the year tabs sit apart, on the right, next to the two small buttons
-      const yItems = tab === "stats" ? yearsWithData().map(y => ["y" + y, String(y)]) : [];
+      const yItems = tab === "cal" ? [["cy", String(view.y)]] : [];
       const tabsH = '<div class="tabrow">' + ftabs(items, yearTab ? stab : String(side), "data-show", "Escolher tabela") +
-        '<div class="tr-r">' + (yItems.length ? ftabs(yItems, yearTab ? stab : "", "data-show", "Escolher o ano").replace('class="ftabs"', 'class="ftabs ytabs"') : '') + grpDots() + '</div></div>';
+        '<div class="tr-r">' + (yItems.length ? ftabs(yItems, calMode === "y" ? "cy" : "", "data-show", "Ver o ano todo").replace('class="ftabs"', 'class="ftabs ytabs"') : '') + grpDots() + '</div></div>';
       if (yearTab) $("view").innerHTML = '<div class="tabbed">' + tabsH + yearCalHtml(+stab.slice(1)) + '</div>';
       else {
         $("view").innerHTML = '<div class="tabbed">' + tabsH + '<div class="slides">' + GS().map(s => '<div class="slide" data-role="' + s.role + '">' + (tab === "cal" ? '<div class="calwrap">' + calHtml(s) + '</div>' : statsHtml(s)) + '</div>').join("") + '</div></div>';
@@ -4245,9 +4273,10 @@ body.offline .netbar { transform: translate(-50%, 0); }
   let calcId = null, calcS = "conta", calcFocus = null;
   function calcUpdate() {
     const e = entry(calcS, calcId), p = pctOf(e), r = Math.max(0, parseFloat(String($("riskIn").value).replace(",", ".")) || 0);
-    $("calcOut").textContent = r ? eur(p * r) : "—";
-    $("calcOut").className = "v " + (r ? cls(p) : "zero");
-    $("calcHow").textContent = r ? fmt(p).replace("%", "") + " × " + EUR.format(r) : "Escreve o risco para calcular";
+    const c = Math.max(0, parseFloat(String($("comIn").value).replace(",", ".")) || 0), v = p * r - c;
+    $("calcOut").textContent = r || c ? eur(v) : "—";
+    $("calcOut").className = "v " + (r || c ? cls(v) : "zero");
+    $("calcHow").textContent = r ? fmt(p).replace("%", "") + " × " + EUR.format(r) + (c ? " − " + EUR.format(c) + " de comissão" : "") : c ? "− " + EUR.format(c) + " de comissão (escreve o risco para o resto)" : "Escreve o risco para calcular";
   }
   function openCalc(s, id) {
     const [y, m, dd] = id.split("-").map(Number), d = new Date(y, m - 1, dd), e = entry(s, id), p = pctOf(e);
@@ -4257,7 +4286,7 @@ body.offline .netbar { transform: translate(-50%, 0); }
     $("calcDay").innerHTML = "Resultado do dia (" + e.tp + " TP, " + e.sl + " SL) <b class=\"" + cls(p) + "\">" + fmt(p) + "</b>";
     let last = ""; try { last = localStorage.getItem(LS_RISK) || ""; } catch (_) {}
     $("riskIn").value = e.risk ? String(e.risk) : last;
-    $("riskIn").readOnly = ro;
+    $("riskIn").readOnly = ro; $("comIn").value = e.com ? String(e.com) : ""; $("comIn").readOnly = ro;
     $("calcForm").querySelector(".primary").hidden = ro; $("calcClear").hidden = ro;
     $("calcCancel").textContent = ro ? "Fechar" : "Cancelar";
     calcUpdate();
@@ -4265,16 +4294,17 @@ body.offline .netbar { transform: translate(-50%, 0); }
     setTimeout(() => { $("riskIn").focus(); $("riskIn").select(); }, 30);
   }
   function closeCalc() { calc.hidden = true; calcId = null; render(); if (calcFocus && document.contains(calcFocus)) calcFocus.focus({ preventScroll: true }); }
-  $("riskIn").addEventListener("input", calcUpdate);
+  $("riskIn").addEventListener("input", calcUpdate); $("comIn").addEventListener("input", calcUpdate);
   $("calcForm").addEventListener("submit", ev => {
     ev.preventDefault(); if (!calcId || ro) return;
     const r = Math.max(0, Math.min(1e7, parseFloat(String($("riskIn").value).replace(",", ".")) || 0));
-    { const s0 = calcS, id0 = calcId, p0 = snapD(s0, id0); if (p0.risk !== r) pushUndo("Calculadora de " + dayName(id0) + " guardada", () => { restoreD(s0, id0, p0); render(); }); }
-    setEntry(calcS, calcId, { risk: r });
+    const c = Math.max(0, Math.min(1e6, parseFloat(String($("comIn").value).replace(",", ".")) || 0));
+    { const s0 = calcS, id0 = calcId, p0 = snapD(s0, id0); if (p0.risk !== r || (p0.com || 0) !== c) pushUndo("Calculadora de " + dayName(id0) + " guardada", () => { restoreD(s0, id0, p0); render(); }); }
+    setEntry(calcS, calcId, { risk: r, com: c });
     if (r) { try { localStorage.setItem(LS_RISK, String(r)); } catch (_) {} }
     closeCalc();
   });
-  $("calcClear").addEventListener("click", () => { if (!calcId || ro) return; const s0 = calcS, id0 = calcId, p0 = snapD(s0, id0); setEntry(calcS, calcId, { risk: 0 }); if (p0.risk) pushUndo("Calculadora apagada", () => { restoreD(s0, id0, p0); render(); }); closeCalc(); });
+  $("calcClear").addEventListener("click", () => { if (!calcId || ro) return; const s0 = calcS, id0 = calcId, p0 = snapD(s0, id0); setEntry(calcS, calcId, { risk: 0, com: 0 }); if (p0.risk || p0.com) pushUndo("Calculadora apagada", () => { restoreD(s0, id0, p0); render(); }); closeCalc(); });
 
   // ---------- conta: deposits, withdrawals and a note for one day ----------
   const acdlg = $("acdlg");
@@ -4356,6 +4386,7 @@ body.offline .netbar { transform: translate(-50%, 0); }
       const row = (a, b, c, extra) => { const tr = document.createElement("tr"); if (extra) tr.className = extra; const x1 = document.createElement("td"), x2 = document.createElement("td"); x1.textContent = a; x2.textContent = b; if (c) x2.className = c; tr.append(x1, x2); tb.append(tr); };
       row("Resultado do dia", el.dataset.pct, el.dataset.cls);
       row("Risco por trade", el.dataset.risk);
+      if (el.dataset.com) row("Comissão", el.dataset.com, "neg");
       row("Resultado final", el.dataset.eur, el.dataset.cls, "total");
       tip.append(t, tb);
     } else if (k === "news") {
@@ -4523,7 +4554,7 @@ body.offline .netbar { transform: translate(-50%, 0); }
     const b = e.target.closest(".ftab[data-show], .ftab[data-ac]"); if (!b) return;
     if (b.dataset.show) {
       const v = b.dataset.show;
-      if (v.startsWith("y")) { stab = v; render(); return; }
+      if (v === "cy") { calMode = calMode === "y" ? "m" : "y"; try { localStorage.setItem(LS_CALM, calMode); } catch (_) {} render(); return; }
       const wasYear = stab.startsWith("y"); stab = "s"; side = +v; saveShown();
       if (wasYear || !slideCtl) { render(); return; }
       markSwitch(); slideCtl.go(side, true);
