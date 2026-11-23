@@ -239,10 +239,16 @@ jobs:
               # what she really traded: only the Fusion and Prop tables count (the Estratégias are backtesting). TP = +TPV%, SL = -1%
               NAMES = {'conta': 'Fusion', 'prop_conta': 'Prop'}
               # how much a TP is worth: set in the site (Configurações), kept in the row serie=config
-              TPV = 2
+              # Fusion and Prop can have different values (tp = Fusion, nota JSON tpProp = Prop)
+              TPV = {'conta': 2, 'prop_conta': 2}
               try:
-                  cf = json.loads(sb('/dias?select=tp&serie=eq.config&limit=1'))
-                  if cf and 1 <= int(cf[0]['tp'] or 0) <= 10: TPV = int(cf[0]['tp'])
+                  cf = json.loads(sb('/dias?select=tp,nota&serie=eq.config&limit=1'))
+                  if cf and 1 <= int(cf[0]['tp'] or 0) <= 10: TPV['conta'] = TPV['prop_conta'] = int(cf[0]['tp'])
+                  try:
+                      tpp = int(json.loads(cf[0].get('nota') or '{}').get('tpProp') or 0)
+                      if 1 <= tpp <= 10: TPV['prop_conta'] = tpp
+                  except Exception:
+                      pass
               except Exception:
                   pass
               def results(d1, d2):
@@ -250,7 +256,7 @@ jobs:
                   out = {}
                   for r in rows:
                       if r['serie'] not in NAMES or r.get('sem_operar') or not ((r.get('tp') or 0) + (r.get('sl') or 0)): continue
-                      o = out.setdefault(r['serie'], [0, 0, 0]); o[0] += r['tp'] or 0; o[1] += r['sl'] or 0; o[2] += (r['tp'] or 0) * TPV - (r['sl'] or 0)
+                      o = out.setdefault(r['serie'], [0, 0, 0]); o[0] += r['tp'] or 0; o[1] += r['sl'] or 0; o[2] += (r['tp'] or 0) * TPV[r['serie']] - (r['sl'] or 0)
                   return out
               def pct(v): return ('+' if v > 0 else '') + str(v) + '%'
               k = 'resumo-dia-' + today.isoformat()
