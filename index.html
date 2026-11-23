@@ -1636,6 +1636,16 @@ body.offline .netbar { transform: translate(-50%, 0); }
   .ses-undo { margin-top: 12px; padding: 8px 14px; font-size: 13px; }
   .ses-help { font-size: 11.5px; margin-top: 10px; }
 }
+/* computer: Estatísticas / Calendário have folder tabs for both accounts (Fusion left, Prop right in purple); no bottom bar there */
+@media (min-width: 861px) {
+  body.view-stats .gbar, body.view-cal .gbar { display: none !important; }
+  .tabrow.both .tr-r { gap: 10px; }
+  .ftabs.proptabs { margin-left: 0; }
+  .ftabs.proptabs .ftab { background-image: var(--leather), linear-gradient(180deg, rgba(92, 52, 130, .6), rgba(40, 18, 62, .6)) !important; color: #CDB6E8; }
+  .ftabs.proptabs .ftab[aria-selected="true"] { background-image: var(--leather), linear-gradient(180deg, #5E3A86, #2E1846) !important; color: #F1E6FF; }
+  .ftabs.proptabs .ftab[aria-selected="true"]::after { border-color: rgba(205, 178, 240, .85); }
+  .ftabs.proptabs .ftab:not([aria-selected="true"]):hover, .tabrow.both > .ftabs .ftab:not([aria-selected="true"]):hover { color: var(--champ); }
+}
 /* the pairs of the two accounts, on their own line at the top */
 .pairs { order: 10; flex-basis: 100%; display: flex; justify-content: center; align-items: center; gap: 14px; margin-top: 4px; }
 .pairs[hidden] { display: none; }
@@ -4142,7 +4152,10 @@ body.offline .netbar { transform: translate(-50%, 0); }
   function markSwitch() {
     document.querySelectorAll(".ftab[data-show]").forEach(b => b.setAttribute("aria-selected", String(b.dataset.show === "cy" ? calMode === "y" : b.dataset.show === String(side))));
     document.querySelectorAll(".ftab[data-ac]").forEach(b => b.setAttribute("aria-selected", String(b.dataset.ac === acView)));
+    document.querySelectorAll(".ftab[data-gshow]").forEach(b => b.setAttribute("aria-selected", String(b.dataset.gshow === grp + "|" + side)));
   }
+  // computer ↔ phone width: the Estatísticas / Calendário tabs change, so draw again
+  try { const mqW = window.matchMedia("(min-width: 861px)"), onW = () => { if (tab === "stats" || tab === "cal") render(); }; if (mqW.addEventListener) mqW.addEventListener("change", onW); else mqW.addListener(onW); } catch (_) {}
   const saveShown = () => { try { localStorage.setItem(LS_VIEW, String(side)); localStorage.setItem(LS_GRP, grp); } catch (_) {} };
   function setGrp(g, quiet) { if (g !== "fusion" && g !== "prop") return; grp = g; saveShown(); updGbar(); if (!quiet) render(); }
   // small bar at the bottom: shows whether you are on Fusion or Prop; tap a side, or slide the finger along it, to change
@@ -4190,8 +4203,10 @@ body.offline .netbar { transform: translate(-50%, 0); }
       const yearTab = false; stab = "s";
       // the year tabs sit apart, on the right, next to the two small buttons
       const yItems = tab === "cal" ? [["cy", String(view.y)]] : [];
-      const tabsH = '<div class="tabrow">' + ftabs(items, yearTab ? stab : String(side), "data-show", "Escolher tabela") +
-        '<div class="tr-r">' + (yItems.length ? ftabs(yItems, calMode === "y" ? "cy" : "", "data-show", "Ver o ano todo").replace('class="ftabs"', 'class="ftabs ytabs"') : '') + grpDots() + '</div></div>';
+      const wide = window.matchMedia && window.matchMedia("(min-width: 861px)").matches;
+      const gTabs = g => ftabs(SERIES.filter(x => x.grp === g).map((x, i) => [g + "|" + i, x.label]), grp + "|" + side, "data-gshow", g === "prop" ? "Tabelas da Prop" : "Tabelas da Fusion");
+      const tabsH = '<div class="tabrow' + (wide ? " both" : "") + '">' + (wide ? gTabs("fusion") : ftabs(items, yearTab ? stab : String(side), "data-show", "Escolher tabela")) +
+        '<div class="tr-r">' + (wide ? gTabs("prop").replace('class="ftabs"', 'class="ftabs proptabs"') : "") + (yItems.length ? ftabs(yItems, calMode === "y" ? "cy" : "", "data-show", "Ver o ano todo").replace('class="ftabs"', 'class="ftabs ytabs"') : '') + grpDots() + '</div></div>';
       if (yearTab) $("view").innerHTML = '<div class="tabbed">' + tabsH + yearCalHtml(+stab.slice(1)) + '</div>';
       else {
         $("view").innerHTML = '<div class="tabbed">' + tabsH + '<div class="slides">' + GS().map(s => '<div class="slide" data-role="' + s.role + '">' + (tab === "cal" ? '<div class="calwrap">' + calHtml(s) + '</div>' : statsHtml(s)) + '</div>').join("") + '</div></div>';
@@ -4760,6 +4775,8 @@ body.offline .netbar { transform: translate(-50%, 0); }
   document.addEventListener("keydown", e => { if (e.key !== "Escape") return; ["srch", "sumdlg", "instdlg"].forEach(k => { $(k).hidden = true; }); });
   // folder tabs above the calendars, statistics and accounts
   $("view").addEventListener("click", e => {
+    const gb = e.target.closest(".ftab[data-gshow]");
+    if (gb) { const [g, i] = gb.dataset.gshow.split("|"); side = +i; if (g !== grp) { setGrp(g); return; } saveShown(); markSwitch(); if (slideCtl) slideCtl.go(side, true); else render(); return; }
     const b = e.target.closest(".ftab[data-show], .ftab[data-ac]"); if (!b) return;
     if (b.dataset.show) {
       const v = b.dataset.show;
