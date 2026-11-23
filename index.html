@@ -1622,6 +1622,33 @@ body.offline .netbar { transform: translate(-50%, 0); }
   .ses-grab { display: none !important; }
   @keyframes sesWin { from { opacity: 0; transform: translate(-50%, -46%) scale(.97); } }
 }
+/* computer: a smaller, compact Sessão window */
+@media (min-width: 861px) {
+  .ses { width: min(400px, calc(100vw - 48px)) !important; height: auto !important; max-height: min(760px, calc(100vh - 40px)); padding: 22px 16px 20px !important; }
+  .ses-watch { width: 40px; height: 40px; margin-top: 8px; }
+  .ses-date { font-size: 24px; margin-top: 4px; }
+  .ses-clock { font-size: 11.5px; }
+  .ses-res, .ses-res.pos, .ses-res.zero, .ses-res.neg { font-size: 54px !important; }
+  .ses-cnt { font-size: 13px; }
+  .ses-btns { flex: none; height: 190px; min-height: 0; max-height: none; margin-top: 30px; gap: 12px; max-width: 340px; }
+  .ses-btns .key b { font-size: 34px; }
+  .ses-btns .key .cnt { font-size: 18px; margin-top: 8px; padding: 5px 12px; }
+  .ses-undo { margin-top: 12px; padding: 8px 14px; font-size: 13px; }
+  .ses-help { font-size: 11.5px; margin-top: 10px; }
+}
+/* the commissions, one by one */
+.ses-comb.lst { border-style: dashed; }
+.ses-coml { margin-top: 10px; width: 100%; max-width: 340px; display: flex; flex-direction: column; gap: 5px; }
+.ses-ci { display: grid; grid-template-columns: 30px minmax(0, 1fr) auto 30px; align-items: center; gap: 8px; padding: 7px 8px 7px 12px; border-radius: 12px; background: rgba(0, 0, 0, .28); border: 1px solid rgba(205, 167, 94, .25); font-size: 13.5px; color: var(--champ); }
+.ses-ci .ci-n { color: var(--gold); font-weight: 600; } .ses-ci .ci-h { color: var(--soft); }
+.ses-ci b { color: #F29AAE; font-variant-numeric: tabular-nums; }
+.ses-ci button { width: 28px; height: 28px; border-radius: 50%; border: 0; background: transparent; color: var(--soft); cursor: pointer; font-size: 13px; }
+.ses-ci button:hover { background: rgba(242, 154, 174, .15); color: #F29AAE; }
+.ses-ci.tot { grid-template-columns: minmax(0, 1fr) auto 30px; background: none; border-style: dashed; font-weight: 600; }
+.calc-coml { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 7px; align-items: center; }
+.calc-coml:empty { display: none; }
+.calc-coml small { color: var(--soft); font-size: 11.5px; margin-right: 2px; }
+.calc-coml span { padding: 3px 9px; border-radius: 999px; background: rgba(242, 154, 174, .12); border: 1px solid rgba(242, 154, 174, .3); color: #F2B7C3; font-size: 12px; font-variant-numeric: tabular-nums; }
 .ses > .ses-grab { position: absolute !important; top: calc(max(8px, env(safe-area-inset-top, 0px)) + 2px); left: 50%; width: 46px; height: 5px; margin-left: -23px; border-radius: 3px; background: rgba(205, 167, 94, .6); z-index: 2; }
 .ses.dragging { overflow: hidden; }
 /* ---------- commission ---------- */
@@ -1777,6 +1804,7 @@ body.offline .netbar { transform: translate(-50%, 0); }
     <div>
       <label for="comIn">Comissão do dia (opcional)</label>
       <div class="calc-in calc-com"><input id="comIn" type="number" inputmode="decimal" min="0" step="any" placeholder="0"><span>€</span></div>
+      <div class="calc-coml" id="calcComL"></div>
     </div>
     <div class="calc-out"><div><small id="calcHow">3 × 50 €</small><small>Resultado em euros</small></div><span class="v" id="calcOut">+150,00 €</span></div>
     <div class="dlg-actions">
@@ -2352,7 +2380,7 @@ body.offline .netbar { transform: translate(-50%, 0); }
   const cls = v => v > 0 ? "pos" : v < 0 ? "neg" : "zero";
   const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
   const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
-  const EMPTY = { tp: 0, sl: 0, be: 0, note: "", off: false, risk: 0, com: 0 };
+  const EMPTY = { tp: 0, sl: 0, be: 0, note: "", off: false, risk: 0, com: 0, coms: [] };
   const EUR = new Intl.NumberFormat("pt-PT", { style: "currency", currency: "EUR" });
   const eur = v => (v > 0 ? "+" : v < 0 ? "−" : "") + EUR.format(Math.abs(v));
   const euroOf = e => pctOf(e) * (e.risk || 0) - (e.com || 0);   // the commission (€) comes off the result
@@ -2360,7 +2388,10 @@ body.offline .netbar { transform: translate(-50%, 0); }
   const entry = (s, id) => store[s].get(id) || EMPTY;
   const traded = (s, id) => { const e = store[s].get(id); return !!e && !e.off && (e.tp > 0 || e.sl > 0 || e.be > 0); };
   const isEmpty = e => !e.tp && !e.sl && !e.be && !e.note && !e.off && !e.risk && !e.com;
-  const norm = v => ({ tp: Math.max(0, +v.tp || 0), sl: Math.max(0, +v.sl || 0), be: Math.max(0, +v.be || 0), note: typeof v.note === "string" ? v.note.slice(0, 4000) : "", off: v.off === true, risk: Math.max(0, Math.min(1e7, +v.risk || 0)), com: Math.max(0, Math.min(1e6, Math.round((+v.com || 0) * 100) / 100)) });
+  const norm = v => ({ tp: Math.max(0, +v.tp || 0), sl: Math.max(0, +v.sl || 0), be: Math.max(0, +v.be || 0), note: typeof v.note === "string" ? v.note.slice(0, 4000) : "", off: v.off === true, risk: Math.max(0, Math.min(1e7, +v.risk || 0)), com: Math.max(0, Math.min(1e6, Math.round((+v.com || 0) * 100) / 100)), coms: Array.isArray(v.coms) ? v.coms.filter(c => c && +c.v > 0).slice(0, 60).map(c => ({ v: Math.round(+c.v * 100) / 100, h: String(c.h || "").slice(0, 5) })) : [] });
+  // the commissions one by one (old days only have the total: then it is one item without a time)
+  const comList = e => e.coms && e.coms.length ? e.coms : e.com ? [{ v: e.com, h: "" }] : [];
+  const comSum = l => Math.round(l.reduce((a, c) => a + c.v, 0) * 100) / 100;
   function isoWeek(d) {
     const t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
     const day = t.getUTCDay() || 7; t.setUTCDate(t.getUTCDate() + 4 - day);
@@ -2442,7 +2473,7 @@ body.offline .netbar { transform: translate(-50%, 0); }
     const e = store[s].get(id);
     let p;
     const chk = r => { if (r.error) throw r.error; };
-    if (mode === "db") { p = e ? sb.from("dias").upsert(Object.assign({ serie: s, dia: id, tp: e.tp, sl: e.sl, nota: e.note, sem_operar: e.off, risco: e.risk || 0 }, beCol ? { be: e.be || 0 } : {}, comCol ? { comissao: e.com || 0 } : {})).then(chk) : sb.from("dias").delete().eq("serie", s).eq("dia", id).then(chk); }
+    if (mode === "db") { p = e ? sb.from("dias").upsert(Object.assign({ serie: s, dia: id, tp: e.tp, sl: e.sl, nota: e.note, sem_operar: e.off, risco: e.risk || 0 }, beCol ? { be: e.be || 0 } : {}, comCol ? { comissao: e.com || 0, comissoes: e.coms || [] } : {})).then(chk) : sb.from("dias").delete().eq("serie", s).eq("dia", id).then(chk); }
     else { saveLocal(); p = Promise.resolve(); }
     inflight.set(k, p);
     try {
@@ -2470,7 +2501,7 @@ body.offline .netbar { transform: translate(-50%, 0); }
     cfgDirty = false; return r.error;
   }
   async function loadRemote() {
-    let { data, error } = await sb.from("dias").select("serie,dia,tp,sl,be,comissao,nota,sem_operar,risco").limit(10000);
+    let { data, error } = await sb.from("dias").select("serie,dia,tp,sl,be,comissao,comissoes,nota,sem_operar,risco").limit(10000);
     if (error) { beCol = comCol = false; ({ data, error } = await sb.from("dias").select("serie,dia,tp,sl,nota,sem_operar,risco").limit(10000)); } else beCol = comCol = true;
     if (error) throw error;
     const cfgRow = (data || []).find(r => r.serie === "config");
@@ -2478,7 +2509,7 @@ body.offline .netbar { transform: translate(-50%, 0); }
     const maps = { estrategia: new Map(), conta: new Map(), prop_estrategia: new Map(), prop_conta: new Map() };
     for (const r of data || []) {
       if (!maps[r.serie]) continue;
-      const n = norm({ tp: r.tp, sl: r.sl, be: r.be, com: r.comissao, note: r.nota || "", off: r.sem_operar === true, risk: r.risco });
+      const n = norm({ tp: r.tp, sl: r.sl, be: r.be, com: r.comissao, coms: r.comissoes, note: r.nota || "", off: r.sem_operar === true, risk: r.risco });
       if (!isEmpty(n)) maps[r.serie].set(String(r.dia).slice(0, 10), n);
     }
     for (const k of dirty) {
@@ -3525,7 +3556,7 @@ body.offline .netbar { transform: translate(-50%, 0); }
   function hideUndo() { undoEl.classList.remove("on"); undoFn = null; setTimeout(() => { if (!undoEl.classList.contains("on")) undoEl.hidden = true; }, 260); }
   undoEl.addEventListener("click", e => { if (!e.target.closest("button") || !undoFn) return; const f = undoFn; hideUndo(); f(); });
   const snapD = (s, id) => ({ ...entry(s, id) });
-  const restoreD = (s, id, p) => setEntry(s, id, { tp: p.tp, sl: p.sl, be: p.be || 0, note: p.note, off: p.off, risk: p.risk, com: p.com || 0 });
+  const restoreD = (s, id, p) => setEntry(s, id, { tp: p.tp, sl: p.sl, be: p.be || 0, note: p.note, off: p.off, risk: p.risk, com: p.com || 0, coms: p.coms || [] });
   const dayName = id => { const [y, m, d] = id.split("-").map(Number); return d + " " + MON3[m - 1]; };
 
   // ---------- gold confetti when a day reaches +30% ----------
@@ -3759,7 +3790,7 @@ body.offline .netbar { transform: translate(-50%, 0); }
   sesBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 3 5 13.5h6L10 21l8-10.5h-6z"/></svg><span>Sessão</span>';
   document.body.appendChild(sesBtn);
   const ses = document.createElement("div"); ses.className = "ses"; ses.hidden = true; ses.setAttribute("role", "dialog"); ses.setAttribute("aria-modal", "true"); ses.setAttribute("aria-label", "Modo sessão"); document.body.appendChild(ses);
-  let sesRole = "estrategia", sesHist = [], sesComOpen = false;
+  let sesRole = "estrategia", sesHist = [], sesComOpen = false, sesComList = false;
   // only the two accounts (the strategies are filled in by hand)
   const SES = () => SERIES.filter(x => x.acct);
   sesRole = "conta";
@@ -3798,13 +3829,14 @@ body.offline .netbar { transform: translate(-50%, 0); }
         '<div class="ses-res ' + cls(p) + '">' + fmt(p) + '</div><div class="ses-cnt">' + e.tp + ' TP · ' + e.sl + ' SL' + (s.acct && e.risk ? ' · ' + eur(euroOf(e)) : '') + '</div>' +
         '<div class="ses-btns"><button type="button" class="key ses-tp" data-ses="tp" aria-label="Mais um TP">' + sesRing(e.tp, e.tp + e.sl, "tp") + '<span class="cap"><b>TP</b><small>Take profit</small><span class="cnt">' + e.tp + '</span></span></button><button type="button" class="key ses-sl" data-ses="sl" aria-label="Mais um SL">' + sesRing(e.sl, e.tp + e.sl, "sl") + '<span class="cap"><b>SL</b><small>Stop loss</small><span class="cnt">' + e.sl + '</span></span></button></div>' +
         '<button type="button" class="ses-undo" data-ses="undo"' + (sesHist.length ? '' : ' disabled') + '>↶ Desfazer o último toque</button>' +
-        '<div class="ses-com"><span>Comissão de hoje <b>' + (e.com ? '−' + EUR.format(e.com) : '0,00 €') + '</b></span><button type="button" class="ses-comb" data-ses="com" aria-expanded="' + sesComOpen + '">＋ Comissão</button></div>' +
+        '<div class="ses-com"><span>Comissão de hoje <b>' + (e.com ? '−' + EUR.format(e.com) : '0,00 €') + '</b></span><button type="button" class="ses-comb" data-ses="com" aria-expanded="' + sesComOpen + '">＋ Comissão</button>' + (comList(e).length ? '<button type="button" class="ses-comb lst" data-ses="comlist" aria-expanded="' + sesComList + '">' + (sesComList ? 'Esconder' : 'Ver uma a uma (' + comList(e).length + ')') + '</button>' : '') + '</div>' +
+        (sesComList && comList(e).length ? '<div class="ses-coml">' + comList(e).map((c, i) => '<div class="ses-ci"><span class="ci-n">' + (i + 1) + 'ª</span><span class="ci-h">' + (c.h ? 'às ' + c.h : 'sem hora') + '</span><b>−' + EUR.format(c.v) + '</b><button type="button" data-ses="comdel" data-i="' + i + '" aria-label="Apagar esta comissão">✕</button></div>').join("") + '<div class="ses-ci tot"><span>Total</span><b>−' + EUR.format(comSum(comList(e))) + '</b></div></div>' : '') +
         (sesComOpen ? '<div class="ses-comf"><div class="calc-in"><input id="sesComIn" type="number" inputmode="decimal" min="0" step="any" placeholder="ex.: 5" aria-label="Comissão a acrescentar, em euros"><span>€</span></div><button type="button" class="btn primary" data-ses="comadd">Acrescentar</button>' + (e.com ? '<button type="button" class="btn ghost" data-ses="comclr">Pôr a zero</button>' : '') + '</div>' : '')) +
       '<p class="ses-help">Toca em cada operação. Fica guardado no Diário de hoje, na ' + s.full + '.</p>' + moodBarHtml();
     sesWatchTick();
   }
   ses.addEventListener("keydown", e => { if (e.key === "Enter" && e.target.id === "sesComIn") { e.preventDefault(); const b = ses.querySelector('[data-ses="comadd"]'); if (b) b.click(); } });
-  sesBtn.addEventListener("click", () => { sesHist = []; sesComOpen = false; drawSes(); ses.hidden = false; sesScrim.hidden = false; ses.style.transform = ""; sesWatchTick(); document.body.classList.add("ses-open"); ses.classList.remove("enter"); void ses.offsetWidth; ses.classList.add("enter"); setTimeout(() => ses.classList.remove("enter"), 900); });
+  sesBtn.addEventListener("click", () => { sesHist = []; sesComOpen = false; sesComList = false; drawSes(); ses.hidden = false; sesScrim.hidden = false; ses.style.transform = ""; sesWatchTick(); document.body.classList.add("ses-open"); ses.classList.remove("enter"); void ses.offsetWidth; ses.classList.add("enter"); setTimeout(() => ses.classList.remove("enter"), 900); });
   ses.addEventListener("click", e => {
     const r = e.target.closest("[data-sesr]");
     if (r) { sesRole = r.dataset.sesr; sesHist = []; try { localStorage.setItem("diario-trading-sessao", sesRole); } catch (_) {} drawSes(); return; }
@@ -3815,9 +3847,11 @@ body.offline .netbar { transform: translate(-50%, 0); }
     if (a === "comadd" || a === "comclr") {
       if (ro) return; const e0 = entry(s.key, id), v = Math.max(0, parseFloat(String(($("sesComIn") || {}).value || "").replace(",", ".")) || 0);
       if (a === "comadd" && !v) { const i = $("sesComIn"); if (i) i.focus(); return; }
-      const nv = a === "comclr" ? 0 : Math.min(1e6, Math.round(((e0.com || 0) + v) * 100) / 100);
-      setEntry(s.key, id, { com: nv }); haptic(); sesComOpen = false; drawSes(); return;
+      const n = new Date(), l = a === "comclr" ? [] : comList(e0).concat([{ v: Math.round(v * 100) / 100, h: pad(n.getHours()) + ":" + pad(n.getMinutes()) }]);
+      setEntry(s.key, id, { coms: l, com: Math.min(1e6, comSum(l)) }); haptic(); sesComOpen = false; drawSes(); return;
     }
+    if (a === "comlist") { sesComList = !sesComList; drawSes(); return; }
+    if (a === "comdel") { if (ro) return; const l = comList(entry(s.key, id)).slice(); l.splice(+b.dataset.i, 1); setEntry(s.key, id, { coms: l, com: comSum(l) }); drawSes(); return; }
     if (a === "undo") { const h = sesHist.pop(); if (h) { const e0 = entry(h.key, h.id); setEntry(h.key, h.id, { [h.f]: Math.max(0, e0[h.f] - 1) }); } drawSes(); return; }
     const e0 = entry(s.key, id); if (e0.off) return;
     const before = pctOf(e0);
@@ -4325,6 +4359,7 @@ body.offline .netbar { transform: translate(-50%, 0); }
     let last = ""; try { last = localStorage.getItem(LS_RISK) || ""; } catch (_) {}
     $("riskIn").value = e.risk ? String(e.risk) : last;
     $("riskIn").readOnly = ro; $("comIn").value = e.com ? String(e.com) : ""; $("comIn").readOnly = ro;
+    { const l = comList(e); $("calcComL").innerHTML = l.length > 1 || (l[0] && l[0].h) ? '<small>Uma a uma:</small>' + l.map(c => '<span>' + (c.h ? c.h + ' · ' : '') + '−' + EUR.format(c.v) + '</span>').join("") : ""; }
     $("calcForm").querySelector(".primary").hidden = ro; $("calcClear").hidden = ro;
     $("calcCancel").textContent = ro ? "Fechar" : "Cancelar";
     calcUpdate();
@@ -4338,11 +4373,11 @@ body.offline .netbar { transform: translate(-50%, 0); }
     const r = Math.max(0, Math.min(1e7, parseFloat(String($("riskIn").value).replace(",", ".")) || 0));
     const c = Math.max(0, Math.min(1e6, parseFloat(String($("comIn").value).replace(",", ".")) || 0));
     { const s0 = calcS, id0 = calcId, p0 = snapD(s0, id0); if (p0.risk !== r || (p0.com || 0) !== c) pushUndo("Calculadora de " + dayName(id0) + " guardada", () => { restoreD(s0, id0, p0); render(); }); }
-    setEntry(calcS, calcId, { risk: r, com: c });
+    { const e1 = entry(calcS, calcId); setEntry(calcS, calcId, Math.abs(c - (e1.com || 0)) < .005 ? { risk: r } : { risk: r, com: c, coms: c ? [{ v: c, h: "" }] : [] }); }
     if (r) { try { localStorage.setItem(LS_RISK, String(r)); } catch (_) {} }
     closeCalc();
   });
-  $("calcClear").addEventListener("click", () => { if (!calcId || ro) return; const s0 = calcS, id0 = calcId, p0 = snapD(s0, id0); setEntry(calcS, calcId, { risk: 0, com: 0 }); if (p0.risk || p0.com) pushUndo("Calculadora apagada", () => { restoreD(s0, id0, p0); render(); }); closeCalc(); });
+  $("calcClear").addEventListener("click", () => { if (!calcId || ro) return; const s0 = calcS, id0 = calcId, p0 = snapD(s0, id0); setEntry(calcS, calcId, { risk: 0, com: 0, coms: [] }); if (p0.risk || p0.com) pushUndo("Calculadora apagada", () => { restoreD(s0, id0, p0); render(); }); closeCalc(); });
 
   // ---------- conta: deposits, withdrawals and a note for one day ----------
   const acdlg = $("acdlg");
