@@ -469,11 +469,13 @@ button, .cd, .nw-card, .tdr, .lrow { transition: transform .12s ease; }
 .medal.m3 circle { fill: #D89A6A; stroke: #8A5428; } .medal.m3 path { stroke: #B07A4A; } .medal.m3 text { fill: #5A3214; }
 /* 2 jewel tones for the days (still light, so everything stays readable) */
 .lrow.d-pos { background: linear-gradient(100deg, #8CC4A2, #B4DCC3 48%, #93C9A8) !important; }
-.lrow.d-neg { background: linear-gradient(100deg, #DDA0AC, #F0C3CB 48%, #E2A6B1) !important; }
+.lrow.d-neg { background: linear-gradient(100deg, #E07A8B, #F4B6C0 48%, #E5899A) !important; }
 .lrow.d-zero { background: linear-gradient(100deg, #DDC07A, #F1DEA6 48%, #E2C580) !important; }
 .lrow.d-pos, .lrow.d-neg, .lrow.d-zero { background-size: auto !important; }
 body.night .lrow.d-pos { background: linear-gradient(100deg, #7FB396, #A3CDB3 48%, #86B99B) !important; }
-body.night .lrow.d-neg { background: linear-gradient(100deg, #CF93A0, #E3B3BC 48%, #D399A5) !important; }
+body.night .lrow.d-neg { background: linear-gradient(100deg, #D46F81, #EBA9B4 48%, #DA7E8F) !important; }
+/* a day with a result never looks faded, even if it was empty a moment ago */
+.lrow.vazio.d-pos, .lrow.vazio.d-neg, .lrow.vazio.d-zero { opacity: 1; }
 body.night .lrow.d-zero { background: linear-gradient(100deg, #CFB36E, #E5D196 48%, #D4B874) !important; }
 .lrow.wave::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; background: linear-gradient(100deg, transparent calc(var(--wp) - 30%), rgba(255, 255, 255, .7) var(--wp), transparent calc(var(--wp) + 3%)); animation: rowWave .8s ease-out; }
 /* 3 binder rings on the left edge of the Diário boxes */
@@ -1701,7 +1703,7 @@ body.offline .netbar { transform: translate(-50%, 0); }
 .nwmark .gm::after { content: ""; position: absolute; left: 2px; top: 2px; width: 3px; height: 3px; background: rgba(255, 255, 255, .85); clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%); }
 .lrow.d-pos .res, .lrow.d-neg .res, .lrow.d-zero .res { padding: 2px 9px; border-radius: 999px; }
 .lrow.d-pos .res { box-shadow: inset 0 0 0 100px rgba(22, 74, 46, .12), inset 0 0 0 1px rgba(22, 74, 46, .25); }
-.lrow.d-neg .res { box-shadow: inset 0 0 0 100px rgba(122, 20, 48, .1), inset 0 0 0 1px rgba(122, 20, 48, .22); }
+.lrow.d-neg .res { color: #6B0B24 !important; box-shadow: inset 0 0 0 100px rgba(122, 20, 48, .14), inset 0 0 0 1px rgba(122, 20, 48, .32); }
 .lrow.d-zero .res { box-shadow: inset 0 0 0 100px rgba(92, 66, 16, .1), inset 0 0 0 1px rgba(92, 66, 16, .22); }
 /* Estatísticas */
 .hero-main b.pos, .hero-main b.zero, .stp-card .st b.pos { background: linear-gradient(110deg, #7A5618, #B8893A 30%, #E3BD6A 48%, #9C7330 62%, #6E4C14); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 1px 0 rgba(255, 255, 255, .6)); }
