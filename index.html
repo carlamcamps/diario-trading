@@ -2185,12 +2185,6 @@ input.ink { animation: inkIn .55s ease-out; }
 /* ================= round of 50: Estatísticas ================= */
 /* charts on fine gold graph paper */
 .stp-card .chc .chw { background-image: linear-gradient(rgba(205, 167, 94, .09) 1px, transparent 1px), linear-gradient(90deg, rgba(205, 167, 94, .09) 1px, transparent 1px), linear-gradient(rgba(205, 167, 94, .05) 1px, transparent 1px), linear-gradient(90deg, rgba(205, 167, 94, .05) 1px, transparent 1px); background-size: 40px 40px, 40px 40px, 8px 8px, 8px 8px; border-radius: 8px; }
-/* the big numbers engraved on small brass plates */
-.stp-card .st > b, .stp-card .st-back > b { align-self: flex-start; padding: 3px 12px 2px; border-radius: 5px; position: relative;
-  background: radial-gradient(circle at 6px 50%, #8A6420 0 1.4px, #FFF2C6 1.6px 2.2px, transparent 2.4px), radial-gradient(circle at calc(100% - 6px) 50%, #8A6420 0 1.4px, #FFF2C6 1.6px 2.2px, transparent 2.4px), repeating-linear-gradient(90deg, rgba(255, 255, 255, .07) 0 1px, transparent 1px 3px), linear-gradient(180deg, #F3DDA0, #D8B568 48%, #B8913F 52%, #E3C47E) !important;
-  -webkit-background-clip: border-box !important; background-clip: border-box !important; background-size: auto !important; animation: none;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .6), inset 0 -1px 0 rgba(90, 60, 10, .4), 0 2px 4px -1px rgba(0, 0, 0, .35); color: #3A2608 !important; -webkit-text-fill-color: #3A2608; text-shadow: 0 1px 0 rgba(255, 245, 210, .7); font-size: 20px; }
-.stp-card .st > b.pos, .stp-card .st-back > b.pos { color: #1F4D33 !important; -webkit-text-fill-color: #1F4D33; } .stp-card .st > b.neg, .stp-card .st-back > b.neg { color: #6E0D26 !important; -webkit-text-fill-color: #6E0D26; }
 /* tiles that turn over */
 .st.flips { cursor: pointer; transition: transform .17s ease-in; }
 .st.flips::after { content: "€"; position: absolute; right: 9px; top: 8px; width: 17px; height: 17px; border-radius: 50%; display: grid; place-items: center; font: 700 10px/1 var(--sans); color: #8A6420; background: rgba(205, 167, 94, .18); }
@@ -4990,7 +4984,7 @@ input.ink { animation: inkIn .55s ease-out; }
       slideCtl = slider($("view").querySelector(".slides"), Math.max(0, AC_VIEWS.indexOf(acView)), i => { acView = AC_VIEWS[i] || "fusion"; try { localStorage.setItem(LS_AC, acView); } catch (_) {} markSwitch(); });
     } else {
       const nn = nextNewsHtml();
-      $("view").innerHTML = '<i class="spine" aria-hidden="true"><b>' + cap(MONTHS[view.m]) + '</b><em>' + view.y + '</em></i>' + moodBarHtml() + weekLineHtml() + '<div class="nextnews" id="nextnews"' + (nn ? '' : ' hidden') + ' role="status">' + nn + '</div><div class="dots" aria-hidden="true"><i></i><i></i></div><div class="panels">' + GS().map(s => '<section class="panel" data-key="' + s.role + '" aria-label="' + s.full + '">' + panelHtml(s, days) + '</section>').join("") + '</div>';
+      $("view").innerHTML = moodBarHtml() + weekLineHtml() + '<div class="nextnews" id="nextnews"' + (nn ? '' : ' hidden') + ' role="status">' + nn + '</div><div class="dots" aria-hidden="true"><i></i><i></i></div><div class="panels">' + GS().map(s => '<section class="panel" data-key="' + s.role + '" aria-label="' + s.full + '">' + panelHtml(s, days) + '</section>').join("") + '</div>';
       setupSwipe();
       drawSparks(days);
     }
