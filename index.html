@@ -2327,6 +2327,9 @@ input.ink { animation: inkIn .55s ease-out; }
 .nw-root .nw-d.past:not(.out) { background: radial-gradient(120% 100% at 50% 50%, rgba(255, 248, 225, .0) 55%, rgba(170, 120, 50, .14)), linear-gradient(170deg, #EFE4C8, #E2D3AE) !important; color: #5A4636 !important; filter: saturate(.85); }
 @media (prefers-reduced-motion: reduce) { .nw-hg .hg-run, .nw-root .nw-flag { animation: none !important; } }
 @media (prefers-reduced-motion: reduce) { .cd .hand path { animation: none; stroke-dashoffset: 0; } .lc .lnrun, .dfacet .dglint { display: none; } .vz-coins i, .jar .jc { animation: none; } }
+/* no gold corners on the boxes (Carla asked) */
+:root { --fc-tl: none; --fc-tr: none; --fc-bl: none; --fc-br: none; }
+.mcorn, .fili { display: none !important; }
 </style>
 
 <!-- opening screen: the icon, the title and the quote of the day (once per visit) -->
