@@ -1,7 +1,7 @@
 /* Diário de Trading: keeps a copy of the site so it opens without internet.
    Pages and scripts: always try the internet first (so updates arrive), the saved copy only when offline.
    Images, fonts and libraries: the saved copy first (faster). The data itself (Supabase) is never touched here. */
-const CACHE = "diario-trading-v2";
+const CACHE = "diario-trading-v3";
 const CORE = ["./", "./index.html", "./noticias.js", "./noticias-arquivo.json", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png", "./apple-touch-icon.png"];
 
 self.addEventListener("install", e => {
@@ -19,7 +19,7 @@ self.addEventListener("fetch", e => {
   const fresh = same && (r.mode === "navigate" || /\.(html|js|json|webmanifest)$/.test(u.pathname) || u.pathname.endsWith("/"));
   if (fresh) {
     e.respondWith(
-      fetch(r).then(res => { if (res.ok) { const cp = res.clone(); caches.open(CACHE).then(c => c.put(r, cp)); } return res; })
+      fetch(u.href, { cache: "no-store", credentials: "same-origin" }).then(res => { if (res.ok) { const cp = res.clone(); caches.open(CACHE).then(c => c.put(r, cp)); } return res; })
         .catch(() => caches.match(r, { ignoreSearch: true }).then(m => m || (r.mode === "navigate" ? caches.match("./index.html") : undefined)))
     );
     return;

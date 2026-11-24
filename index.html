@@ -1687,6 +1687,14 @@ body.offline .netbar { transform: translate(-50%, 0); }
 /* Diário: rows like paper cards, colour wave, rolling numbers, bookmark on today, gems, result pills */
 .lrow { position: relative; box-shadow: inset 0 1px 0 rgba(255, 255, 255, .35), 0 3px 6px -3px rgba(20, 3, 8, .55); }
 .lrow.wk-now { background-image: linear-gradient(90deg, rgba(255, 250, 235, .4), rgba(255, 250, 235, .08)), var(--paper) !important; background-size: auto, 180px 180px !important; box-shadow: inset 3px 0 0 var(--gold), 0 3px 6px -3px rgba(20, 3, 8, .55); }
+/* this week's days keep their green / red / gold colour under the soft highlight */
+.lrow.wk-now.d-pos, .lrow.wk-now.d-neg, .lrow.wk-now.d-zero { background-size: auto !important; }
+.lrow.wk-now.d-pos { background-image: linear-gradient(90deg, rgba(255, 250, 235, .22), rgba(255, 250, 235, 0)), linear-gradient(100deg, #8CC4A2, #B4DCC3 48%, #93C9A8) !important; }
+.lrow.wk-now.d-neg { background-image: linear-gradient(90deg, rgba(255, 250, 235, .22), rgba(255, 250, 235, 0)), linear-gradient(100deg, #E07A8B, #F4B6C0 48%, #E5899A) !important; }
+.lrow.wk-now.d-zero { background-image: linear-gradient(90deg, rgba(255, 250, 235, .22), rgba(255, 250, 235, 0)), linear-gradient(100deg, #DDC07A, #F1DEA6 48%, #E2C580) !important; }
+body.night .lrow.wk-now.d-pos { background-image: linear-gradient(100deg, #7FB396, #A3CDB3 48%, #86B99B) !important; }
+body.night .lrow.wk-now.d-neg { background-image: linear-gradient(100deg, #D46F81, #EBA9B4 48%, #DA7E8F) !important; }
+body.night .lrow.wk-now.d-zero { background-image: linear-gradient(100deg, #CFB36E, #E5D196 48%, #D4B874) !important; }
 @property --wp { syntax: "<percentage>"; initial-value: 0%; inherits: false; }
 .lrow.wave { background-image: linear-gradient(100deg, transparent calc(var(--wp) - 30%), rgba(255, 255, 255, .7) var(--wp), transparent calc(var(--wp) + 3%)), var(--paper) !important; background-size: auto, 180px 180px !important; animation: rowWave .8s ease-out; }
 @keyframes rowWave { from { --wp: -5%; } to { --wp: 130%; } }
