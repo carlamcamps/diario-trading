@@ -2330,6 +2330,8 @@ input.ink { animation: inkIn .55s ease-out; }
 /* no gold corners on the boxes (Carla asked) */
 :root { --fc-tl: none; --fc-tr: none; --fc-bl: none; --fc-br: none; }
 .mcorn, .fili { display: none !important; }
+/* notebook rings only on the computer */
+@media (max-width: 900px) { .rings { display: none !important; } }
 </style>
 
 <!-- opening screen: the icon, the title and the quote of the day (once per visit) -->
