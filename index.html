@@ -3748,7 +3748,8 @@ input.ink { animation: inkIn .55s ease-out; }
       const ms = [...r.months.entries()].sort().slice(-12).map(([k, M]) => ({ l: MON3[M.d.getMonth()], v: M.v, n: M.n, tip: cap(MONTHS[M.d.getMonth()]) + " " + M.d.getFullYear() + ": " + fmt(M.v) }));
       h += '<div class="chc"><div class="cht">Por mês</div>' + barChart(ms, { aria: "Resultado por mês", f: fmt }) + '</div>';
     }
-    h += '</div>' + sec("Notícias", "NFP, CPI e FOMC") + '<div class="charts">' + newsTables(s) + '</div>';
+    h += '</div>';
+    if (per === "y") h += sec("Notícias", "NFP, CPI e FOMC") + '<div class="charts">' + newsTables(s) + '</div>';
     // side by side: the four tables in the same period, and the ranking of the months
     h += sec("Comparação", "as quatro tabelas e os meses") + '<div class="cmp-w"><div class="cmp"><div class="cht">Comparar no mesmo período</div><table><thead><tr><th></th><th>Resultado</th><th>Acerto</th><th>Dias</th><th>Melhor dia</th></tr></thead><tbody>' +
       SERIES.map(x => { const q = statsOf(x, periodDays(x)); return '<tr' + (x.role === s.role ? ' class="me"' : '') + '><th>' + x.full + '</th><td class="' + cls(q.pct) + '">' + fmt(q.pct) + '</td><td>' + (q.win == null ? "—" : NUM1.format(q.win) + "%") + '</td><td>' + q.n + '</td><td>' + (q.best ? fmt(q.best.p) : "—") + '</td></tr>'; }).join("") + '</tbody></table></div>';
