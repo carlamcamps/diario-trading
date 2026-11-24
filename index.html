@@ -2020,6 +2020,314 @@ body.night .lrow.wk-now.d-zero { background-image: linear-gradient(100deg, #CFB3
 .ses-wave.tp { background: radial-gradient(circle, rgba(111, 211, 155, .35), rgba(111, 211, 155, .12) 55%, transparent 70%); box-shadow: 0 0 0 2px rgba(111, 211, 155, .5); }
 .ses-wave.sl { background: radial-gradient(circle, rgba(240, 138, 160, .35), rgba(240, 138, 160, .12) 55%, transparent 70%); box-shadow: 0 0 0 2px rgba(240, 138, 160, .5); }
 @keyframes sesWave { from { transform: scale(.4); opacity: 1; } to { transform: scale(16); opacity: 0; } }
+
+/* ================= round of 50: opening ================= */
+/* gold dust that gathers into "DT" */
+.sp-dt { position: absolute; left: 50%; top: max(5%, calc(env(safe-area-inset-top, 0px) + 18px)); transform: translateX(-50%); z-index: 2; pointer-events: none; }
+/* a gold ribbon with a bow that unties as the app opens */
+.sp-ribbon { position: absolute; inset: 0; z-index: 6; pointer-events: none; }
+.sp-ribbon .rh, .sp-ribbon .rv { position: absolute; display: block; }
+.sp-ribbon .rh { left: 0; right: 0; top: 50%; height: 14px; margin-top: -7px; }
+.sp-ribbon .rv { top: 0; bottom: 0; left: 50%; width: 14px; margin-left: -7px; }
+.sp-ribbon .rh::before, .sp-ribbon .rh::after, .sp-ribbon .rv::before, .sp-ribbon .rv::after { content: ""; position: absolute; background: linear-gradient(180deg, #F6E0A4, #CDA75E 45%, #9C7330); box-shadow: 0 2px 6px rgba(0, 0, 0, .45); }
+.sp-ribbon .rv::before, .sp-ribbon .rv::after { background: linear-gradient(90deg, #F6E0A4, #CDA75E 45%, #9C7330); }
+.sp-ribbon .rh::before { left: 0; width: 50%; top: 0; bottom: 0; } .sp-ribbon .rh::after { right: 0; width: 50%; top: 0; bottom: 0; }
+.sp-ribbon .rv::before { top: 0; height: 50%; left: 0; right: 0; } .sp-ribbon .rv::after { bottom: 0; height: 50%; left: 0; right: 0; }
+.sp-ribbon .bow { position: absolute; left: 50%; top: 50%; width: 120px; height: 70px; margin: -38px 0 0 -60px; filter: drop-shadow(0 4px 6px rgba(0, 0, 0, .5)); overflow: visible; }
+.sp-ribbon .bow path, .sp-ribbon .bow rect { transform-box: fill-box; }
+.splash.in .sp-ribbon .bl { transform-origin: 100% 60%; animation: bowL .5s cubic-bezier(.5, 0, .7, .4) .12s forwards; }
+.splash.in .sp-ribbon .br { transform-origin: 0 60%; animation: bowR .5s cubic-bezier(.5, 0, .7, .4) .12s forwards; }
+.splash.in .sp-ribbon .tl, .splash.in .sp-ribbon .tr, .splash.in .sp-ribbon .bow rect { animation: spGone .3s ease .25s forwards; }
+.splash.in .sp-ribbon .rh::before { animation: rbL .6s cubic-bezier(.6, 0, .4, 1) .3s forwards; } .splash.in .sp-ribbon .rh::after { animation: rbR .6s cubic-bezier(.6, 0, .4, 1) .3s forwards; }
+.splash.in .sp-ribbon .rv::before { animation: rbU .6s cubic-bezier(.6, 0, .4, 1) .3s forwards; } .splash.in .sp-ribbon .rv::after { animation: rbD .6s cubic-bezier(.6, 0, .4, 1) .3s forwards; }
+@keyframes bowL { to { transform: translate(-60px, 30px) rotate(-70deg) scale(.6); opacity: 0; } }
+@keyframes bowR { to { transform: translate(60px, 30px) rotate(70deg) scale(.6); opacity: 0; } }
+@keyframes rbL { to { transform: translateX(-102%); } } @keyframes rbR { to { transform: translateX(102%); } }
+@keyframes rbU { to { transform: translateY(-102%); } } @keyframes rbD { to { transform: translateY(102%); } }
+/* a little candle lights up and warms the title */
+.sp-candle { position: relative; z-index: 1; width: 12px; height: 34px; margin: 2px 0 -8px; }
+.sp-candle .wx { position: absolute; left: 0; bottom: 0; width: 12px; height: 22px; border-radius: 3px 3px 2px 2px; background: linear-gradient(90deg, #E9DCC4, #FFF8EA 40%, #D8C7A8); box-shadow: 0 2px 6px rgba(0, 0, 0, .5); }
+.sp-candle .wx::before { content: ""; position: absolute; left: 2px; top: -1px; width: 4px; height: 7px; border-radius: 0 0 3px 3px; background: #FFF8EA; }
+.sp-candle .wk { position: absolute; left: 5.3px; bottom: 21px; width: 1.4px; height: 5px; border-radius: 1px; background: #2A1A10; }
+.sp-candle .fl { position: absolute; left: 1px; bottom: 24px; width: 10px; height: 17px; border-radius: 50% 50% 50% 50% / 62% 62% 38% 38%; background: radial-gradient(circle at 50% 75%, #FFFFFF 0 18%, #FFE7A0 32%, #F6B23C 62%, rgba(232, 120, 40, .0) 76%); transform-origin: 50% 90%; opacity: 0; transform: scale(.2); filter: blur(.2px); }
+.sp-candle .cg { position: absolute; left: 50%; top: 2px; width: 320px; height: 220px; margin-left: -160px; border-radius: 50%; background: radial-gradient(closest-side, rgba(255, 196, 120, .28), rgba(255, 170, 90, .1) 55%, transparent); opacity: 0; pointer-events: none; mix-blend-mode: screen; }
+.splash.in .sp-candle .fl { animation: flOn .45s cubic-bezier(.2, 1.6, .4, 1) 1s forwards, flFlick 1.6s ease-in-out 1.45s infinite; }
+.splash.in .sp-candle .cg { animation: cgOn 1s ease 1.05s forwards, cgFlick 2.2s ease-in-out 2s infinite; }
+.splash.in .sp-title { animation: spWarm 1.2s ease 1.15s forwards; }
+@keyframes flOn { to { opacity: 1; transform: scale(1); } }
+@keyframes flFlick { 0%, 100% { transform: scale(1) rotate(0); } 25% { transform: scale(1.06, .95) rotate(-3deg); } 50% { transform: scale(.96, 1.05) rotate(2deg); } 75% { transform: scale(1.03, .98) rotate(-1deg); } }
+@keyframes cgOn { to { opacity: 1; } } @keyframes cgFlick { 0%, 100% { opacity: 1; } 50% { opacity: .78; } }
+@keyframes spWarm { to { text-shadow: 0 0 22px rgba(255, 190, 110, .42), 0 0 2px rgba(255, 220, 160, .5); } }
+/* at night: a moonlit opening */
+.sp-moon { display: none; }
+.splash.night::before { background: radial-gradient(70% 50% at 50% 40%, #2B1236, #120A1F 68%, #06040C); }
+.splash.night .sp-moon { display: block; position: absolute; z-index: 1; right: 13%; top: max(13%, calc(env(safe-area-inset-top, 0px) + 96px)); width: 46px; height: 46px; border-radius: 50%; box-shadow: inset -12px 4px 0 0 #F3DDA0; transform: rotate(-18deg); filter: drop-shadow(0 0 14px rgba(243, 221, 160, .55)); opacity: 0; }
+.splash.night.in .sp-moon { animation: spFadeIn 1.2s ease .3s forwards; }
+.splash.night .sp-stars i { box-shadow: 0 0 6px rgba(255, 244, 214, .9); }
+.splash.night .sp-candle .cg { background: radial-gradient(closest-side, rgba(255, 196, 120, .36), rgba(255, 170, 90, .12) 55%, transparent); }
+@media (prefers-reduced-motion: reduce) { .sp-ribbon, .sp-dt { display: none; } .sp-candle .fl, .sp-candle .cg { opacity: 1; transform: none; animation: none !important; } }
+.splash.fly .sp-candle, .splash.fly .sp-moon, .splash.fly .sp-dt, .splash.fly .sp-ribbon { opacity: 0 !important; transition: opacity .3s ease !important; }
+
+/* ================= round of 50: Sessão ================= */
+/* sunset: the screen darkens slowly towards 21:00 */
+.ses-dusk { position: fixed; inset: 0; z-index: -1; pointer-events: none; border-radius: inherit; opacity: var(--dusk, 0); transition: opacity 2s ease;
+  background: linear-gradient(180deg, rgba(8, 4, 22, .62) 0%, rgba(30, 8, 30, .35) 45%, rgba(190, 80, 40, .16) 82%, rgba(240, 150, 70, .22) 100%); }
+/* the last tap leaves a soft breathing light (green for TP, wine for SL) */
+.ses-glow { position: fixed; inset: 0; z-index: -1; pointer-events: none; border-radius: inherit; animation: sesBreath 3.2s ease-in-out infinite; }
+.ses-glow.g-tp { background: radial-gradient(70% 40% at 50% 78%, rgba(90, 210, 140, .28), transparent 70%); }
+.ses-glow.g-sl { background: radial-gradient(70% 40% at 50% 78%, rgba(230, 70, 100, .28), transparent 70%); }
+@keyframes sesBreath { 0%, 100% { opacity: .45; } 50% { opacity: 1; } }
+/* numbers flip like a station board */
+.ses .flip { display: inline-block; animation: sesFlip .42s cubic-bezier(.3, 1.4, .5, 1); transform-origin: 50% 50%; backface-visibility: hidden; }
+.ses-res.flip { display: block; }
+@keyframes sesFlip { 0% { transform: perspective(300px) rotateX(-95deg); opacity: .2; } 60% { transform: perspective(300px) rotateX(12deg); opacity: 1; } 100% { transform: none; } }
+/* a drop of gold (TP) or wine (SL) falls onto the key */
+.ses-drop { position: absolute; z-index: 5; width: 12px; height: 16px; margin-left: -6px; border-radius: 50% 50% 50% 50% / 62% 62% 38% 38%; pointer-events: none; animation: sesDropF .55s cubic-bezier(.5, 0, .9, .5) forwards; }
+.ses-drop.tp { background: radial-gradient(circle at 38% 62%, #FFF6D0, #E7C06A 45%, #9C7330); box-shadow: 0 0 10px rgba(243, 217, 142, .8); }
+.ses-drop.sl { background: radial-gradient(circle at 38% 62%, #FFC8D2, #B03050 45%, #5A0E1C); box-shadow: 0 0 10px rgba(225, 80, 110, .7); }
+.ses-drop::after { content: ""; position: absolute; left: 50%; bottom: -2px; width: 8px; height: 8px; margin-left: -4px; border-radius: 50%; border: 2px solid currentColor; opacity: 0; }
+.ses-drop.tp::after { color: #F3D98E; } .ses-drop.sl::after { color: #E07A8B; }
+@keyframes sesDropF { 0% { transform: translateY(-150px) scale(.7); opacity: 0; } 15% { opacity: 1; } 70% { transform: translateY(0) scale(1, 1.1); opacity: 1; } 82% { transform: translateY(0) scale(1.6, .35); opacity: 1; } 100% { transform: translateY(0) scale(2.6, .2); opacity: 0; } }
+/* the small chart of the day */
+.ses-spark { width: 100%; max-width: 300px; margin-top: 14px; text-align: center; }
+.ses-spark svg { width: 100%; height: 48px; display: block; overflow: visible; }
+.ses-spark .z { stroke: rgba(205, 167, 94, .35); stroke-width: 1; stroke-dasharray: 3 4; vector-effect: non-scaling-stroke; }
+.ses-spark .l { fill: none; stroke: #E7C989; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; vector-effect: non-scaling-stroke; filter: drop-shadow(0 0 4px rgba(243, 217, 142, .55)); }
+.ses-spark .a { stroke: none; opacity: .22; } .ses-spark .a.pos { fill: #5FC48C; } .ses-spark .a.neg { fill: #E0607E; } .ses-spark .a.zero { fill: #E7C989; }
+.ses-spark .p { stroke: #FFF4D6; stroke-width: 1.4; vector-effect: non-scaling-stroke; animation: spkPulse 1.6s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+.ses-spark .p.pos { fill: #5FC48C; } .ses-spark .p.neg { fill: #E0607E; } .ses-spark .p.zero { fill: #E7C989; }
+.ses-spark small { display: block; margin-top: 4px; color: var(--soft); font-size: 11px; letter-spacing: .02em; }
+@keyframes spkPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.35); } }
+/* undo: a gold arrow that turns back */
+.ses-undo { display: inline-flex; align-items: center; gap: 8px; }
+.undo-ic { width: 17px; height: 17px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.undo-ic.spin { animation: undoSpin .6s cubic-bezier(.3, .8, .3, 1); }
+@keyframes undoSpin { from { transform: rotate(360deg); } to { transform: rotate(0); } }
+/* the letter that folds and goes into the Diário */
+.ses-letter { position: fixed; z-index: 60; left: 50%; top: 42%; width: 230px; margin: -70px 0 0 -115px; padding: 22px 16px 18px; text-align: center; border-radius: 6px; pointer-events: none; color: #3A1018;
+  background: linear-gradient(160deg, #FFF9EC, #F3E6CC); box-shadow: 0 24px 40px -14px rgba(0, 0, 0, .75), inset 0 0 0 1px rgba(205, 167, 94, .55), inset 0 0 0 5px #FFF9EC, inset 0 0 0 6px rgba(205, 167, 94, .45); transform-origin: 50% 40%; }
+.ses-letter small { display: block; font-size: 11px; color: #8C6168; letter-spacing: .04em; }
+.ses-letter b { display: block; font: 600 40px/1.1 var(--display); margin: 6px 0 2px; } .ses-letter b.pos { color: #2F6B4B; } .ses-letter b.neg { color: #8E1A2E; } .ses-letter b.zero { color: #8A6420; }
+.ses-letter span { font-size: 13px; color: #6B4A3A; }
+.ses-letter .sl-flap { position: absolute; left: 0; right: 0; top: 0; height: 40px; background: linear-gradient(160deg, #F7EBD3, #EAD8B6); clip-path: polygon(0 0, 100% 0, 50% 100%); opacity: .7; }
+.ses-letter .sl-seal { position: absolute; left: 50%; bottom: -11px; width: 22px; height: 22px; margin-left: -11px; border-radius: 50%; background: radial-gradient(circle at 38% 35%, #C2364F, #8E1A2E 60%, #5A0E1C); box-shadow: 0 2px 4px rgba(0, 0, 0, .35); }
+.got-letter { animation: gotLetter .8s ease; }
+@keyframes gotLetter { 0% { box-shadow: 0 0 0 0 rgba(243, 217, 142, .9); } 100% { box-shadow: 0 0 0 14px rgba(243, 217, 142, 0); } }
+@media (prefers-reduced-motion: reduce) { .ses-glow, .ses-spark .p { animation: none; } .ses .flip { animation: none; } }
+
+/* ================= round of 50: Diário ================= */
+/* notebook spine with the month in gold (computer) */
+.spine { display: none; }
+@media (min-width: 1120px) {
+  body.view-diario #view { position: relative; }
+  .spine { display: flex; position: absolute; left: -50px; width: 34px; flex-direction: column; align-items: center; justify-content: center; gap: 14px; border-radius: 9px 3px 3px 9px; pointer-events: none;
+    background: var(--leather, none), linear-gradient(90deg, #2A0811, #5A1626 42%, #3A0C18 70%, #1E050B); background-size: 140px 140px, auto;
+    box-shadow: inset -4px 0 8px rgba(0, 0, 0, .55), inset 2px 0 0 rgba(255, 255, 255, .07), 0 14px 24px -12px rgba(0, 0, 0, .9); }
+  .spine::before, .spine::after { content: ""; position: absolute; left: 4px; right: 4px; height: 7px; border-top: 1px solid rgba(231, 201, 137, .7); border-bottom: 1px solid rgba(231, 201, 137, .7); }
+  .spine::before { top: 26px; } .spine::after { bottom: 26px; }
+  .spine b, .spine em { writing-mode: vertical-rl; transform: rotate(180deg); background: linear-gradient(180deg, #FFF2C6, #E3BD6A 45%, #A8833F 70%, #F3DDA0); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .spine b { font: 600 21px/1 var(--display); letter-spacing: .14em; } .spine em { font: 600 13px/1 var(--display); font-style: normal; letter-spacing: .2em; }
+}
+/* months gone by look like older paper */
+.pbody.aged .lrow { filter: sepia(.3) saturate(.86) brightness(.98); }
+.pbody.aged::after { content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; z-index: 2; mix-blend-mode: multiply; opacity: .5;
+  background: radial-gradient(circle at 12% 18%, rgba(160, 110, 50, .16) 0 3px, transparent 4px), radial-gradient(circle at 78% 64%, rgba(160, 110, 50, .13) 0 4px, transparent 5px), radial-gradient(circle at 41% 88%, rgba(160, 110, 50, .12) 0 2px, transparent 3px), radial-gradient(120% 90% at 50% 50%, transparent 60%, rgba(150, 100, 40, .22)); }
+/* a tiny wax seal on days with a note */
+.lrow .date .wax { display: inline-block; flex: none; width: 10px; height: 10px; margin-left: 1px; align-self: center; border-radius: 50% 45% 52% 48%; background: radial-gradient(circle at 36% 34%, #D9566C, #9C1F36 58%, #5A0E1C); box-shadow: 0 1px 1px rgba(0, 0, 0, .35), inset 0 0 0 1.5px rgba(255, 190, 200, .18); }
+/* a gleam of paper slides across the line when touched */
+.lrow .gleam { position: absolute; inset: 0; border-radius: inherit; pointer-events: none; z-index: 3; overflow: hidden; }
+.lrow .gleam::before { content: ""; position: absolute; top: 0; bottom: 0; width: 38%; left: -40%; background: linear-gradient(100deg, transparent, rgba(255, 252, 240, .55), transparent); animation: gleamRun .7s ease-out forwards; }
+@keyframes gleamRun { to { left: 105%; } }
+/* numbers written with a fountain pen */
+input.ink { animation: inkIn .55s ease-out; }
+@keyframes inkIn { 0% { color: transparent; text-shadow: 0 0 7px rgba(60, 14, 28, .9); } 60% { text-shadow: 0 0 1px rgba(60, 14, 28, .6); } 100% { text-shadow: none; } }
+/* gold metal corners on the Diário boxes, like an old album */
+.mcorn { position: absolute; inset: -2px; pointer-events: none; z-index: 4; }
+.mcorn b { position: absolute; width: 22px; height: 22px; background: linear-gradient(135deg, #FFF2C6, #E3BD6A 35%, #A8833F 70%, #6E4F1A); filter: drop-shadow(0 1px 1px rgba(0, 0, 0, .55)); }
+.mcorn b::after { content: ""; position: absolute; width: 4px; height: 4px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #FFF6D8, #8A6420); }
+.mcorn b:nth-child(1) { left: 0; top: 0; clip-path: polygon(0 0, 100% 0, 0 100%); border-top-left-radius: 10px; } .mcorn b:nth-child(1)::after { left: 4px; top: 4px; }
+.mcorn b:nth-child(2) { right: 0; top: 0; clip-path: polygon(0 0, 100% 0, 100% 100%); border-top-right-radius: 10px; } .mcorn b:nth-child(2)::after { right: 4px; top: 4px; }
+.mcorn b:nth-child(3) { left: 0; bottom: 0; clip-path: polygon(0 0, 100% 100%, 0 100%); border-bottom-left-radius: 10px; } .mcorn b:nth-child(3)::after { left: 4px; bottom: 4px; }
+.mcorn b:nth-child(4) { right: 0; bottom: 0; clip-path: polygon(100% 0, 100% 100%, 0 100%); border-bottom-right-radius: 10px; } .mcorn b:nth-child(4)::after { right: 4px; bottom: 4px; }
+/* a satin ribbon with a little bow tied around each week bar */
+.wrow { padding-left: 20px !important; }
+.wrow .wbow { position: absolute; left: 5px; top: 0; bottom: 0; width: 7px; pointer-events: none; z-index: 1; background: linear-gradient(90deg, #8E1A2E, #D9566C 45%, #7A1428); box-shadow: 1px 0 2px rgba(0, 0, 0, .35); }
+.wrow .wbow::after { content: ""; position: absolute; left: 50%; top: 50%; width: 18px; height: 12px; margin: -6px 0 0 -9px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 28'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23F28AA0'/%3E%3Cstop offset='.55' stop-color='%23B8304C'/%3E%3Cstop offset='1' stop-color='%236E1024'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M22 14C15 4 4 1 2 6s4 13 20 8zM22 14c7-10 18-13 20-8s-4 13-20 8z' fill='url(%23g)'/%3E%3Cpath d='M20 15l-7 12 4-1 3 2 2-13zM24 15l7 12-4-1-3 2-2-13z' fill='url(%23g)'/%3E%3Crect x='19' y='10' width='6' height='8' rx='2.5' fill='%23C2364F'/%3E%3C/svg%3E") center / contain no-repeat; filter: drop-shadow(0 1px 1px rgba(0, 0, 0, .45)); }
+
+/* ================= round of 50: Calendário ================= */
+.cal { isolation: isolate; }
+/* a faint map of constellations behind the month */
+.cal > .consts { position: absolute; inset: 0; z-index: -1; pointer-events: none; border-radius: inherit; opacity: .3;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 300'%3E%3Cg stroke='%23E7C989' stroke-width='.5' stroke-opacity='.55' fill='none'%3E%3Cpath d='M30 40L70 62 96 50 120 88M200 30l26 30 40-8 18 40M60 200l40-20 30 30 50-6M220 220l30-30 30 20'/%3E%3C/g%3E%3Cg fill='%23FFF4D6'%3E%3Ccircle cx='30' cy='40' r='1.6'/%3E%3Ccircle cx='70' cy='62' r='1.2'/%3E%3Ccircle cx='96' cy='50' r='1.8'/%3E%3Ccircle cx='120' cy='88' r='1.2'/%3E%3Ccircle cx='200' cy='30' r='1.4'/%3E%3Ccircle cx='226' cy='60' r='1.9'/%3E%3Ccircle cx='266' cy='52' r='1.2'/%3E%3Ccircle cx='284' cy='92' r='1.5'/%3E%3Ccircle cx='60' cy='200' r='1.4'/%3E%3Ccircle cx='100' cy='180' r='1.2'/%3E%3Ccircle cx='130' cy='210' r='1.9'/%3E%3Ccircle cx='180' cy='204' r='1.2'/%3E%3Ccircle cx='220' cy='220' r='1.3'/%3E%3Ccircle cx='250' cy='190' r='1.7'/%3E%3Ccircle cx='280' cy='210' r='1.1'/%3E%3Ccircle cx='150' cy='140' r='.9'/%3E%3Ccircle cx='20' cy='130' r='.8'/%3E%3Ccircle cx='170' cy='270' r='.9'/%3E%3Ccircle cx='260' cy='140' r='.8'/%3E%3C/g%3E%3C/svg%3E") 0 0 / 300px 300px repeat; }
+/* each day is a little postage stamp */
+.cal-grid .cd:not(.out) { outline: 3px dotted rgba(26, 4, 10, .78); outline-offset: -1px; border-radius: 5px; }
+/* a gold leaf on the corner of the green days */
+.cd .leaf { position: absolute; left: 50%; top: 7px; width: 13px; height: 13px; margin-left: -6px; pointer-events: none; transform: rotate(-20deg);
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%23FFF2C6'/%3E%3Cstop offset='.5' stop-color='%23E3BD6A'/%3E%3Cstop offset='1' stop-color='%23A8833F'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath d='M3 17C3 8 9 3 17 3c0 8-5 14-14 14z' fill='url(%23g)'/%3E%3Cpath d='M3 17L13 7M8 12h3M6 14l1-3' stroke='%238A6420' stroke-width='.7' fill='none'/%3E%3C/svg%3E") center / contain no-repeat; filter: drop-shadow(0 1px 1px rgba(0, 0, 0, .3)); }
+/* today: a gold circle drawn by hand */
+.cd .hand { position: absolute; inset: -5px; width: calc(100% + 10px); height: calc(100% + 10px); pointer-events: none; overflow: visible; z-index: 2; }
+.cd .hand path { fill: none; stroke: #E3BD6A; stroke-width: 2.2; stroke-linecap: round; vector-effect: non-scaling-stroke; stroke-dasharray: 1; stroke-dashoffset: 1; animation: handDraw 1.1s ease-out .4s forwards; filter: drop-shadow(0 0 2px rgba(243, 217, 142, .6)); }
+@keyframes handDraw { to { stroke-dashoffset: 0; } }
+/* moods sit on small coloured gems */
+.cmood.set { background: radial-gradient(circle at 32% 28%, rgba(255, 255, 255, .85) 0 8%, transparent 22%), conic-gradient(from 20deg, color-mix(in srgb, var(--gem, #C9A55E) 70%, #fff), var(--gem, #C9A55E), color-mix(in srgb, var(--gem, #C9A55E) 60%, #000), var(--gem, #C9A55E), color-mix(in srgb, var(--gem, #C9A55E) 75%, #fff), var(--gem, #C9A55E)); box-shadow: 0 0 0 1.6px #D9B66C, 0 0 0 2.6px rgba(110, 79, 26, .6), 0 2px 5px rgba(0, 0, 0, .35); }
+.cmood.set img { filter: drop-shadow(0 1px 1px rgba(0, 0, 0, .35)); }
+/* months slide in like cards being dealt */
+.cal.deal-n { animation: dealN .6s cubic-bezier(.2, .8, .2, 1); } .cal.deal-p { animation: dealP .6s cubic-bezier(.2, .8, .2, 1); }
+@keyframes dealN { from { transform: translateX(70px) rotate(4deg); opacity: 0; box-shadow: 0 30px 50px -20px #000; } }
+@keyframes dealP { from { transform: translateX(-70px) rotate(-4deg); opacity: 0; box-shadow: 0 30px 50px -20px #000; } }
+
+/* ================= round of 50: Estatísticas ================= */
+/* charts on fine gold graph paper */
+.stp-card .chc .chw { background-image: linear-gradient(rgba(205, 167, 94, .09) 1px, transparent 1px), linear-gradient(90deg, rgba(205, 167, 94, .09) 1px, transparent 1px), linear-gradient(rgba(205, 167, 94, .05) 1px, transparent 1px), linear-gradient(90deg, rgba(205, 167, 94, .05) 1px, transparent 1px); background-size: 40px 40px, 40px 40px, 8px 8px, 8px 8px; border-radius: 8px; }
+/* the big numbers engraved on small brass plates */
+.stp-card .st > b, .stp-card .st-back > b { align-self: flex-start; padding: 3px 12px 2px; border-radius: 5px; position: relative;
+  background: radial-gradient(circle at 6px 50%, #8A6420 0 1.4px, #FFF2C6 1.6px 2.2px, transparent 2.4px), radial-gradient(circle at calc(100% - 6px) 50%, #8A6420 0 1.4px, #FFF2C6 1.6px 2.2px, transparent 2.4px), repeating-linear-gradient(90deg, rgba(255, 255, 255, .07) 0 1px, transparent 1px 3px), linear-gradient(180deg, #F3DDA0, #D8B568 48%, #B8913F 52%, #E3C47E) !important;
+  -webkit-background-clip: border-box !important; background-clip: border-box !important; background-size: auto !important; animation: none;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .6), inset 0 -1px 0 rgba(90, 60, 10, .4), 0 2px 4px -1px rgba(0, 0, 0, .35); color: #3A2608 !important; -webkit-text-fill-color: #3A2608; text-shadow: 0 1px 0 rgba(255, 245, 210, .7); font-size: 20px; }
+.stp-card .st > b.pos, .stp-card .st-back > b.pos { color: #1F4D33 !important; -webkit-text-fill-color: #1F4D33; } .stp-card .st > b.neg, .stp-card .st-back > b.neg { color: #6E0D26 !important; -webkit-text-fill-color: #6E0D26; }
+/* tiles that turn over */
+.st.flips { cursor: pointer; transition: transform .17s ease-in; }
+.st.flips::after { content: "€"; position: absolute; right: 9px; top: 8px; width: 17px; height: 17px; border-radius: 50%; display: grid; place-items: center; font: 700 10px/1 var(--sans); color: #8A6420; background: rgba(205, 167, 94, .18); }
+.st { position: relative; }
+.st.turn { transform: perspective(600px) rotateY(90deg); }
+.st.flips:not(.back) > .st-back { display: none; }
+.st.back > :not(.st-back) { display: none; }
+.st-back { display: flex; flex-direction: column; gap: 2px; }
+.st.back { background: linear-gradient(160deg, #FFF8E6, #F1E0BC); }
+/* the donut cut like a jewel */
+.dfacet line { stroke: rgba(255, 255, 255, .28); stroke-width: .5; }
+.dfacet .dglint { fill: #FFFFFF; opacity: .85; animation: glint 3.4s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+@keyframes glint { 0%, 70%, 100% { opacity: 0; transform: scale(.4); } 80% { opacity: .95; transform: scale(1.3); } }
+/* a little light runs along the gold line */
+.lc .lnrun { fill: none; stroke: #FFF6D8; stroke-width: 3.2; stroke-linecap: round; stroke-dasharray: .05 .95; stroke-dashoffset: 1; filter: drop-shadow(0 0 4px rgba(255, 240, 190, .95)); animation: lnRun 3.6s linear 1.6s infinite; opacity: .95; }
+@keyframes lnRun { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+/* legends on little satin ribbons */
+.dleg span:not(.g-cap), .heat-leg span:not(:last-child), .cal-foot .legend span { padding: 2px 12px 2px 9px; color: #3A1018; border-radius: 2px; background: linear-gradient(180deg, #FFF8E8, #EAD7B4 55%, #F6E8CC); box-shadow: 0 1px 2px rgba(0, 0, 0, .25), inset 0 1px 0 rgba(255, 255, 255, .7); clip-path: polygon(0 0, 100% 0, calc(100% - 6px) 50%, 100% 100%, 0 100%, 5px 50%); }
+/* numbers roll up like an old cash register */
+.odo { display: inline; white-space: nowrap; }
+.odc { display: inline-block; height: 1.15em; overflow: hidden; vertical-align: bottom; line-height: 1.15em; }
+.odr { display: block; animation: odoRoll 1.1s cubic-bezier(.2, .8, .25, 1) both; }
+.odr i { display: block; height: 1.15em; font-style: normal; text-align: center; }
+@keyframes odoRoll { from { transform: translateY(0); } to { transform: translateY(calc(var(--n) * -1.15em)); } }
+
+/* ================= round of 50: Conta ================= */
+/* the card turns over: the back has the magnetic strip and the signature */
+.bank { cursor: pointer; transition: transform .2s ease-in; }
+.bank.turn { transform: perspective(700px) rotateY(90deg); }
+.bank .bk-back { display: none; }
+.bank.back > :not(.bk-back) { visibility: hidden; }
+.bank.back .bk-back { display: flex; visibility: visible; position: absolute; inset: 0; flex-direction: column; justify-content: flex-start; padding: 16px 14px 12px; gap: 10px; z-index: 3; }
+.bk-back .bk-mag { display: block; height: 30px; margin: 0 -14px; background: linear-gradient(180deg, #151010, #2A2220 50%, #0E0A0A); }
+.bk-back .bk-sig { display: flex; align-items: center; height: 28px; border-radius: 3px; overflow: hidden; background: repeating-linear-gradient(-30deg, #FFFDF4 0 4px, #F1E7CF 4px 6px); }
+.bk-back .bk-sig b { flex: 1; padding-left: 8px; font: 400 19px/1 "Pinyon Script", cursive; color: #1E2A55; }
+.bk-back .bk-sig em { padding: 0 8px; font: italic 600 12px/28px var(--sans); color: #3A2608; background: #FFFFFF; height: 100%; }
+.bk-back small { font-size: 9.5px; line-height: 1.35; opacity: .75; }
+/* the balance on a vault display, coins piling up with the month */
+.visor { position: relative; z-index: 1; display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; margin: 4px 2px 2px; padding: 12px 16px; border-radius: 14px;
+  background: repeating-linear-gradient(0deg, rgba(255, 255, 255, .025) 0 1px, transparent 1px 3px), linear-gradient(160deg, #1A0A08, #0C0504); box-shadow: inset 0 0 0 1px rgba(205, 167, 94, .45), inset 0 0 0 4px #0C0504, inset 0 0 0 5px rgba(205, 167, 94, .2), inset 0 8px 22px rgba(0, 0, 0, .7), 0 10px 22px -14px #000; }
+.visor small { display: block; font-size: 11px; letter-spacing: .08em; color: rgba(231, 201, 137, .7); }
+.visor b { display: block; font: 600 clamp(24px, 6vw, 32px)/1.1 var(--sans); letter-spacing: .06em; color: #FFD98A; font-variant-numeric: tabular-nums; text-shadow: 0 0 10px rgba(255, 200, 100, .55), 0 0 2px rgba(255, 230, 170, .9); }
+.visor span { display: block; margin-top: 3px; font-size: 11.5px; color: rgba(231, 201, 137, .65); }
+.vz-coins { position: relative; width: 44px; height: 70px; flex: none; }
+.vz-coins i { position: absolute; left: 4px; bottom: calc(var(--i) * 5px); width: 36px; height: 10px; border-radius: 50%; background: linear-gradient(180deg, #FFF0B8, #E3BD6A 40%, #A8833F 75%, #7A5A1E); box-shadow: inset 0 -2px 0 rgba(90, 60, 10, .5), 0 1px 1px rgba(0, 0, 0, .4); animation: coinDrop .45s cubic-bezier(.3, 1.4, .5, 1) both; animation-delay: calc(var(--i) * 90ms + .3s); }
+@keyframes coinDrop { from { transform: translateY(-60px); opacity: 0; } }
+.tudo .ac-now { padding: 10px 14px; border-radius: 12px; background: repeating-linear-gradient(0deg, rgba(255, 255, 255, .025) 0 1px, transparent 1px 3px), linear-gradient(160deg, #1A0A08, #0C0504); box-shadow: inset 0 0 0 1px rgba(205, 167, 94, .45), inset 0 6px 16px rgba(0, 0, 0, .7); }
+.tudo .ac-now b { color: #FFD98A; text-shadow: 0 0 10px rgba(255, 200, 100, .55); font-family: var(--sans); letter-spacing: .05em; }
+/* deposits and withdrawals: a till receipt + an inked stamp */
+.arow { position: relative; }
+.amov { margin-top: 4px; }
+.amov span { display: inline-block; padding: 4px 10px 7px; color: #3A2A20; font: 500 11px/1.3 var(--sans); letter-spacing: .03em; background: linear-gradient(180deg, #FFFDF6, #F4EEDF); box-shadow: 0 1px 2px rgba(0, 0, 0, .2);
+  -webkit-mask: conic-gradient(from 135deg at bottom, transparent 90deg, #000 0) 50% / 8px 100%; mask: conic-gradient(from 135deg at bottom, transparent 90deg, #000 0) 50% / 8px 100%; }
+.mstamp { position: absolute; right: 44px; top: 50%; transform: translateY(-50%) rotate(-11deg); padding: 1px 7px; border: 2px solid currentColor; border-radius: 5px; font: 800 10px/1.4 var(--sans); letter-spacing: .14em; text-transform: uppercase; font-style: normal; pointer-events: none; mix-blend-mode: multiply; opacity: .55; }
+.mstamp.dep { color: #2F6B4B; } .mstamp.lev { color: #8E1A2E; } .mstamp.two { right: 150px; transform: translateY(-50%) rotate(8deg); }
+@media (max-width: 860px) { .mstamp { top: auto; bottom: 6px; transform: rotate(-8deg); } .mstamp.two { right: 140px; transform: rotate(6deg); } }
+/* notes slide out of a leather wallet */
+.wallet { position: fixed; z-index: 58; left: 50%; bottom: 120px; width: 150px; height: 96px; margin-left: -75px; pointer-events: none; animation: walIn 2.2s ease forwards; }
+.wallet > i { position: absolute; display: block; }
+.wl-back { left: 0; right: 0; bottom: 0; height: 80px; border-radius: 10px; background: linear-gradient(160deg, #6A2A18, #3A140A); }
+.wl-front { left: 0; right: 0; bottom: 0; height: 56px; border-radius: 4px 4px 10px 10px; background: var(--leather, none), linear-gradient(160deg, #8A3A22, #4A1A0E); background-size: 120px 120px, auto; box-shadow: 0 10px 20px -8px #000, inset 0 2px 0 rgba(255, 255, 255, .12); }
+.wl-stitch { position: absolute; inset: 5px; border: 1px dashed rgba(231, 201, 137, .6); border-radius: 3px 3px 7px 7px; }
+.wl-clasp { position: absolute; right: -6px; top: 18px; width: 26px; height: 18px; border-radius: 9px; background: linear-gradient(180deg, #FFF0B8, #CDA75E 50%, #8A6420); box-shadow: 0 2px 3px rgba(0, 0, 0, .5); }
+.wl-note { left: 16px; right: 16px; bottom: 30px; height: 56px; border-radius: 3px; display: grid; place-items: center; background: linear-gradient(160deg, #D5E9C9, #9CC49A); box-shadow: inset 0 0 0 3px #E9F3E0, inset 0 0 0 4px rgba(60, 110, 70, .5); animation: noteUp 1.4s cubic-bezier(.3, .7, .3, 1) both; animation-delay: calc(.35s + var(--i) * .16s); }
+.wl-note b { font: 600 22px/1 var(--display); color: rgba(40, 90, 55, .75); }
+@keyframes noteUp { 0% { transform: translateY(0); opacity: 1; } 55% { transform: translateY(-70px) rotate(calc((var(--i) - 1) * 9deg)); opacity: 1; } 100% { transform: translateY(-190px) translateX(calc((var(--i) - 1) * 70px)) rotate(calc((var(--i) - 1) * 24deg)) scale(.7); opacity: 0; } }
+@keyframes walIn { 0% { transform: translateY(40px) scale(.8); opacity: 0; } 14% { transform: none; opacity: 1; } 80% { opacity: 1; } 100% { transform: translateY(30px); opacity: 0; } }
+
+/* ================= round of 50: Pagamentos ================= */
+/* each payout is a cheque */
+.payrow.chq { background: radial-gradient(circle at 0 50%, transparent 0 4px, transparent 4px), repeating-radial-gradient(circle at 85% 40%, rgba(60, 120, 89, .06) 0 2px, transparent 2px 6px), linear-gradient(160deg, #F5F8EC, #E6EFD9) !important; color: #23382B; box-shadow: inset 0 0 0 1px rgba(60, 120, 89, .25), 0 4px 10px -6px rgba(0, 0, 0, .5); cursor: pointer; padding-top: 10px; padding-bottom: 10px; }
+.payrow.chq .pay-d { border-right: 1.5px dashed rgba(60, 120, 89, .4); padding-right: 6px; }
+.payrow.chq .chq-to { display: block; font-size: 10.5px; color: #5C7A66; font-style: italic; margin-bottom: 2px; }
+.payrow.chq .chq-box { display: inline-block; padding: 1px 8px; border: 1px solid rgba(60, 120, 89, .45); border-radius: 3px; background: rgba(255, 255, 255, .55); }
+.payrow.chq .chq-sig { position: absolute; right: 44px; bottom: 6px; width: 70px; height: 14px; fill: none; stroke: #1E2A55; stroke-width: 1.2; stroke-linecap: round; opacity: .55; pointer-events: none; }
+.payrow.chq.wait { opacity: .85; }
+/* the gold "Recebido" seal */
+.pago.gseal { right: 132px; width: 54px; height: 54px; padding: 0; border: 0; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; mix-blend-mode: normal; transform: translateY(-50%) rotate(-12deg);
+  background: radial-gradient(circle at 34% 30%, #FFF2C6, #E3BD6A 45%, #A8833F 80%); box-shadow: 0 0 0 2px #D9B66C, 0 0 0 3.5px rgba(110, 79, 26, .5), 0 3px 6px rgba(0, 0, 0, .3), inset 0 0 0 4px rgba(255, 245, 210, .35); color: #5A3E0E; opacity: .92; }
+.pago.gseal b { font: 800 8px/1 var(--sans); letter-spacing: .12em; text-transform: uppercase; }
+.pago.gseal small { font: 600 7.5px/1 var(--sans); letter-spacing: .02em; }
+@media (max-width: 520px) { .pago.gseal { right: 124px; width: 46px; height: 46px; } .payrow.chq .chq-sig { display: none; } }
+/* the glass jar of coins */
+.jar-w { display: flex; align-items: flex-end; gap: 10px; }
+.jar { width: 48px; height: 62px; flex: none; overflow: visible; }
+.jar .jg { fill: rgba(255, 255, 255, .06); stroke: rgba(255, 245, 225, .55); stroke-width: 1.2; }
+.jar .jl { fill: url(#spg); fill: #CDA75E; stroke: #8A6420; stroke-width: .6; }
+.jar .js { fill: none; stroke: rgba(255, 255, 255, .45); stroke-width: 1.4; stroke-linecap: round; }
+.jar .jc { fill: #E3BD6A; stroke: #8A6420; stroke-width: .6; animation: jarCoin .5s cubic-bezier(.3, 1.3, .5, 1) both; animation-delay: calc(var(--i) * 70ms + .25s); }
+@keyframes jarCoin { from { transform: translateY(-70px); opacity: 0; } }
+/* the gold envelope that opens */
+.envl { position: fixed; inset: 0; z-index: 70; display: grid; place-items: center; background: rgba(12, 2, 6, .55); -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px); animation: spFadeIn .25s ease; cursor: pointer; }
+.envl.bye { opacity: 0; transition: opacity .35s ease; }
+.ev-box { position: relative; width: 250px; height: 160px; margin-top: 60px; }
+.ev-box > i, .ev-card { position: absolute; display: block; }
+.ev-back { inset: 0; border-radius: 8px; background: linear-gradient(160deg, #C9A050, #8A6420); }
+.ev-front { inset: 0; border-radius: 8px; z-index: 3; background: linear-gradient(160deg, #F0D48E, #C9A050); clip-path: polygon(0 0, 50% 52%, 100% 0, 100% 100%, 0 100%); box-shadow: inset 0 0 0 1px rgba(255, 245, 210, .5); }
+.ev-flap { left: 0; right: 0; top: 0; height: 90px; z-index: 4; background: linear-gradient(180deg, #F6E0A4, #D9B66C); clip-path: polygon(0 0, 100% 0, 50% 100%); transform-origin: 50% 0; animation: evFlap .5s ease .35s forwards; }
+.ev-seal { left: 50%; top: 72px; width: 30px; height: 30px; margin-left: -15px; z-index: 5; border-radius: 50%; background: radial-gradient(circle at 36% 32%, #D9566C, #9C1F36 58%, #5A0E1C); box-shadow: 0 2px 4px rgba(0, 0, 0, .4); animation: evSeal .3s ease .25s forwards; }
+.ev-card { left: 14px; right: 14px; top: 14px; height: 130px; z-index: 2; border-radius: 6px; padding: 14px 12px; text-align: center; color: #23382B; background: linear-gradient(160deg, #F5F8EC, #E2ECD4); box-shadow: 0 4px 10px rgba(0, 0, 0, .25); animation: evCard .7s cubic-bezier(.3, 1.3, .5, 1) .75s forwards; }
+.ev-card small { display: block; font-size: 11px; color: #5C7A66; letter-spacing: .04em; } .ev-card b { display: block; font: 600 32px/1.15 var(--display); margin: 6px 0 4px; color: #1F4D33; } .ev-card span { font-size: 12px; color: #4A6252; }
+@keyframes evFlap { to { transform: rotateX(180deg); z-index: 1; } }
+@keyframes evSeal { to { transform: scale(.2); opacity: 0; } }
+@keyframes evCard { to { transform: translateY(-112px); z-index: 6; } }
+/* ================= round of 50: Notícias ================= */
+/* an old newspaper masthead */
+.nw-root .nw-mast { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; margin: -4px -4px 14px; padding: 10px 12px 9px; text-align: center; color: #2A1A14; border-radius: 8px;
+  background: repeating-linear-gradient(0deg, rgba(90, 60, 30, .03) 0 1px, transparent 1px 3px), linear-gradient(170deg, #F6EEDC, #E8DCC0); box-shadow: inset 0 0 0 1px rgba(90, 60, 30, .25), 0 6px 14px -8px rgba(0, 0, 0, .6); }
+.nw-root .nw-mast b { font: 400 clamp(26px, 7vw, 38px)/1 var(--display); letter-spacing: .02em; padding: 5px 0 4px; width: 100%; border-top: 3px double rgba(42, 26, 20, .75); border-bottom: 1px solid rgba(42, 26, 20, .6); }
+.nw-root .nw-mast span { font: 500 10.5px/1.3 var(--sans); letter-spacing: .1em; color: #5A4636; }
+.nw-root .nw-mast span:first-child { font-style: italic; letter-spacing: .04em; }
+/* a red wax seal "Alto impacto" on the next news */
+.nw-root .nw-first { position: relative; }
+.nw-root .nw-first .nf-row { padding-right: 50px; }
+.nw-root .nw-wax { position: absolute; right: 10px; top: -12px; z-index: 3; width: 58px; height: 58px; display: grid; place-items: center; transform: rotate(10deg); pointer-events: none;
+  border-radius: 47% 53% 50% 50% / 52% 48% 52% 48%; background: radial-gradient(circle at 36% 32%, #D9566C, #A8213C 50%, #6A0F22); box-shadow: 0 3px 6px rgba(0, 0, 0, .45), inset 0 0 0 4px rgba(120, 10, 30, .55), inset 0 0 0 5px rgba(255, 170, 185, .22); }
+.nw-root .nw-wax b { font: 800 7.5px/1.15 var(--sans); letter-spacing: .1em; text-transform: uppercase; text-align: center; color: rgba(255, 220, 226, .9); text-shadow: 0 -1px 0 rgba(0, 0, 0, .35); }
+/* the hourglass of gold sand next to the countdown */
+.nw-root .nf-time { display: inline-flex; align-items: center; gap: 8px; }
+.nw-hg { width: 24px; height: 38px; flex: none; overflow: visible; }
+.nw-hg .hg-cap { fill: #CDA75E; stroke: #8A6420; stroke-width: .6; }
+.nw-hg .hg-glass { fill: rgba(255, 255, 255, .08); stroke: rgba(255, 245, 225, .65); stroke-width: 1; }
+.nw-hg .hg-top, .nw-hg .hg-bot { fill: #E3BD6A; transition: y 1s linear, height 1s linear; }
+.nw-hg .hg-run { stroke: #F3D98E; stroke-width: 1.1; stroke-dasharray: 1.5 2; animation: hgRun .6s linear infinite; }
+@keyframes hgRun { to { stroke-dashoffset: -7; } }
+/* a wall clock on the time of the news */
+.nw-root .nw-wclk { position: static; flex: none; display: flex; flex-direction: column; align-items: center; gap: 2px; margin-left: 6px; pointer-events: none; }
+.nw-wclk svg { width: 44px !important; height: 44px !important; }
+@media (min-width: 521px) { .nw-root .nw-wax { top: -20px; right: auto; left: 132px; width: 50px; height: 50px; } .nw-root .nw-first .nf-row { padding-right: 0; } }
+.nw-wclk svg { width: 52px; height: 52px; filter: drop-shadow(0 4px 6px rgba(0, 0, 0, .45)); }
+.nw-wclk .wc-rim { fill: none; stroke: #CDA75E; stroke-width: 2.4; } .nw-wclk .wc-face { fill: #FBF5E6; stroke: rgba(138, 100, 32, .4); stroke-width: .6; }
+.nw-wclk .wc-t line { stroke: #3A2A20; stroke-width: 1; stroke-linecap: round; } .nw-wclk .wc-h { stroke: #2A1A14; stroke-width: 2.4; stroke-linecap: round; } .nw-wclk .wc-m { stroke: #2A1A14; stroke-width: 1.5; stroke-linecap: round; }
+.nw-wclk .wc-s { stroke: #B03050; stroke-width: .8; } .nw-wclk .wc-c { fill: #CDA75E; }
+.nw-wclk small { font: 600 10px/1 var(--sans); color: var(--gold); letter-spacing: .04em; }
+@media (max-width: 520px) { .nw-wclk svg { width: 38px !important; height: 38px !important; } .nw-root .nw-wclk small { display: none; } }
+/* the US flag waves on holidays */
+.nw-root .nw-d.hol .nw-flag, .nw-root .nw-legend .nw-flag { transform-origin: 0 50%; animation: flagWave 2.4s ease-in-out infinite; }
+@keyframes flagWave { 0%, 100% { transform: perspective(60px) rotateY(0) skewY(0); } 33% { transform: perspective(60px) rotateY(-14deg) skewY(-3deg); } 66% { transform: perspective(60px) rotateY(8deg) skewY(2deg); } }
+/* days gone by on yellowed paper */
+.nw-root .nw-d.past:not(.out) { background: radial-gradient(120% 100% at 50% 50%, rgba(255, 248, 225, .0) 55%, rgba(170, 120, 50, .14)), linear-gradient(170deg, #EFE4C8, #E2D3AE) !important; color: #5A4636 !important; filter: saturate(.85); }
+@media (prefers-reduced-motion: reduce) { .nw-hg .hg-run, .nw-root .nw-flag { animation: none !important; } }
+@media (prefers-reduced-motion: reduce) { .cd .hand path { animation: none; stroke-dashoffset: 0; } .lc .lnrun, .dfacet .dglint { display: none; } .vz-coins i, .jar .jc { animation: none; } }
 </style>
 
 <!-- opening screen: the icon, the title and the quote of the day (once per visit) -->
@@ -2036,6 +2344,9 @@ body.night .lrow.wk-now.d-zero { background-image: linear-gradient(100deg, #CFB3
   <div class="sp-stars" aria-hidden="true"></div>
   <div class="sp-tips" aria-hidden="true"><i style="left:97.5%;top:28.4%"></i><i style="left:2.5%;top:79.6%;animation-delay:1.5s"></i><i style="left:97.5%;top:87.7%;animation-delay:1.65s"></i></div>
   <div class="sp-dust" aria-hidden="true"></div>
+  <i class="sp-moon" aria-hidden="true"></i>
+  <canvas class="sp-dt" aria-hidden="true"></canvas>
+  <div class="sp-ribbon" aria-hidden="true"><i class="rh"></i><i class="rv"></i><svg class="bow" viewBox="0 0 120 70"><defs><linearGradient id="spbw" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F6E0A4"/><stop offset=".5" stop-color="#CDA75E"/><stop offset="1" stop-color="#8A6420"/></linearGradient></defs><path class="bl" d="M60 35C44 14 18 6 10 16 4 26 18 44 60 35z" fill="url(#spbw)"/><path class="br" d="M60 35C76 14 102 6 110 16 116 26 102 44 60 35z" fill="url(#spbw)"/><path class="tl" d="M56 37 40 66 50 62 58 69 60 38z" fill="url(#spbw)"/><path class="tr" d="M64 37 80 66 70 62 62 69 60 38z" fill="url(#spbw)"/><rect x="52" y="28" width="16" height="15" rx="5" fill="url(#spbw)"/></svg></div>
   <svg class="sp-icon" viewBox="0 0 120 120">
     <defs><linearGradient id="spg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F3DDA0"/><stop offset="1" stop-color="#A8833F"/></linearGradient>
       <radialGradient id="spglow"><stop offset="0" stop-color="#F3D98E" stop-opacity=".42"/><stop offset=".45" stop-color="#CDA75E" stop-opacity=".14"/><stop offset="1" stop-color="#CDA75E" stop-opacity="0"/></radialGradient>
@@ -2064,6 +2375,7 @@ body.night .lrow.wk-now.d-zero { background-image: linear-gradient(100deg, #CFB3
         <text x="60" y="65.5" text-anchor="middle" font-family="DM Serif Display, Didot, serif" font-size="15" fill="#F3D98E">DT</text></g></defs>
     <g class="sp-med" aria-hidden="true"><g class="sp-medl"><use href="#spmed" clip-path="url(#spcl)"/></g><g class="sp-medr"><use href="#spmed" clip-path="url(#spcr)"/></g><path class="sp-crack" pathLength="1" d="M60 41l-3 6 4 4-3 5 3 4-4 5 3 5-1 7" fill="none" stroke="#2A0510" stroke-width="1.4" stroke-linejoin="round"/></g>
   </svg>
+  <div class="sp-candle" aria-hidden="true"><i class="cg"></i><i class="fl"></i><i class="wk"></i><i class="wx"></i></div>
   <div class="sp-title">Diário <em>de</em> Trading</div>
   <svg class="sp-sign" viewBox="0 0 240 26" aria-hidden="true"><path pathLength="1" d="M6 18c22-10 40-12 58-4 14 6 26 7 40-1 10-6 18-9 26-3 6 5-2 11-6 6-3-5 8-10 22-8 22 3 44 6 82-4"/></svg>
   <div class="sp-date" id="spDate"></div>
@@ -2655,6 +2967,49 @@ body.night .lrow.wk-now.d-zero { background-image: linear-gradient(100deg, #CFB3
     const du = sp.querySelector(".sp-dust"); if (du) { let h = ""; for (let i = 0; i < 16; i++) h += '<i style="left:' + (4 + Math.random() * 92).toFixed(1) + '%;animation-delay:' + (1.3 + Math.random() * 1.5).toFixed(2) + 's;animation-duration:' + (2.4 + Math.random() * 1.6).toFixed(2) + 's;--sx:' + ((Math.random() - .5) * 70).toFixed(0) + 'px;--r:' + Math.round(180 + Math.random() * 360) + 'deg;--sc:' + (.7 + Math.random() * .6).toFixed(2) + '"></i>'; du.innerHTML = h; }
     const st = sp.querySelector(".sp-stars"); if (st) { let h = ""; for (let i = 0; i < 26; i++) { const z = 1 + Math.round(Math.random() * 2); h += '<i style="left:' + (Math.random() * 100).toFixed(1) + '%;top:' + (Math.random() * 100).toFixed(1) + '%;width:' + z + 'px;height:' + z + 'px;animation-delay:' + (.2 + i * .07).toFixed(2) + 's"></i>'; } st.innerHTML = h; }
     try { const dd = document.getElementById("spDate"); if (dd) dd.textContent = new Intl.DateTimeFormat("pt-PT", { weekday: "long", day: "numeric", month: "long" }).format(d); } catch (_) {}
+    // at night the opening is a moonlit one
+    { const hh = d.getHours(); if (hh >= 20 || hh < 7) sp.classList.add("night"); }
+    const rmS = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    // gold dust gathers into "DT", then blows away
+    try { (function () {
+      const cv = sp.querySelector(".sp-dt"); if (!cv || rmS) return;
+      const W = Math.min(window.innerWidth || 0, 480), H = 120; if (W < 100) return; const dpr = Math.min(2, window.devicePixelRatio || 1);
+      cv.width = W * dpr; cv.height = H * dpr; cv.style.width = W + "px"; cv.style.height = H + "px";
+      const x = cv.getContext("2d"); if (!x) return; x.scale(dpr, dpr);
+      const off = document.createElement("canvas"); off.width = W; off.height = H; const o = off.getContext("2d");
+      o.fillStyle = "#000"; o.textAlign = "center"; o.textBaseline = "middle"; o.font = "400 84px 'DM Serif Display', Didot, Georgia, serif"; o.fillText("DT", W / 2, H / 2 + 4);
+      const px = o.getImageData(0, 0, W, H).data, T = [];
+      for (let yy = 0; yy < H; yy += 3) for (let xx = 0; xx < W; xx += 3) if (px[(yy * W + xx) * 4 + 3] > 120) T.push([xx, yy]);
+      const COL = ["#F6E0A4", "#E7C989", "#CDA75E", "#FFF4D6", "#D9B46A"];
+      const P = T.filter((_, i) => i % Math.max(1, Math.ceil(T.length / 420)) === 0).map(([tx, ty]) => ({ tx, ty, sx: Math.random() * W, sy: H + 20 + Math.random() * 120, ex: tx + (Math.random() - .3) * 260, ey: ty - 40 - Math.random() * 140, r: .7 + Math.random() * 1.1, c: COL[Math.random() * COL.length | 0], dl: Math.random() * .35 }));
+      const t0 = performance.now(), ease = q => 1 - Math.pow(1 - q, 3);
+      (function f(t) {
+        if (!document.contains(cv)) return;
+        const k = (t - t0) / 1000; x.clearRect(0, 0, W, H);
+        for (const p of P) {
+          let X, Y, a = 1;
+          if (k < 1.5) { const q = ease(Math.max(0, Math.min(1, (k - .2 - p.dl) / 1.1))); X = p.sx + (p.tx - p.sx) * q; Y = p.sy + (p.ty - p.sy) * q; a = Math.min(1, q * 1.6); }
+          else if (k < 2.5) { X = p.tx + Math.sin(k * 6 + p.tx) * .3; Y = p.ty; }
+          else { const q = ease(Math.min(1, (k - 2.5) / 1)); X = p.tx + (p.ex - p.tx) * q; Y = p.ty + (p.ey - p.ty) * q; a = 1 - q; }
+          x.globalAlpha = Math.max(0, a); x.fillStyle = p.c; x.beginPath(); x.arc(X, Y, p.r, 0, 6.29); x.fill();
+        }
+        if (k < 3.6) requestAnimationFrame(f); else x.clearRect(0, 0, W, H);
+      })(t0);
+    })(); } catch (_) {}
+    // a soft bell when the app opens (only when switched on in Configurações)
+    (function () {
+      let on = false; try { on = localStorage.getItem("diario-som-abrir") === "1"; } catch (_) {}
+      if (!on) return;
+      try {
+        const A = window.AudioContext || window.webkitAudioContext; if (!A) return; const ac = new A();
+        let done = false;
+        const go = () => { if (done || ac.state !== "running") return; done = true; const t = ac.currentTime + .05; [[880, .5], [1320, .22], [1760, .12], [2637, .06]].forEach(([fq, g]) => { const os = ac.createOscillator(), gn = ac.createGain(); os.type = "sine"; os.frequency.value = fq; gn.gain.setValueAtTime(0, t); gn.gain.linearRampToValueAtTime(g * .5, t + .01); gn.gain.exponentialRampToValueAtTime(.0001, t + 2.4); os.connect(gn); gn.connect(ac.destination); os.start(t); os.stop(t + 2.5); }); };
+        if (ac.state === "running") go(); else ac.resume().then(go).catch(() => {});
+        // phones only allow sound after a tap: if it could not ring now, it rings on the first tap
+        const once = () => { document.removeEventListener("pointerdown", once, true); if (!done) ac.resume().then(go).catch(() => {}); };
+        setTimeout(() => { if (!done) document.addEventListener("pointerdown", once, true); }, 300);
+      } catch (_) {}
+    })();
     requestAnimationFrame(() => sp.classList.add("in"));
     let closing = false;
     const close = () => {
@@ -3072,7 +3427,8 @@ body.night .lrow.wk-now.d-zero { background-image: linear-gradient(100deg, #CFB3
   }
   function panelHtml(s, days) {
     const ids = days.map(iso), t = sum(s.key, ids), notes = s.acct;
-    let h = ptabHtml(s) + '<div class="pbody glass g-' + s.role + '"><i class="fili" aria-hidden="true"></i><i class="rings" aria-hidden="true"></i>' + (SEASON_NOW === "natal" ? tableLights(s.role) : "");
+    const aged = view.y * 12 + view.m < now.getFullYear() * 12 + now.getMonth();
+    let h = ptabHtml(s) + '<div class="pbody glass g-' + s.role + (aged ? " aged" : "") + '"><i class="fili" aria-hidden="true"></i><i class="rings" aria-hidden="true"></i><i class="mcorn" aria-hidden="true"><b></b><b></b><b></b><b></b></i>' + (SEASON_NOW === "natal" ? tableLights(s.role) : "");
     const wkNow = isoWeek(now);
     const isCur = view.y === now.getFullYear() && view.m === now.getMonth();
     h += '<div class="phead"><div><h2' + (isCur ? ' class="cur"' : '') + '>' + cap(MONTHS[view.m]) + ' <em>' + view.y + '</em></h2>' +
@@ -3089,7 +3445,7 @@ body.night .lrow.wk-now.d-zero { background-image: linear-gradient(100deg, #CFB3
       for (const d of g.days) {
         const id = iso(d), e = entry(s.key, id), p = pctOf(e);
         const base = (wkOpen ? "" : " wk-shut") + (SHOW_BE ? " hasbe" : "") + (id === todayId ? " today" : id > todayId ? " future" : "") + (g.w === wkNow && id !== todayId && Math.abs(d - now) < 8 * 864e5 ? " wk-now" : "");
-        const dateHtml = '<div class="date"><span class="dn">' + d.getDate() + '</span><span class="dw">' + DOW[d.getDay()] + '</span>' + (s.acct ? "" : newsMark(id)) + '</div>';
+        const dateHtml = '<div class="date"><span class="dn">' + d.getDate() + '</span><span class="dw">' + DOW[d.getDay()] + '</span>' + (s.acct ? "" : newsMark(id)) + (e.note ? '<i class="wax" aria-hidden="true"></i>' : '') + '</div>';
         const nbHtml = notes ? noteBtn(s.key, id, e, d) : "", ex = notes ? " cta" : " estr";
         const cbHtml = notes ? '<button type="button" class="nb' + (e.risk ? " has" : "") + '" data-calc="' + s.key + '|' + id + '" aria-label="Calculadora de ' + d.getDate() + ' de ' + MONTHS[d.getMonth()] + '"' + (e.risk ? ' data-tip="calc" data-risk="' + EUR.format(e.risk) + '" data-pct="' + fmt(p) + '"' + (e.com ? ' data-com="−' + EUR.format(e.com) + '"' : '') + ' data-eur="' + eur(euroOf(e)) + '" data-cls="' + cls(euroOf(e)) + '"' : ' data-tip="empty" data-tv="Calcular em euros"') + '>' + CALC + '</button>' : "";
         const offB = notes ? "" : '<button type="button" class="nb' + (e.off ? " has" : "") + '" data-offday="' + s.key + '|' + id + '" aria-label="Não era para operar a ' + d.getDate() + ' de ' + MONTHS[d.getMonth()] + '" data-tip="empty" data-tv="' + (e.off ? "Voltar a contar este dia" : "Não era para operar") + '">' + PEN + '</button>';
@@ -3109,7 +3465,7 @@ body.night .lrow.wk-now.d-zero { background-image: linear-gradient(100deg, #CFB3
       const we = notes ? eurSum(s.key, wids) : { n: 0 };
       const weHtml = we.n ? '<span class="weur ' + cls(we.v) + '" data-tip="plain" data-tv="Soma das calculadoras da semana (' + we.n + (we.n === 1 ? " dia" : " dias") + ')">' + CALC_SM + eur(we.v) + '</span>' : "";
       const split = wk5.some(x => x.getMonth() !== view.m);
-      h += '<div class="wrow wk-tog' + (wkOpen ? "" : " shut") + '" data-wkt="' + wkKey + '"' + (split ? ' data-tip="plain" data-tv="Semana completa (' + weekLabel(wk5) + '), conta também os dias do outro mês"' : '') + '><div class="wl"><i class="wk-chev" aria-hidden="true"></i><b>Semana ' + g.w + '</b>' + weekLabel(wk5) + '</div>' +
+      h += '<div class="wrow wk-tog' + (wkOpen ? "" : " shut") + '" data-wkt="' + wkKey + '"' + (split ? ' data-tip="plain" data-tv="Semana completa (' + weekLabel(wk5) + '), conta também os dias do outro mês"' : '') + '><i class="wbow" aria-hidden="true"></i><div class="wl"><i class="wk-chev" aria-hidden="true"></i><b>Semana ' + g.w + '</b>' + weekLabel(wk5) + '</div>' +
         '<div class="wr"><span class="wtx">' + wt.tp + ' TP, ' + wt.sl + ' SL, ' + (SHOW_BE && wt.be ? wt.be + ' BE, ' : '') + wt.to + ' TO</span>' + weHtml + '<span class="wp ' + cls(wt.pct) + '">' + fmt(wt.pct) + '</span></div>' + (wt.tp + wt.sl ? '<i class="wbar ' + cls(wt.pct) + '" style="--w:' + Math.max(6, Math.min(100, Math.abs(wt.pct) * 1.4)) + '%" aria-hidden="true"></i>' : '') + '</div>';
       if (bd) h += '</div>';
     }
@@ -3122,7 +3478,7 @@ body.night .lrow.wk-now.d-zero { background-image: linear-gradient(100deg, #CFB3
     if (calMode === "y") return calYearHtml(s);
     const days = weekdays(view.y, view.m), ids = days.map(iso), t = sum(s.key, ids);
     const tradedDays = ids.filter(id => traded(s.key, id)).length;
-    let h = '<div class="cal glass g-' + s.role + '"><i class="fili" aria-hidden="true"></i>', ci = 0;
+    let h = '<div class="cal glass g-' + s.role + '"><i class="consts" aria-hidden="true"></i><i class="fili" aria-hidden="true"></i>', ci = 0;
     h += '<div class="cal-head"><div><div class="kind">Calendário</div><h2>' + cap(MONTHS[view.m]) + ' <em>' + view.y + '</em></h2>' +
       '<div class="stats"><b>' + tradedDays + '</b> dias registados, <b>' + t.tp + '</b> TP, <b>' + t.sl + '</b> SL</div></div>' +
       '<div class="cal-hr">' + calModeBtns() + '<div class="big ' + cls(t.pct) + '">' + fmt(t.pct) + '</div></div></div>';
@@ -3144,7 +3500,8 @@ body.night .lrow.wk-now.d-zero { background-image: linear-gradient(100deg, #CFB3
           const e = entry(s.key, id), p = pctOf(e), has = traded(s.key, id);
           const c = (e.off ? " off" : has ? " d-" + cls(p) : "") + (id === todayId ? " today" : id > todayId ? " future" : "") + (!s.acct && has && p >= BIG_DAY ? " star" : "");
           const md = moods.get(id);
-          let inner = '<span class="cn">' + d.getDate() + '</span><span class="cmood' + (md ? " set" : "") + '" data-mood="' + id + '" role="button" tabindex="0" aria-label="Humor de ' + d.getDate() + ' de ' + MONTHS[view.m] + (md ? ": " + MOOD[md][2] : "") + '"' + (md ? ' data-tip="plain" data-tv="Humor: ' + MOOD[md][2] + '"' : ' data-tip="empty" data-tv="Como te sentiste?"') + '>' + (md ? moodImg(md, "cm-i") : '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><circle cx="8" cy="8" r="6.2"/><path d="M5.6 9.6a3 3 0 0 0 4.8 0"/><path d="M6 6.4h.01M10 6.4h.01" stroke-width="1.8"/></svg>') + '</span>';
+          let inner = (id === todayId ? '<svg class="hand" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M54 5C80 4 97 22 96 50 95 78 75 96 48 95 21 94 4 76 5 49 6 23 27 6 56 8 72 9 86 16 92 27"/></svg>' : '') + (has && !e.off && p > 0 ? '<i class="leaf" aria-hidden="true"></i>' : '') +
+            '<span class="cn">' + d.getDate() + '</span><span class="cmood' + (md ? " set" : "") + '"' + (md ? ' style="--gem:' + (GEM[md] || "#C9A55E") + '"' : '') + ' data-mood="' + id + '" role="button" tabindex="0" aria-label="Humor de ' + d.getDate() + ' de ' + MONTHS[view.m] + (md ? ": " + MOOD[md][2] : "") + '"' + (md ? ' data-tip="plain" data-tv="Humor: ' + MOOD[md][2] + '"' : ' data-tip="empty" data-tv="Como te sentiste?"') + '>' + (md ? moodImg(md, "cm-i") : '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"><circle cx="8" cy="8" r="6.2"/><path d="M5.6 9.6a3 3 0 0 0 4.8 0"/><path d="M6 6.4h.01M10 6.4h.01" stroke-width="1.8"/></svg>') + '</span>';
           if (e.note) inner += '<svg class="cnote" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.8 2.6l2.6 2.6L6 12.6 2.8 13.2l.6-3.2z"/></svg>';
           if (e.off) inner += '<span class="coff">Sem operar</span>';
           else if (has) inner += '<span class="cr ' + cls(p) + '">' + fmt(p) + '</span><span class="cx">' + (s.acct && e.risk ? eur(euroOf(e)) : e.tp + ' TP, ' + e.sl + ' SL') + '</span>';
@@ -3205,6 +3562,8 @@ body.night .lrow.wk-now.d-zero { background-image: linear-gradient(100deg, #CFB3
     g = g.replace("</defs>", '<filter id="' + gid + 'b" x="-5%" y="-30%" width="110%" height="160%"><feGaussianBlur stdDeviation="3"/></filter></defs>');
     g += '<path d="' + line + '" class="lnr" transform="translate(0 7)" filter="url(#' + gid + 'b)"/>';
     g += '<path d="' + line + '" class="ln" pathLength="1"/>';
+    // a little light that runs along the gold thread
+    g += '<path d="' + line + '" class="lnrun" pathLength="1"/>';
     const li = pts.length - 1;
     if (o.labels) {
       // the value written on the line: every point when they fit, otherwise every few points (always the last)
@@ -3257,7 +3616,7 @@ body.night .lrow.wk-now.d-zero { background-image: linear-gradient(100deg, #CFB3
       segs += '<circle r="' + R + '" cx="50" cy="50" fill="none" stroke="' + p.c + '" stroke-width="12" stroke-dasharray="' + Math.max(0, len - gap).toFixed(2) + ' ' + C.toFixed(2) + '" stroke-dashoffset="' + (-off).toFixed(2) + '" class="dseg" style="--c:' + C.toFixed(2) + ';animation-delay:' + (i * .35) + 's"/>';
       off += len;
     });
-    return '<div class="dnut"><svg viewBox="0 0 100 100" role="img" aria-label="' + esc(small + ": " + big) + '"><defs><linearGradient id="dsh' + du + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".6"/><stop offset=".35" stop-color="#fff" stop-opacity=".08"/><stop offset=".6" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".22"/></linearGradient></defs><circle r="' + R + '" cx="50" cy="50" fill="none" stroke="rgba(58,16,24,.08)" stroke-width="12"/><g transform="rotate(-90 50 50)">' + segs + '</g>' + (tot ? '<g class="dsheen"><circle r="' + R + '" cx="50" cy="50" fill="none" stroke="url(#dsh' + du + ')" stroke-width="12"/><circle r="' + (R + 6) + '" cx="50" cy="50" fill="none" stroke="rgba(255,248,225,.5)" stroke-width=".7"/><circle r="' + (R - 6) + '" cx="50" cy="50" fill="none" stroke="rgba(255,248,225,.35)" stroke-width=".6"/></g>' : '') + '<text x="50" y="50" text-anchor="middle" class="dbig">' + esc(big) + '</text><text x="50" y="64" text-anchor="middle" class="dsm">' + esc(small) + '</text></svg>' +
+    return '<div class="dnut"><svg viewBox="0 0 100 100" role="img" aria-label="' + esc(small + ": " + big) + '"><defs><linearGradient id="dsh' + du + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".6"/><stop offset=".35" stop-color="#fff" stop-opacity=".08"/><stop offset=".6" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".22"/></linearGradient></defs><circle r="' + R + '" cx="50" cy="50" fill="none" stroke="rgba(58,16,24,.08)" stroke-width="12"/><g transform="rotate(-90 50 50)">' + segs + '</g>' + (tot ? '<g class="dsheen"><circle r="' + R + '" cx="50" cy="50" fill="none" stroke="url(#dsh' + du + ')" stroke-width="12"/><circle r="' + (R + 6) + '" cx="50" cy="50" fill="none" stroke="rgba(255,248,225,.5)" stroke-width=".7"/><circle r="' + (R - 6) + '" cx="50" cy="50" fill="none" stroke="rgba(255,248,225,.35)" stroke-width=".6"/></g><g class="dfacet">' + Array.from({ length: 16 }, (_, i) => { const a = i * Math.PI / 8; return '<line x1="' + (50 + Math.cos(a) * (R - 6)).toFixed(2) + '" y1="' + (50 + Math.sin(a) * (R - 6)).toFixed(2) + '" x2="' + (50 + Math.cos(a) * (R + 6)).toFixed(2) + '" y2="' + (50 + Math.sin(a) * (R + 6)).toFixed(2) + '"/>'; }).join("") + '<circle r="' + R + '" cx="50" cy="50" fill="none" stroke="rgba(255,255,255,.18)" stroke-width=".5"/><path class="dglint" d="M' + (50 - R * .64).toFixed(1) + ' ' + (50 - R * .77).toFixed(1) + ' l3 -1.5 l1.2 3.4z"/></g>' : '') + '<text x="50" y="50" text-anchor="middle" class="dbig">' + esc(big) + '</text><text x="50" y="64" text-anchor="middle" class="dsm">' + esc(small) + '</text></svg>' +
       '<div class="dleg">' + parts.map(p => '<span><i style="background:' + p.c + '"></i>' + p.v + ' ' + esc(p.l) + '</span>').join("") + '</div></div>';
   }
 
@@ -3317,7 +3676,7 @@ body.night .lrow.wk-now.d-zero { background-image: linear-gradient(100deg, #CFB3
   };
   const tileIc = l => /^Média/.test(l) ? "avg" : /^Melhor/.test(l) ? "up" : /^Pior/.test(l) ? "down" : /queda|Distância/.test(l) ? "drop" : /semana/.test(l) ? "week" : /seguidos a ganhar|verdes/.test(l) ? "fire" : /seguidos a perder/.test(l) ? "cloud" : /sem operar/.test(l) ? "moon" : /Lucro|Crescimento/.test(l) ? "money" : /Risco/.test(l) ? "pct" : "";
   const CROWN = () => { const cu = Math.random().toString(36).slice(2, 7); return '<svg class="crown" viewBox="0 0 24 16" aria-hidden="true"><path d="M2 14l1.6-10 5 5L12 2l3.4 7 5-5L22 14z" fill="url(#crg' + cu + ')"/><defs><linearGradient id="crg' + cu + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFF0B8"/><stop offset=".5" stop-color="#E3BD6A"/><stop offset="1" stop-color="#A8833F"/></linearGradient></defs></svg>'; };
-  function tile(label, value, sub, c) { const k = tileIc(label); return '<div class="st"><span class="sl">' + (k ? '<svg class="sti" viewBox="0 0 24 24" aria-hidden="true">' + TILE_IC[k] + '</svg>' : '') + label + '</span><b class="' + (c || "") + '">' + value + (label === "Melhor dia" && value !== "—" ? CROWN() : "") + '</b>' + (sub ? '<small>' + sub + '</small>' : "") + '</div>'; }
+  function tile(label, value, sub, c, back) { const k = tileIc(label); return '<div class="st' + (back ? ' flips" data-flip role="button" tabindex="0" aria-label="' + esc(label) + ': ' + esc(value) + '. Toca para ver em euros"' : '"') + '>' + (back ? '<span class="st-back"><span class="sl">' + label + ' em euros</span><b class="' + back.c + '">' + back.v + '</b><small>' + back.sub + '</small></span>' : '') + '<span class="sl">' + (k ? '<svg class="sti" viewBox="0 0 24 24" aria-hidden="true">' + TILE_IC[k] + '</svg>' : '') + label + '</span><b class="' + (c || "") + '">' + value + (label === "Melhor dia" && value !== "—" ? CROWN() : "") + '</b>' + (sub ? '<small>' + sub + '</small>' : "") + '</div>'; }
   // the hit rate as a gold speedometer
   function gauge(win, tp, sl) {
     const v = win == null ? 0 : Math.max(0, Math.min(100, win)), R = 38, a = Math.PI * R;
@@ -3362,9 +3721,13 @@ body.night .lrow.wk-now.d-zero { background-image: linear-gradient(100deg, #CFB3
     h = h.replace('<div class="hero">', sec("Resumo", "o essencial deste período") + '<div class="hero">');
     h += storyHtml(r);
     h += '<div class="tiles">';
-    h += tile("Média por dia", fmt1(r.avg), "nos dias em que operaste", cls(r.avg));
-    h += tile("Melhor dia", fmt(r.best.p), dShort(r.best.d), cls(r.best.p));
-    h += tile("Pior dia", fmt(r.worst.p), dShort(r.worst.d), cls(r.worst.p));
+    // Fusion / Prop: the tiles turn over to show the same numbers in euros
+    const eDay = d => { if (!s.acct || !r.n) return null; const e = entry(s.key, iso(d)); return e.risk ? euroOf(e) : null; };
+    const bk = (v, sub) => v == null ? null : { v: eur(v), c: cls(v), sub };
+    const bAvg = s.acct && r.eurN ? bk(r.eur / r.eurN, "média dos " + r.eurN + (r.eurN === 1 ? " dia" : " dias") + " com risco escrito") : null;
+    h += tile("Média por dia", fmt1(r.avg), "nos dias em que operaste", cls(r.avg), bAvg);
+    h += tile("Melhor dia", fmt(r.best.p), dShort(r.best.d), cls(r.best.p), bk(eDay(r.best.d), dShort(r.best.d) + ", depois da comissão"));
+    h += tile("Pior dia", fmt(r.worst.p), dShort(r.worst.d), cls(r.worst.p), bk(eDay(r.worst.d), dShort(r.worst.d) + ", depois da comissão"));
     h += tile("Maior queda", r.dd ? "−" + NUM1.format(r.dd) + "%" : "0%", "o máximo que desceste desde o ponto mais alto", r.dd ? "neg" : "");
     if (r.bw && per !== "m") { h += tile("Melhor semana", fmt(r.bw.v), "semana " + r.bw.w, cls(r.bw.v)); h += tile("Pior semana", fmt(r.ww.v), "semana " + r.ww.w, cls(r.ww.v)); }
     h += tile("Dias seguidos a ganhar", String(r.streakP), "o máximo seguido");
@@ -3582,7 +3945,10 @@ body.night .lrow.wk-now.d-zero { background-image: linear-gradient(100deg, #CFB3
     const curDD = C.peak && C.last != null ? (C.peak - C.last) / C.peak * 100 : 0;
     let h = '<section class="acc-card glass g-' + (isProp(a) ? "prop" : "conta") + '">';
     h += '<div class="st-head"><div><div class="kind">Conta</div><h2>' + cap(MONTHS[view.m]) + ' <em>' + view.y + '</em></h2></div>' +
-      '<div class="bank ' + (isProp(a) ? "b-prop" : "b-fusion") + '" aria-label="Saldo atual: ' + (C.last != null ? EUR.format(C.last) : "sem registo") + '"><span class="bk-n">' + esc(acName(a)) + '</span><span class="bk-logo">✦ Diário</span><i class="bk-chip" aria-hidden="true"></i><svg class="bk-nfc" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 4.5a5 5 0 0 1 0 7M8 3a7.5 7.5 0 0 1 0 10M11 1.5a10 10 0 0 1 0 13"/></svg><span class="bk-num" aria-hidden="true">' + (isProp(a) ? "4716" : "5412") + ' •••• •••• ' + String(view.y) + '</span><small>Saldo atual</small><b>' + (C.last != null ? EUR.format(C.last) : "—") + '</b><span class="bk-dots" aria-hidden="true">' + (isProp(a) ? "PROP" : "FUSION") + ' · ' + pad(view.m + 1) + '/' + String(view.y).slice(2) + '</span></div></div>';
+      '<div class="bank ' + (isProp(a) ? "b-prop" : "b-fusion") + '" aria-label="Saldo atual: ' + (C.last != null ? EUR.format(C.last) : "sem registo") + '"><span class="bk-n">' + esc(acName(a)) + '</span><span class="bk-logo">✦ Diário</span><i class="bk-chip" aria-hidden="true"></i><svg class="bk-nfc" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 4.5a5 5 0 0 1 0 7M8 3a7.5 7.5 0 0 1 0 10M11 1.5a10 10 0 0 1 0 13"/></svg><span class="bk-num" aria-hidden="true">' + (isProp(a) ? "4716" : "5412") + ' •••• •••• ' + String(view.y) + '</span><small>Saldo atual</small><b>' + (C.last != null ? EUR.format(C.last) : "—") + '</b><span class="bk-dots" aria-hidden="true">' + (isProp(a) ? "PROP" : "FUSION") + ' · ' + pad(view.m + 1) + '/' + String(view.y).slice(2) + '</span><span class="bk-back" aria-hidden="true"><i class="bk-mag"></i><span class="bk-sig"><b>Carla Campos</b><em>' + (isProp(a) ? "716" : "412") + '</em></span><small>Diário de Trading · ' + esc(acName(a)) + '<br>Toca outra vez para virar</small></span></div></div>';
+    // the balance in a vault display, with a pile of coins that grows with the month
+    { const mpc = mStart ? mp / mStart * 100 : 0, nC = mp > 0 ? Math.min(12, 1 + Math.round(mpc / 2)) : 0;
+      h += '<div class="visor"><div class="vz-l"><small>Cofre · saldo atual</small><b>' + (C.last != null ? EUR.format(C.last) : "— — —") + '</b><span>' + (mStart != null ? "este mês " + eur(mp) : "escreve o início e o fim do dia") + '</span></div><div class="vz-coins" aria-hidden="true">' + Array.from({ length: nC }, (_, i) => '<i style="--i:' + i + '"></i>').join("") + '</div></div>'; }
     // three headline chips: this month, since the start, money already taken out
     const paid = payTotals(a);
     h += '<div class="achips">' +
@@ -3621,7 +3987,7 @@ body.night .lrow.wk-now.d-zero { background-image: linear-gradient(100deg, #CFB3
           '<div class="apr ' + (r && r.profit != null ? cls(r.profit) : "zero") + '"><b>' + (r && r.profit != null ? eur(r.profit) : "—") + '</b><small>' + (r ? pctS(r.pct) : "") + '</small></div>' +
           '<div class="ark">' + fld("risco", e.risco, "Risco") + '<small>' + (r && r.rpct != null ? NUM1.format(r.rpct) + "% do saldo" : "") + '</small></div>' +
           '<button type="button" class="nb' + (extra ? " has" : "") + '" data-acday="' + a + '|' + id + '" aria-label="Depósitos, levantamentos e nota de ' + d.getDate() + ' de ' + MONTHS[d.getMonth()] + '"' + (r && r.nota ? ' data-tip="note" data-tv="' + esc(r.nota.slice(0, 600)) + '"' : ' data-tip="empty" data-tv="Depósito, levantamento ou nota"') + '>' + PEN + '</button>' +
-          (r && (r.dep || r.lev) ? '<div class="amov">' + (r.dep ? '<span>+ depósito ' + EUR.format(r.dep) + '</span>' : '') + (r.lev ? '<span>− levantamento ' + EUR.format(r.lev) + '</span>' : '') + '</div>' : '') +
+          (r && (r.dep || r.lev) ? '<div class="amov">' + (r.dep ? '<span>+ depósito ' + EUR.format(r.dep) + '</span>' : '') + (r.lev ? '<span>− levantamento ' + EUR.format(r.lev) + '</span>' : '') + '</div>' + (r.dep ? '<i class="mstamp dep" aria-hidden="true">Depósito</i>' : '') + (r.lev ? '<i class="mstamp lev' + (r.dep ? " two" : "") + '" aria-hidden="true">Levantamento</i>' : '') : '') +
           '</div>';
       }
       // full Monday–Friday week, also the days that fall in the other month
@@ -3686,7 +4052,12 @@ body.night .lrow.wk-now.d-zero { background-image: linear-gradient(100deg, #CFB3
     const list = pays[a].slice().sort((x, y) => y.dia.localeCompare(x.dia)), T = payTotals(a), last = list.find(p => p.estado !== "pedido");
     const avg = T.n ? T.rec / T.n : 0;
     let h = '<section class="acc-card pag glass g-' + (isProp(a) ? "prop" : "conta") + '">';
-    h += '<div class="st-head"><div><div class="kind">Pagamentos</div><h2>' + acName(a) + '</h2></div><div class="ac-now"><small>Total recebido</small><b>' + EUR.format(T.rec) + '</b></div></div>';
+    // a glass jar that fills with coins as the payouts come in
+    const jl = T.rec > 0 ? Math.min(.9, .12 + Math.log10(1 + T.rec) / 5.2) : 0, nJ = Math.round(jl * 16);
+    const jar = '<svg class="jar" viewBox="0 0 60 76" aria-hidden="true"><defs><clipPath id="jarc' + a.replace(/\W/g, "") + '"><path d="M12 22c-4 4-6 9-6 16v24c0 6 4 10 10 10h28c6 0 10-4 10-10V38c0-7-2-12-6-16z"/></clipPath></defs>' +
+      '<g clip-path="url(#jarc' + a.replace(/\W/g, "") + ')">' + Array.from({ length: nJ }, (_, i) => { const row = Math.floor(i / 4), col = i % 4; return '<ellipse class="jc" style="--i:' + i + '" cx="' + (15 + col * 10 + (row % 2) * 5).toFixed(0) + '" cy="' + (68 - row * 5.2).toFixed(1) + '" rx="5.6" ry="2.6"/>'; }).join("") + '</g>' +
+      '<path d="M12 22c-4 4-6 9-6 16v24c0 6 4 10 10 10h28c6 0 10-4 10-10V38c0-7-2-12-6-16z" class="jg"/><rect x="11" y="12" width="38" height="10" rx="3" class="jl"/><path d="M14 30c-2 4-3 9-3 14" class="js"/></svg>';
+    h += '<div class="st-head"><div><div class="kind">Pagamentos</div><h2>' + acName(a) + '</h2></div><div class="ac-now jar-w">' + jar + '<span><small>Total recebido</small><b>' + EUR.format(T.rec) + '</b></span></div></div>';
     const byP = PESSOAS.map(n => [n, list.filter(p => p.pessoa === n && p.estado !== "pedido").reduce((s0, p) => s0 + p.valor, 0)]);
     h += '<div class="achips">' +
       '<div class="achip"><span>Pagamentos</span><b>' + T.n + '</b><small>recebidos</small></div>' +
@@ -3710,8 +4081,9 @@ body.night .lrow.wk-now.d-zero { background-image: linear-gradient(100deg, #CFB3
         const y = p.dia.slice(0, 4);
         if (y !== year) { year = y; const ty = list.filter(q => q.dia.startsWith(y) && q.estado !== "pedido").reduce((s0, q) => s0 + q.valor, 0); h += '<div class="pay-y"><b>' + y + '</b><span>' + EUR.format(ty) + ' recebidos</span></div>'; }
         const [yy, mm, dd] = p.dia.split("-").map(Number), dt = new Date(yy, mm - 1, dd);
-        h += '<div class="payrow' + (p.estado === "pedido" ? " wait" : "") + '">' + (p.estado === "pedido" ? "" : '<span class="pago" aria-hidden="true">PAGO</span>') + '<div class="pay-d"><b>' + dd + '</b><span>' + MON3[mm - 1] + '</span></div>' +
-          '<div class="pay-m"><b>' + EUR.format(p.valor) + '</b><small>' + DOWL[dt.getDay()] + (p.nota ? ' · ' + esc(p.nota) : '') + '</small></div>' +
+        // each payout is drawn as a cheque, with a gold "Recebido" seal
+        h += '<div class="payrow chq' + (p.estado === "pedido" ? " wait" : "") + '" data-payopen="' + a + '|' + p.id + '">' + (p.estado === "pedido" ? "" : '<span class="pago gseal" aria-hidden="true"><b>Recebido</b><small>' + dd + ' ' + MON3[mm - 1] + ' ' + yy + '</small></span>') + '<div class="pay-d"><b>' + dd + '</b><span>' + MON3[mm - 1] + '</span></div>' +
+          '<div class="pay-m"><small class="chq-to">Pague-se a ' + esc(p.pessoa || "Carla") + '</small><b><span class="chq-box">' + EUR.format(p.valor) + '</span></b><small>' + DOWL[dt.getDay()] + (p.nota ? ' · ' + esc(p.nota) : '') + '</small><svg class="chq-sig" viewBox="0 0 90 18" aria-hidden="true"><path d="M2 13c6-8 10-9 12-4s-3 7-1 3 7-9 10-6-1 8 2 5 6-7 9-5 0 6 3 4 7-5 11-4 6 3 10 1 9-4 14-3"/></svg></div>' +
           '<span class="pay-who pw-' + (p.pessoa === "Miguel" ? "m" : "c") + '">' + esc(p.pessoa || "Carla") + '</span>' +
           '<button type="button" class="pay-x" data-paydel="' + a + '|' + p.id + '" aria-label="Apagar este pagamento">✕</button></div>';
       }
@@ -3897,6 +4269,8 @@ body.night .lrow.wk-now.d-zero { background-image: linear-gradient(100deg, #CFB3
     ["stressada", "😤", "Stressada", fe3("Face with steam from nose")], ["triste", "😢", "Triste", fe3("Crying face")], ["doente", "🤒", "Doente", fe3("Face with thermometer")]
   ];
   const MOOD = Object.fromEntries(MOODS.map(m => [m[0], m]));
+  // each mood sits on a small coloured gem in the Calendário
+  const GEM = { radiante: "#F2C14E", otima: "#2FA36B", bem: "#8CC63F", confiante: "#2F6FD0", focada: "#8A4FC8", normal: "#B9B2AE", pensativa: "#5FB7C9", cansada: "#A99BD8", ansiosa: "#E8892E", stressada: "#C8243F", triste: "#4A86C8", doente: "#5E9E7A" };
   const moodImg = (m, cls0) => '<img class="' + (cls0 || "mimg") + '" src="' + MOOD[m][3] + '" alt="' + MOOD[m][2] + '" loading="lazy">';
   const LS_MOOD = "diario-trading-humor-v1";
   let moods = new Map();
@@ -4210,27 +4584,77 @@ body.night .lrow.wk-now.d-zero { background-image: linear-gradient(100deg, #CFB3
     w.className = "ses-wave " + k; w.style.left = (r.left - o.left + r.width / 2) + "px"; w.style.top = (r.top - o.top + r.height / 2) + "px";
     ses.appendChild(w); setTimeout(() => w.remove(), 900);
   }
+  // the sky darkens slowly from midday to 21:00, like a sunset
+  function sesDusk() { const n = new Date(), h = n.getHours() + n.getMinutes() / 60; return Math.max(0, Math.min(1, (h - 12) / (DAY_END - 12))); }
+  setInterval(() => { if (ses.hidden) return; const d = ses.querySelector(".ses-dusk"); if (d) d.style.setProperty("--dusk", sesDusk().toFixed(3)); }, 60000);
+  let sesLast = "";   // last key tapped: a soft green or wine light breathes behind the keys
+  // the order of today's taps (kept on this device) for the small chart of the day
+  const seqKey = (k, id) => "diario-ses-seq|" + k + "|" + id;
+  const seqGet = (k, id) => { try { const v = JSON.parse(localStorage.getItem(seqKey(k, id)) || "[]"); return Array.isArray(v) ? v : []; } catch (_) { return []; } };
+  const seqSet = (k, id, v) => { try { localStorage.setItem(seqKey(k, id), JSON.stringify(v.slice(-200))); } catch (_) {} };
+  function sesSpark(k, id, e) {
+    let seq = seqGet(k, id).filter(x => x === "tp" || x === "sl");
+    const st = seq.filter(x => x === "tp").length, ss = seq.length - st;
+    if (st > e.tp || ss > e.sl) { seq = []; }
+    const tv = tpOf(k), base = ((seq.length ? e.tp - st : 0)) * tv - ((seq.length ? e.sl - ss : 0)) * SL_PCT;
+    const pts = [seq.length ? base : 0];
+    if (seq.length) seq.forEach(x => pts.push(pts[pts.length - 1] + (x === "tp" ? tv : -SL_PCT)));
+    else if (e.tp + e.sl) pts.push(pctOf(e));
+    if (pts.length < 2) return "";
+    const W = 260, H = 48, lo = Math.min(0, ...pts), hi = Math.max(0, ...pts), rg = hi - lo || 1;
+    const X = i => 6 + (W - 12) * i / (pts.length - 1), Y = v => 6 + (H - 12) * (1 - (v - lo) / rg);
+    const d = pts.map((v, i) => (i ? "L" : "M") + X(i).toFixed(1) + " " + Y(v).toFixed(1)).join(" "), last = pts[pts.length - 1];
+    return '<div class="ses-spark" aria-hidden="true"><svg viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="none"><line x1="0" x2="' + W + '" y1="' + Y(0).toFixed(1) + '" y2="' + Y(0).toFixed(1) + '" class="z"/><path d="' + d + ' L' + X(pts.length - 1).toFixed(1) + ' ' + Y(0).toFixed(1) + ' L' + X(0).toFixed(1) + ' ' + Y(0).toFixed(1) + 'Z" class="a ' + cls(last) + '"/><path d="' + d + '" class="l" pathLength="1"/><circle cx="' + X(pts.length - 1).toFixed(1) + '" cy="' + Y(last).toFixed(1) + '" r="3.4" class="p ' + cls(last) + '"/></svg><small>o teu dia, toque a toque</small></div>';
+  }
+  // a drop of gold falls on the TP, a drop of wine on the SL
+  function sesDrop(btn, k) {
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const r = btn.getBoundingClientRect(), o = ses.getBoundingClientRect(), dr = document.createElement("i");
+    dr.className = "ses-drop " + k; dr.style.left = (r.left - o.left + r.width / 2) + "px"; dr.style.top = (r.top - o.top + 8) + "px";
+    ses.appendChild(dr); setTimeout(() => dr.remove(), 1000);
+  }
+  // when the Sessão closes, today's summary folds like a letter and goes into the Diário
+  function sesLetter(s, id) {
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const e = entry(s.key, id); if (!traded(s.key, id) || e.off) return;
+    const p = pctOf(e), L = document.createElement("div"); L.className = "ses-letter"; L.setAttribute("aria-hidden", "true");
+    L.innerHTML = '<i class="sl-flap"></i><small>Sessão de hoje · ' + esc(s.full) + '</small><b class="' + cls(p) + '">' + fmt(p) + '</b><span>' + e.tp + ' TP · ' + e.sl + ' SL</span><i class="sl-seal"></i>';
+    document.body.appendChild(L);
+    const tg = (tab === "diario" && document.querySelector('.lrow[data-row="' + s.key + '|' + id + '"]')) || document.querySelector('.tabs button[data-view="diario"]');
+    let dx = 0, dy = window.innerHeight * .45;
+    if (tg) { const a = L.getBoundingClientRect(), b = tg.getBoundingClientRect(); if (b.width && b.bottom > 0 && b.top < window.innerHeight) { dx = b.left + b.width / 2 - (a.left + a.width / 2); dy = b.top + b.height / 2 - (a.top + a.height / 2); } }
+    if (!L.animate) { setTimeout(() => L.remove(), 1400); return; }
+    const an = L.animate([
+      { transform: "translate(0,0) scale(.85) rotateX(0deg)", opacity: 0 },
+      { transform: "translate(0,0) scale(1) rotateX(0deg)", opacity: 1, offset: .18 },
+      { transform: "translate(0,0) scale(1) rotateX(0deg)", opacity: 1, offset: .42 },
+      { transform: "translate(0,0) scale(.9, .18) rotateX(70deg)", opacity: 1, offset: .62 },
+      { transform: "translate(" + dx.toFixed(0) + "px," + dy.toFixed(0) + "px) scale(.25, .06) rotateX(70deg)", opacity: .2 }
+    ], { duration: 1500, easing: "ease-in-out", fill: "forwards" });
+    an.onfinish = () => { L.remove(); if (tg) { tg.classList.remove("got-letter"); void tg.offsetWidth; tg.classList.add("got-letter"); setTimeout(() => tg.classList.remove("got-letter"), 900); } };
+  }
+  let sesTapped = false;
   function drawSes() {
     if (!SES().some(x => x.role === sesRole)) sesRole = "conta";
     const d = new Date(), id = iso(d), s = byRole(sesRole), e = entry(s.key, id), p = pctOf(e), we = d.getDay() === 0 || d.getDay() === 6;
     ses.dataset.res = !we && !e.off && traded(s.key, id) ? cls(p) : "";   // soft green / yellow / red glow behind the keys
-    ses.innerHTML = '<div class="ses-top"><div class="ses-tabs">' + SES().map(x => '<button type="button" data-sesr="' + x.role + '" aria-pressed="' + (x.role === sesRole) + '">' + x.label + '</button>').join("") + '</div><button type="button" class="ses-x" data-ses="close" aria-label="Fechar">✕</button></div>' +
+    ses.innerHTML = '<i class="ses-dusk" aria-hidden="true" style="--dusk:' + sesDusk().toFixed(3) + '"></i>' + (sesLast ? '<i class="ses-glow g-' + sesLast + '" aria-hidden="true"></i>' : '') + '<div class="ses-top"><div class="ses-tabs">' + SES().map(x => '<button type="button" data-sesr="' + x.role + '" aria-pressed="' + (x.role === sesRole) + '">' + x.label + '</button>').join("") + '</div><button type="button" class="ses-x" data-ses="close" aria-label="Fechar">✕</button></div>' +
       '<i class="ses-frame" aria-hidden="true"></i><i class="ses-grab" aria-hidden="true"></i>' + sesWatch() +
       '<div class="ses-par">' + ((isPropKey(s.key) ? PAR_P : PAR_F) ? '<b>' + esc(isPropKey(s.key) ? PAR_P : PAR_F) + '</b>' : '') + '<span>1:' + tpOf(s.key) + '</span></div>' + '<div class="ses-date">' + DOWL[d.getDay()] + ', ' + d.getDate() + ' de ' + MONTHS[d.getMonth()] + '</div><div class="ses-clock" id="sesClock">' + dayClock().short + '</div><div class="ses-news" id="sesNews"' + (sesNewsTxt() ? '' : ' hidden') + '>' + sesNewsTxt() + '</div>' +
       (we ? '<p class="ses-we">Hoje é fim de semana. O Diário só tem dias úteis.</p>' : e.off ? '<p class="ses-we">Este dia está marcado como "sem operar".</p>' :
         '<div class="ses-res ' + cls(p) + '">' + fmt(p) + '</div><div class="ses-cnt">' + e.tp + ' TP · ' + e.sl + ' SL' + (SHOW_BE ? ' · ' + (e.be || 0) + ' BE' : '') + (s.acct && e.risk ? ' · ' + eur(euroOf(e)) : '') + '</div>' +
         '<div class="ses-btns"><button type="button" class="key ses-tp" data-ses="tp" aria-label="Mais um TP">' + sesRing(e.tp, e.tp + e.sl, "tp") + '<span class="cap"><b>TP</b><small>Take profit</small><span class="cnt">' + e.tp + '</span></span></button><button type="button" class="key ses-sl" data-ses="sl" aria-label="Mais um SL">' + sesRing(e.sl, e.tp + e.sl, "sl") + '<span class="cap"><b>SL</b><small>Stop loss</small><span class="cnt">' + e.sl + '</span></span></button></div>' +
         (SHOW_BE ? '<button type="button" class="ses-be" data-ses="be" aria-label="Mais um BE (break-even)"><b>BE</b><small>break-even</small><span class="cnt">' + (e.be || 0) + '</span></button>' : '') +
-        '<button type="button" class="ses-undo" data-ses="undo"' + (sesHist.length ? '' : ' disabled') + '>↶ Desfazer o último toque</button>' +
-        '') +
+        '<button type="button" class="ses-undo" data-ses="undo"' + (sesHist.length ? '' : ' disabled') + '><svg class="undo-ic" viewBox="0 0 20 20" aria-hidden="true"><path d="M5.5 8.5A6 6 0 1 1 4.6 13"/><path d="M5.4 3.6v5h5"/></svg>Desfazer o último toque</button>' +
+        sesSpark(s.key, id, e)) +
       '<p class="ses-help">Toca em cada operação. Fica guardado no Diário de hoje, na ' + s.full + '.</p>' + moodBarHtml();
     sesWatchTick();
   }
   ses.addEventListener("keydown", e => { if (e.key === "Enter" && e.target.id === "sesComIn") { e.preventDefault(); const b = ses.querySelector('[data-ses="comadd"]'); if (b) b.click(); } });
-  sesBtn.addEventListener("click", () => { sesHist = []; sesComOpen = false; sesComList = false; drawSes(); ses.hidden = false; sesScrim.hidden = false; ses.style.transform = ""; sesWatchTick(); document.body.classList.add("ses-open"); ses.classList.remove("enter"); void ses.offsetWidth; ses.classList.add("enter"); setTimeout(() => ses.classList.remove("enter"), 900); });
+  sesBtn.addEventListener("click", () => { sesHist = []; sesLast = ""; sesTapped = false; sesComOpen = false; sesComList = false; drawSes(); ses.hidden = false; sesScrim.hidden = false; ses.style.transform = ""; sesWatchTick(); document.body.classList.add("ses-open"); ses.classList.remove("enter"); void ses.offsetWidth; ses.classList.add("enter"); setTimeout(() => ses.classList.remove("enter"), 900); });
   ses.addEventListener("click", e => {
     const r = e.target.closest("[data-sesr]");
-    if (r) { sesRole = r.dataset.sesr; sesHist = []; try { localStorage.setItem("diario-trading-sessao", sesRole); } catch (_) {} drawSes(); return; }
+    if (r) { sesRole = r.dataset.sesr; sesHist = []; sesLast = ""; try { localStorage.setItem("diario-trading-sessao", sesRole); } catch (_) {} drawSes(); return; }
     const b = e.target.closest("[data-ses]"); if (!b) return;
     const a = b.dataset.ses, id = iso(new Date()), s = byRole(sesRole);
     if (a === "close") { closeSes(); return; }
@@ -4243,16 +4667,23 @@ body.night .lrow.wk-now.d-zero { background-image: linear-gradient(100deg, #CFB3
     }
     if (a === "comlist") { sesComList = !sesComList; drawSes(); return; }
     if (a === "comdel") { if (ro) return; const l = comList(entry(s.key, id)).slice(); l.splice(+b.dataset.i, 1); setEntry(s.key, id, { coms: l, com: comSum(l) }); drawSes(); return; }
-    if (a === "undo") { const h = sesHist.pop(); if (h) { const e0 = entry(h.key, h.id); setEntry(h.key, h.id, { [h.f]: Math.max(0, (e0[h.f] || 0) - 1) }); } drawSes(); return; }
+    if (a === "undo") {
+      const h = sesHist.pop();
+      if (h) { const e0 = entry(h.key, h.id); setEntry(h.key, h.id, { [h.f]: Math.max(0, (e0[h.f] || 0) - 1) }); const q = seqGet(h.key, h.id), ix = q.lastIndexOf(h.f); if (ix >= 0) { q.splice(ix, 1); seqSet(h.key, h.id, q); } }
+      sesLast = sesHist.length ? sesHist[sesHist.length - 1].f : "";
+      drawSes(); const u = ses.querySelector(".ses-undo .undo-ic"); if (u) u.classList.add("spin"); return;
+    }
     const e0 = entry(s.key, id); if (e0.off) return;
     // no confetti here: the day is still going, it only celebrates when the result is written in the Diário
     setEntry(s.key, id, { [a]: Math.min(99, (e0[a] || 0) + 1) });
     sesHist.push({ key: s.key, id, f: a });
+    if (a === "tp" || a === "sl") { const q = seqGet(s.key, id); q.push(a); seqSet(s.key, id, q); sesLast = a; sesTapped = true; }
     haptic();
     drawSes();
-    // the key stays pressed for a moment and a "+1" floats up
+    // the key stays pressed for a moment and a "+1" floats up; the numbers flip like a station board
     const nb = ses.querySelector('[data-ses="' + a + '"]');
-    if (nb) { nb.classList.add("hit"); setTimeout(() => nb.classList.remove("hit"), 170); nb.insertAdjacentHTML("beforeend", '<i class="plus1">+1</i>'); sesWave(nb, a); }
+    if (nb) { nb.classList.add("hit"); setTimeout(() => nb.classList.remove("hit"), 170); nb.insertAdjacentHTML("beforeend", '<i class="plus1">+1</i>'); sesWave(nb, a); if (a === "tp" || a === "sl") sesDrop(nb, a); }
+    ses.querySelectorAll((nb ? '[data-ses="' + a + '"] .cnt, ' : '') + '.ses-res, .ses-cnt').forEach(el => el.classList.add("flip"));
   });
   document.addEventListener("keydown", e => { if (e.key === "Escape" && !ses.hidden) closeSes(); });
   // computer: a dark backdrop behind the Sessão window; a click outside closes it
@@ -4262,6 +4693,7 @@ body.night .lrow.wk-now.d-zero { background-image: linear-gradient(100deg, #CFB3
     if (ses.hidden) return;
     ses.hidden = true; sesScrim.hidden = true; ses.style.transform = ""; ses.style.transition = ""; ses.classList.remove("dragging");
     document.body.classList.remove("ses-open"); render();
+    if (sesTapped) { sesTapped = false; const d = new Date(), wd = d.getDay(); if (wd > 0 && wd < 6) try { sesLetter(byRole(sesRole), iso(d)); } catch (_) {} }
   }
   // phone: pull the Sessão down to close it
   (function () {
@@ -4549,12 +4981,13 @@ body.night .lrow.wk-now.d-zero { background-image: linear-gradient(100deg, #CFB3
       slideCtl = slider($("view").querySelector(".slides"), Math.max(0, AC_VIEWS.indexOf(acView)), i => { acView = AC_VIEWS[i] || "fusion"; try { localStorage.setItem(LS_AC, acView); } catch (_) {} markSwitch(); });
     } else {
       const nn = nextNewsHtml();
-      $("view").innerHTML = moodBarHtml() + weekLineHtml() + '<div class="nextnews" id="nextnews"' + (nn ? '' : ' hidden') + ' role="status">' + nn + '</div><div class="dots" aria-hidden="true"><i></i><i></i></div><div class="panels">' + GS().map(s => '<section class="panel" data-key="' + s.role + '" aria-label="' + s.full + '">' + panelHtml(s, days) + '</section>').join("") + '</div>';
+      $("view").innerHTML = '<i class="spine" aria-hidden="true"><b>' + cap(MONTHS[view.m]) + '</b><em>' + view.y + '</em></i>' + moodBarHtml() + weekLineHtml() + '<div class="nextnews" id="nextnews"' + (nn ? '' : ' hidden') + ' role="status">' + nn + '</div><div class="dots" aria-hidden="true"><i></i><i></i></div><div class="panels">' + GS().map(s => '<section class="panel" data-key="' + s.role + '" aria-label="' + s.full + '">' + panelHtml(s, days) + '</section>').join("") + '</div>';
       setupSwipe();
       drawSparks(days);
     }
     drawCharts();
     decorateCards();
+    try { deco50(); } catch (_) {}
     if (Math.abs(window.scrollY - sy) > 2) window.scrollTo(0, sy);
     viewEnter();
     if (fk) { const el = document.querySelector('[data-k="' + fk + '"], [data-note="' + fk + '"]'); if (el && !el.disabled) el.focus({ preventScroll: true }); }
@@ -4726,12 +5159,14 @@ body.night .lrow.wk-now.d-zero { background-image: linear-gradient(100deg, #CFB3
     cfgDlg.innerHTML = '<div class="dlg-card cfg-card" role="dialog" aria-modal="true" aria-labelledby="cfgT"><div><div class="sub">Diário</div><h3 id="cfgT">Configurações</h3><p class="cfg-note">A Fusion e a Prop podem ter valores diferentes. A Estratégia de cada uma usa o mesmo valor da sua conta. Ao mudar, os resultados são recalculados.</p></div>' +
       cfgAcc("f", "Fusion", cfg.tpF, cfg.parF) + cfgAcc("p", "Prop", cfg.tpP, cfg.parP) +
       '<div class="cfg-sec"><label class="cfg-sw"><input type="checkbox" id="cfgBe"' + (cfg.be ? " checked" : "") + '><span class="sw" aria-hidden="true"></span><span><b>Bolinha BE (break-even)</b><small>Para as operações que fecharam a zero, no preço de entrada. Contam no TO, mas não mexem no resultado.</small></span></label></div>' +
+      '<div class="cfg-sec"><label class="cfg-sw"><input type="checkbox" id="cfgSom"' + (cfg.som ? " checked" : "") + '><span class="sw" aria-hidden="true"></span><span><b>Som de sino ao abrir</b><small>Um toque suave quando abres o site. Fica só neste telemóvel ou computador. No iPhone toca quando tocas no ecrã pela primeira vez.</small></span></label></div>' +
       (ro ? '<p class="cfg-ro">Só leitura: entra na tua conta para mudar as configurações.</p>' : '') +
       '<div class="dlg-actions"><button type="button" class="btn" data-cfg="cancel">Cancelar</button><button type="button" class="btn primary" data-cfg="save"' + (ro ? " disabled" : "") + '>Guardar</button></div></div>';
   }
-  const cfgRead = () => { const g = k => { const i = cfgDlg.querySelector('[data-cfgpar="' + k + '"]'); return i ? i.value.trim().toUpperCase().slice(0, 20) : ""; }; cfg.parF = g("f"); cfg.parP = g("p"); const b = $("cfgBe"); if (b) cfg.be = b.checked; };
+  const cfgRead = () => { const g = k => { const i = cfgDlg.querySelector('[data-cfgpar="' + k + '"]'); return i ? i.value.trim().toUpperCase().slice(0, 20) : ""; }; cfg.parF = g("f"); cfg.parP = g("p"); const b = $("cfgBe"); if (b) cfg.be = b.checked; const sm = $("cfgSom"); if (sm) cfg.som = sm.checked; };
   function openCfg(focusPar) {
-    cfg = { tpF: TP_PCT, tpP: TP_PROP, be: SHOW_BE, parF: PAR_F, parP: PAR_P }; drawCfg(); cfgDlg.hidden = false;
+    let som = false; try { som = localStorage.getItem("diario-som-abrir") === "1"; } catch (_) {}
+    cfg = { tpF: TP_PCT, tpP: TP_PROP, be: SHOW_BE, parF: PAR_F, parP: PAR_P, som }; drawCfg(); cfgDlg.hidden = false;
     if (focusPar) setTimeout(() => { const i = cfgDlg.querySelector('[data-cfgpar="' + focusPar + '"]'); if (i) { i.focus(); i.select(); } }, 60);
   }
   function closeCfg() { cfgDlg.hidden = true; }
@@ -4743,6 +5178,7 @@ body.night .lrow.wk-now.d-zero { background-image: linear-gradient(100deg, #CFB3
     const t = e.target.closest("[data-cfgtp]"); if (t) { const [k, v] = t.dataset.cfgtp.split("|"); cfgRead(); if (k === "f") cfg.tpF = +v; else cfg.tpP = +v; drawCfg(); return; }
     const a = e.target.closest("[data-cfg]"); if (!a) return;
     if (a.dataset.cfg === "cancel") return closeCfg();
+    if (a.dataset.cfg === "save") { cfgRead(); try { localStorage.setItem("diario-som-abrir", cfg.som ? "1" : "0"); } catch (_) {} if (ro) closeCfg(); }
     if (a.dataset.cfg === "save" && !ro) {
       cfgRead(); TP_PCT = cfg.tpF; TP_PROP = cfg.tpP; SHOW_BE = !!cfg.be; PAR_F = cfg.parF; PAR_P = cfg.parP; closeCfg(); render(); if (typeof ses !== "undefined" && !ses.hidden) drawSes();
       setStatus("saving", "A guardar…"); const err = await saveCfg(); if (err) setStatus("err", "Não foi guardado, tenta outra vez"); else idleStatus();
@@ -4789,6 +5225,18 @@ body.night .lrow.wk-now.d-zero { background-image: linear-gradient(100deg, #CFB3
     v.querySelectorAll(".phead h2").forEach(h => h.classList.add("pen"));
     v.querySelectorAll(".cal-grid").forEach(g => { g.classList.add("casc"); setTimeout(() => g.classList.remove("casc"), 1600); });
     v.querySelectorAll(".bank").forEach(coinRain);
+    // statistics: the numbers roll up like an old cash register
+    v.querySelectorAll(".stp-card .st > b, .stp-card .hero-main b").forEach(odo);
+  }
+  function odo(el) {
+    const tn = [...el.childNodes].find(n => n.nodeType === 3 && /\d/.test(n.textContent)); if (!tn) return;
+    const txt = tn.textContent, wrap = document.createElement("span"); wrap.className = "odo";
+    [...txt].forEach((ch, i) => {
+      if (/\d/.test(ch)) { const c = document.createElement("span"); c.className = "odc"; c.innerHTML = '<span class="odr" style="--n:' + ch + ';animation-delay:' + (i * 60) + 'ms">' + "0123456789".split("").map(x => "<i>" + x + "</i>").join("") + "</span>"; wrap.appendChild(c); }
+      else wrap.appendChild(document.createTextNode(ch));
+    });
+    tn.replaceWith(wrap);
+    setTimeout(() => { if (wrap.isConnected) wrap.replaceWith(document.createTextNode(txt)); }, 1500 + txt.length * 60);
   }
   function countUp(el) {
     const m = el.textContent.trim().match(/^([+−-]?)(\d+(?:,\d+)?)%$/); if (!m) return;
@@ -4797,6 +5245,62 @@ body.night .lrow.wk-now.d-zero { background-image: linear-gradient(100deg, #CFB3
     const step = t => { const q = Math.min(1, (t - t0) / D), e = 1 - Math.pow(1 - q, 3); if (!document.contains(el)) return; el.textContent = m[1] + (target * e).toFixed(dec).replace(".", ",") + "%"; if (q < 1) requestAnimationFrame(step); else el.textContent = final; };
     requestAnimationFrame(step);
   }
+  // ---------- round of 50: small touches added after each page is drawn ----------
+  let r50Tab = null, r50Cal = null;
+  const r50rm = () => window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function deco50() {
+    const v = $("view"), prevTab = r50Tab; r50Tab = tab;
+    // Diário: the notebook spine on the left (computer)
+    if (tab === "diario") {
+      const sp = v.querySelector(".spine"), pn = v.querySelector(".panels");
+      if (sp && pn) { sp.style.top = pn.offsetTop + "px"; sp.style.height = pn.offsetHeight + "px"; }
+    }
+    // Calendário: the months slide in like cards being dealt
+    if (tab === "cal") {
+      const k = view.y * 12 + view.m;
+      if (r50Cal != null && r50Cal !== k && calMode !== "y" && !r50rm()) v.querySelectorAll(".cal").forEach(c => { c.classList.add(k > r50Cal ? "deal-n" : "deal-p"); setTimeout(() => c.classList.remove("deal-n", "deal-p"), 700); });
+      r50Cal = k;
+    }
+    // Conta: notes slide out of a leather wallet when you come into the tab
+    if (tab === "acct" && pinOk && prevTab && prevTab !== "acct" && !r50rm()) walletShow();
+  }
+  function walletShow() {
+    const w = document.createElement("div"); w.className = "wallet"; w.setAttribute("aria-hidden", "true");
+    w.innerHTML = '<i class="wl-back"></i>' + [0, 1, 2].map(i => '<i class="wl-note" style="--i:' + i + '"><b>€</b></i>').join("") + '<i class="wl-front"><i class="wl-stitch"></i><i class="wl-clasp"></i></i>';
+    document.body.appendChild(w); setTimeout(() => w.remove(), 2300);
+  }
+  // a gold envelope opens and shows the payout
+  function envelopeShow(p) {
+    if (!p || r50rm()) return;
+    const [yy, mm, dd] = String(p.dia || "").split("-").map(Number);
+    const o = document.createElement("div"); o.className = "envl"; o.setAttribute("aria-hidden", "true");
+    o.innerHTML = '<div class="ev-box"><i class="ev-back"></i><div class="ev-card"><small>Pagamento recebido</small><b>' + EUR.format(p.valor) + '</b><span>' + esc(p.pessoa || "Carla") + (dd ? ' · ' + dd + ' ' + MON3[mm - 1] + ' ' + yy : '') + '</span></div><i class="ev-front"></i><i class="ev-flap"></i><i class="ev-seal"></i></div>';
+    document.body.appendChild(o);
+    const bye = () => { o.classList.add("bye"); setTimeout(() => o.remove(), 400); };
+    o.addEventListener("click", bye); setTimeout(bye, 2600);
+  }
+  // the lines of the Diário: a gleam of paper slides across when touched
+  $("view").addEventListener("pointerdown", e => {
+    const r = e.target.closest(".lrow"); if (!r || r50rm()) return;
+    const g = document.createElement("i"); g.className = "gleam"; g.setAttribute("aria-hidden", "true"); r.appendChild(g); setTimeout(() => g.remove(), 750);
+  });
+  $("view").addEventListener("mouseover", e => {
+    const r = e.target.closest(".lrow"); if (!r || r.contains(e.relatedTarget) || r50rm()) return;
+    const g = document.createElement("i"); g.className = "gleam"; g.setAttribute("aria-hidden", "true"); r.appendChild(g); setTimeout(() => g.remove(), 750);
+  });
+  // numbers written with a fountain pen
+  $("view").addEventListener("input", e => { const i = e.target.closest("input[data-in], input[data-cin]"); if (!i || r50rm()) return; i.classList.remove("ink"); void i.offsetWidth; i.classList.add("ink"); });
+  // statistics tiles turn over (Fusion / Prop: euros on the back)
+  function flipTile(t) { if (t.classList.contains("turn")) return; t.classList.add("turn"); setTimeout(() => { t.classList.toggle("back"); t.classList.remove("turn"); }, 170); }
+  $("view").addEventListener("click", e => { const t = e.target.closest(".st.flips"); if (t) flipTile(t); });
+  $("view").addEventListener("keydown", e => { const t = e.target.closest && e.target.closest(".st.flips"); if (t && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); flipTile(t); } });
+  // the bank card turns over to show the back with the signature
+  $("view").addEventListener("click", e => { const c = e.target.closest(".bank"); if (!c || c.classList.contains("turn")) return; c.classList.add("turn"); setTimeout(() => { c.classList.toggle("back"); c.classList.remove("turn"); }, 200); });
+  // a payout cheque opens in its gold envelope
+  $("view").addEventListener("click", e => {
+    const r = e.target.closest("[data-payopen]"); if (!r || e.target.closest("button, a, input")) return;
+    const [a, id] = r.dataset.payopen.split("|"), p = (pays[a] || []).find(x => String(x.id) === id); if (p) envelopeShow(p);
+  });
   // used by the Notícias tab: the Diário result of a day, and "open this day in the Diário"
   window.DiarioHook = {
     result(id) {
@@ -5140,6 +5644,7 @@ body.night .lrow.wk-now.d-zero { background-image: linear-gradient(100deg, #CFB3
     const item = await addPay(a, { dia: f.dia.value || iso(new Date()), valor: v, estado: "recebido", pessoa: (f.querySelector('input[name="pessoa"]:checked') || {}).value, nota: f.nota.value.trim().slice(0, 300) });
     pushUndo("Pagamento de " + EUR.format(v) + " guardado", () => { delPay(a, item.id); hideUndo(); render(); });
     render();
+    envelopeShow(item);
   });
   // search, summary, backup and install windows
   const srch = $("srch");

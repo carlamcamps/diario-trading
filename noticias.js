@@ -214,6 +214,33 @@
     const ms = Math.max(0, d - Date.now()), s = Math.floor(ms / 1000), parts = [[Math.floor(s / 86400), "dias"], [Math.floor(s / 3600) % 24, "horas"], [Math.floor(s / 60) % 60, "min"], [s % 60, "seg"]];
     return '<span class="flipc" data-t="' + d.getTime() + '">' + parts.map(([v, l]) => '<span class="fg"><span class="fd">' + String(v).padStart(2, "0").split("").map(c => '<i>' + c + '</i>').join("") + '</span><small>' + l + '</small></span>').join("") + '</span>';
   }
+  // an hourglass of gold sand: the top empties as the news gets closer (over the last 24 hours)
+  const hgFill = d => Math.max(0, Math.min(1, (d - Date.now()) / 864e5));
+  function hourglass(d) {
+    const f = hgFill(d);
+    return '<svg class="nw-hg" data-t="' + d.getTime() + '" viewBox="0 0 30 46" aria-hidden="true"><defs><clipPath id="hgT"><path d="M7 6h16c0 7-5 11-8 17-3-6-8-10-8-17z"/></clipPath><clipPath id="hgB"><path d="M15 23c3 6 8 10 8 17H7c0-7 5-11 8-17z"/></clipPath></defs>' +
+      '<rect x="3" y="2" width="24" height="4" rx="1.5" class="hg-cap"/><rect x="3" y="40" width="24" height="4" rx="1.5" class="hg-cap"/>' +
+      '<rect class="hg-top" clip-path="url(#hgT)" x="5" y="' + (6 + 17 * (1 - f)).toFixed(1) + '" width="20" height="' + (17 * f).toFixed(1) + '"/>' +
+      '<rect class="hg-bot" clip-path="url(#hgB)" x="5" y="' + (40 - 17 * (1 - f)).toFixed(1) + '" width="20" height="' + (17 * (1 - f)).toFixed(1) + '"/>' +
+      '<line class="hg-run" x1="15" y1="22" x2="15" y2="39"/><path d="M7 6h16c0 7-5 11-8 17 3 6 8 10 8 17H7c0-7 5-11 8-17-3-6-8-10-8-17z" class="hg-glass"/></svg>';
+  }
+  // an elegant wall clock with its hands on the time of the next news
+  function wallClock(e) {
+    const t = timeOf(e).match(/(\d+):(\d+)/); if (!t) return "";
+    const H = +t[1], M = +t[2], ha = ((H % 12) + M / 60) * 30, ma = M * 6;
+    let ticks = ""; for (let i = 0; i < 12; i++) { const a = i * Math.PI / 6, r1 = i % 3 ? 17.5 : 15.5; ticks += '<line x1="' + (24 + Math.sin(a) * r1).toFixed(1) + '" y1="' + (24 - Math.cos(a) * r1).toFixed(1) + '" x2="' + (24 + Math.sin(a) * 19.5).toFixed(1) + '" y2="' + (24 - Math.cos(a) * 19.5).toFixed(1) + '"/>'; }
+    return '<span class="nw-wclk" aria-hidden="true"><svg viewBox="0 0 48 48"><circle cx="24" cy="24" r="22.6" class="wc-rim"/><circle cx="24" cy="24" r="20.6" class="wc-face"/><g class="wc-t">' + ticks + '</g>' +
+      '<line x1="24" y1="24" x2="24" y2="13" class="wc-h" transform="rotate(' + ha.toFixed(1) + ' 24 24)"/><line x1="24" y1="24" x2="24" y2="8" class="wc-m" transform="rotate(' + ma.toFixed(1) + ' 24 24)"/><line x1="24" y1="27" x2="24" y2="7" class="wc-s"/><circle cx="24" cy="24" r="1.8" class="wc-c"/></svg><small>' + esc(timeOf(e)) + '</small></span>';
+  }
+  setInterval(() => {
+    const n = new Date(), s = n.getSeconds();
+    document.querySelectorAll(".nw-wclk .wc-s").forEach(l => l.setAttribute("transform", "rotate(" + (s * 6) + " 24 24)"));
+    document.querySelectorAll(".nw-hg").forEach(g => {
+      const f = hgFill(+g.dataset.t), tp = g.querySelector(".hg-top"), bt = g.querySelector(".hg-bot"); if (!tp || !bt) return;
+      tp.setAttribute("y", (6 + 17 * (1 - f)).toFixed(1)); tp.setAttribute("height", (17 * f).toFixed(1));
+      bt.setAttribute("y", (40 - 17 * (1 - f)).toFixed(1)); bt.setAttribute("height", (17 * (1 - f)).toFixed(1));
+    });
+  }, 1000);
   setInterval(() => {
     document.querySelectorAll(".flipc").forEach(fc => {
       const t = +fc.dataset.t, ms = Math.max(0, t - Date.now()), s = Math.floor(ms / 1000), vals = [Math.floor(s / 86400), Math.floor(s / 3600) % 24, Math.floor(s / 60) % 60, s % 60];
@@ -461,13 +488,13 @@
     const next = evs.filter(e => e.d.getTime() > now - 10 * 60000 && e.impact !== "Holiday").slice(0, 8);
     let h = '<div class="nw">';
     // hero with the next strong news as cards (names as on Forex Factory)
-    h += '<section class="nw-hero"><svg class="bg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=".6">' + IC.talk + '</svg>' +
+    h += '<section class="nw-hero"><div class="nw-mast" aria-hidden="true"><span>' + esc(cap(fmtLong.format(new Date()))) + '</span><b>Notícias do Dia</b><span>Estados Unidos · alto impacto · horas de Portugal</span></div><svg class="bg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=".6">' + IC.talk + '</svg>' +
       '<div class="k"><svg class="globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9.2"/><path d="M2.8 12h18.4M12 2.8c2.6 2.6 3.9 5.7 3.9 9.2s-1.3 6.6-3.9 9.2c-2.6-2.6-3.9-5.7-3.9-9.2S9.4 5.4 12 2.8z"/><path d="M4.4 7.2h15.2M4.4 16.8h15.2"/></svg>Notícias</div><h2>O que vem aí</h2><p>As notícias de alto impacto dos Estados Unidos, com os nomes do Forex Factory e em horas de Portugal. Toca numa para veres a explicação e o resultado.</p>';
     if (next.length) {
       const e0 = next[0];
       // the next one, big and highlighted; then the ones after it
       const soon = e0.d - now > 0 && e0.d - now < 30 * 60000;
-      h += '<button type="button" class="nw-first' + (soon ? " soon" : "") + '" data-ev="' + e0.i + '"' + kc(e0.k) + '><span class="nf-tag">✦ A próxima</span><span class="nf-row"><span class="bubble">' + icon(e0.k) + '</span><span class="nf-t"><b>' + esc(e0.title) + '</b><small>' + esc(explain(e0).name || "") + '</small></span></span><span class="nf-when">' + (e0.d - now > 0 ? flipHtml(e0.d) : '<b>' + esc(until(e0.d)) + '</b>') + '<small>' + CLOCK + esc(cap(fmtShort.format(e0.d))) + ', ' + esc(timeOf(e0)) + '</small></span></button>';
+      h += '<button type="button" class="nw-first' + (soon ? " soon" : "") + '" data-ev="' + e0.i + '"' + kc(e0.k) + '><i class="nw-wax" aria-hidden="true"><b>Alto<br>impacto</b></i><span class="nf-tag">✦ A próxima</span><span class="nf-row"><span class="bubble">' + icon(e0.k) + '</span><span class="nf-t"><b>' + esc(e0.title) + '</b><small>' + esc(explain(e0).name || "") + '</small></span></span><span class="nf-when">' + (e0.d - now > 0 ? '<span class="nf-time">' + hourglass(e0.d) + flipHtml(e0.d) + wallClock(e0) + '</span>' : '<b>' + esc(until(e0.d)) + '</b>') + '<small>' + CLOCK + esc(cap(fmtShort.format(e0.d))) + ', ' + esc(timeOf(e0)) + '</small></span></button>';
       if (next.length > 1) h += '<div class="nf-after">Depois</div><div class="nw-next">' + next.slice(1).map(e => '<button type="button" class="nw-card" data-ev="' + e.i + '"' + kc(e.k) + '><span class="top"><span class="bubble">' + icon(e.k) + '</span><span class="when">' + esc(until(e.d)) + '</span></span><b>' + esc(e.title) + '</b><small>' + CLOCK + esc(cap(fmtShort.format(e.d))) + ', ' + esc(timeOf(e)) + '</small></button>').join("") + '</div>';
     } else h += '<p style="margin-top:12px">Não há notícias fortes marcadas para os próximos dias.</p>';
     h += '</section>';
