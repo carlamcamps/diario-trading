@@ -287,8 +287,8 @@
 
   // ---------- data ----------
   let all = null, err = null, loading = false, root = null;
-  const LS_CUR = "diario-noticias-moeda";
-  let cur = "ALL"; try { cur = localStorage.getItem(LS_CUR) || "ALL"; } catch (_) {}
+  const LS_CUR = "diario-noticias-moeda2";
+  let cur = "USD"; try { cur = localStorage.getItem(LS_CUR) || "USD"; } catch (_) {}
   const nowD = new Date();
   let vy = nowD.getFullYear(), vm = nowD.getMonth(), sel = null;
   let loadP = null;
@@ -356,7 +356,18 @@
   }
   // only the American (USD) news
   const visible = () => (all || []).filter(e => e.country === "USD");
-  void cur; void LS_CUR;
+  // what the Notícias tab shows: the dollar by default, or another currency / all of them (filter chips)
+  const CUR_NAME = { USD: "EUA", EUR: "Euro", GBP: "Libra", JPY: "Iene", CAD: "Canadá", AUD: "Austrália", NZD: "Nova Zelândia", CHF: "Suíça", CNY: "China" };
+  const CUR_LONG = { USD: "Estados Unidos", EUR: "Zona Euro", GBP: "Reino Unido", JPY: "Japão", CAD: "Canadá", AUD: "Austrália", NZD: "Nova Zelândia", CHF: "Suíça", CNY: "China" };
+  const shown = () => cur === "ALL" ? (all || []) : (all || []).filter(e => e.country === cur);
+  function curBar() {
+    const n = {}; for (const e of all || []) n[e.country] = (n[e.country] || 0) + 1;
+    const cs = Object.keys(n).filter(c => c !== "USD" && c !== "All").sort((a, b) => n[b] - n[a]);
+    if (cur !== "USD" && cur !== "ALL" && !n[cur]) cur = "USD";
+    const b = (c, label) => '<button type="button" data-cur="' + c + '" aria-pressed="' + (cur === c) + '">' + (c === "ALL" ? "" : flag(c)) + esc(label) + '</button>';
+    return '<div class="nw-cur" role="group" aria-label="Filtrar por moeda">' + b("USD", "EUA") + cs.map(c => b(c, CUR_NAME[c] || c)).join("") + b("ALL", "Todas") + '</div>' +
+      (cur !== "USD" ? '<p class="nw-curnote">As outras moedas só ficam guardadas desde 16 de novembro de 2026. Os avisos, o Diário e as Estatísticas continuam a usar só as notícias dos EUA.</p>' : '');
+  }
 
   // ---------- styles ----------
   const css = `
@@ -388,6 +399,9 @@
 .nw-cur { display: flex; gap: 6px; flex-wrap: wrap; }
 .nw-cur button { border: 1px solid var(--line); background: rgba(0,0,0,.2); color: var(--champ); border-radius: 999px; padding: 5px 11px 5px 8px; font: 500 12.5px/1 var(--sans); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; }
 .nw-cur button[aria-pressed="true"] { background: var(--champ); color: #2A0A11; border-color: var(--champ); }
+.nw-hero .nw-cur { margin-top: 12px; position: relative; z-index: 2; }
+.nw-cur .flag { width: 16px; height: 11px; border-radius: 2px; object-fit: cover; }
+.nw-curnote { margin-top: 8px !important; font-size: 12px !important; color: var(--soft); }
 .nw-cal { border-radius: 22px; padding: 16px; background: rgba(61, 34, 25, .82); border: 1px solid rgba(232,200,160,.18); box-shadow: 0 24px 50px -24px rgba(0,0,0,.8); }
 .nw-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)) repeat(2, minmax(0, .62fr)); gap: 6px; }
 .nw-grid.anim { animation: nwIn .35s ease; }
@@ -484,12 +498,12 @@
   function draw(anim) {
     if (!root || !document.contains(root)) return;
     if (!all) { root.innerHTML = '<div class="nw"><div class="nw-msg">' + (err ? "Não foi possível carregar as notícias. Tenta outra vez daqui a pouco." : "A carregar as notícias…") + '</div></div>'; return; }
-    const evs = visible(), now = Date.now(), todayK = dayKey(new Date());
+    const cb = curBar(), evs = shown(), now = Date.now(), todayK = dayKey(new Date()), where = cur === "ALL" ? "Todas as moedas" : CUR_LONG[cur] || cur;
     const next = evs.filter(e => e.d.getTime() > now - 10 * 60000 && e.impact !== "Holiday").slice(0, 8);
     let h = '<div class="nw">';
     // hero with the next strong news as cards (names as on Forex Factory)
-    h += '<section class="nw-hero"><div class="nw-mast" aria-hidden="true"><span>' + esc(cap(fmtLong.format(new Date()))) + '</span><b>Notícias do Dia</b><span>Estados Unidos · alto impacto · horas de Portugal</span></div><svg class="bg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=".6">' + IC.talk + '</svg>' +
-      '<div class="k"><svg class="globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9.2"/><path d="M2.8 12h18.4M12 2.8c2.6 2.6 3.9 5.7 3.9 9.2s-1.3 6.6-3.9 9.2c-2.6-2.6-3.9-5.7-3.9-9.2S9.4 5.4 12 2.8z"/><path d="M4.4 7.2h15.2M4.4 16.8h15.2"/></svg>Notícias</div><h2>O que vem aí</h2><p>As notícias de alto impacto dos Estados Unidos, com os nomes do Forex Factory e em horas de Portugal. Toca numa para veres a explicação e o resultado.</p>';
+    h += '<section class="nw-hero"><div class="nw-mast" aria-hidden="true"><span>' + esc(cap(fmtLong.format(new Date()))) + '</span><b>Notícias do Dia</b><span>' + esc(where) + ' · alto impacto · horas de Portugal</span></div><svg class="bg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=".6">' + IC.talk + '</svg>' +
+      '<div class="k"><svg class="globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9.2"/><path d="M2.8 12h18.4M12 2.8c2.6 2.6 3.9 5.7 3.9 9.2s-1.3 6.6-3.9 9.2c-2.6-2.6-3.9-5.7-3.9-9.2S9.4 5.4 12 2.8z"/><path d="M4.4 7.2h15.2M4.4 16.8h15.2"/></svg>Notícias</div><h2>O que vem aí</h2><p>As notícias de alto impacto ' + (cur === "USD" ? "dos Estados Unidos" : cur === "ALL" ? "de todas as moedas" : "de " + esc(CUR_LONG[cur] || cur)) + ', com os nomes do Forex Factory e em horas de Portugal. Toca numa para veres a explicação e o resultado.</p>' + cb;
     if (next.length) {
       const e0 = next[0];
       // the next one, big and highlighted; then the ones after it
@@ -543,7 +557,7 @@
     const box = root && root.querySelector("#nwSR"); if (!box || !all) return;
     root.querySelectorAll("[data-q]").forEach(b => b.classList.toggle("on", b.dataset.q.toLowerCase() === q.trim().toLowerCase()));
     const f = qMatch(q); if (!f) { box.innerHTML = ""; return; }
-    const hits = all.filter(e => e.country === "USD" && f(e));
+    const hits = shown().filter(f);
     if (!hits.length) { box.innerHTML = '<div class="nw-empty">Nada encontrado. Experimenta NFP, CPI, FOMC ou o nome em inglês.</div>'; return; }
     const byDay = new Map(); for (const e of hits) { if (!byDay.has(e.day)) byDay.set(e.day, []); byDay.get(e.day).push(e); }
     const days = [...byDay.keys()].sort().reverse(), todayK = dayKey(new Date()), H = window.DiarioHook;
@@ -603,13 +617,13 @@
   }
   function openDay(k, focusEv) {
     ensureSheet(); sel = k; draw();
-    const list = visible().filter(e => e.day === k);
+    const list = shown().filter(e => e.day === k);
     const [y, m, d] = k.split("-").map(Number);
     sheet.querySelector("#nwPT").textContent = cap(fmtLong.format(new Date(Date.UTC(y, m - 1, d, 12))));
     sheet.querySelector("#nwPK").textContent = list.length ? (list.length === 1 ? "1 notícia" : list.length + " notícias") : "Dia calmo";
     const H = window.DiarioHook, wd = new Date(Date.UTC(y, m - 1, d, 12)).getUTCDay(), R = H ? H.result(k) : null;
     const goH = H && wd > 0 && wd < 6 ? '<div class="nw-godi"><div><small>No teu Diário · ' + esc(R ? R.who : "Estratégia") + '</small><b class="' + (R ? R.cls : "") + '">' + (R ? esc(R.txt) + (R.tp != null ? ' <span>' + R.tp + ' TP · ' + R.sl + ' SL</span>' : '') : 'ainda sem registo') + '</b></div><button type="button" class="nw-gobtn" data-godiario="' + k + '">Abrir no Diário ›</button></div>' : '';
-    sheet.querySelector("#nwPL").innerHTML = goH + (list.length ? list.map((e, n) => evHtml(e, focusEv != null ? e.i === focusEv : list.length === 1, n)).join("") : '<div class="nw-empty">Sem notícias de alto impacto dos EUA neste dia.</div>');
+    sheet.querySelector("#nwPL").innerHTML = goH + (list.length ? list.map((e, n) => evHtml(e, focusEv != null ? e.i === focusEv : list.length === 1, n)).join("") : '<div class="nw-empty">Sem notícias de alto impacto ' + (cur === "USD" ? "dos EUA" : cur === "ALL" ? "" : "de " + esc(CUR_LONG[cur] || cur)) + ' neste dia.</div>');
     lastFocus = document.activeElement;
     sheet.setAttribute("aria-hidden", "false");
     requestAnimationFrame(() => sheet.classList.add("open"));

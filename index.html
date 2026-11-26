@@ -223,6 +223,7 @@ button:focus-visible, textarea:focus-visible, input:focus-visible { outline: 1.5
 .tip[hidden] { display: none !important; }
 .tip .tt { font-family: var(--display); color: var(--gold); font-size: 14px; margin-bottom: 6px; padding-bottom: 6px; border-bottom: 1px solid rgba(205, 167, 94, .25); }
 .tip .tx { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 180px; overflow: hidden; }
+.tip .tgo { display: block; margin-top: 8px; padding-top: 6px; border-top: 1px solid rgba(205, 167, 94, .2); font-size: 11.5px; color: var(--soft); }
 .tip table { width: 100%; border-collapse: collapse; }
 .tip td { padding: 3px 0; font-variant-numeric: tabular-nums; }
 .tip td + td { text-align: right; padding-left: 14px; font-weight: 600; }
@@ -1414,6 +1415,12 @@ body.night .st, body.night .chc, body.night .achip, body.night .rank, body.night
 .paylist { display: flex; flex-direction: column; gap: 4px; position: relative; z-index: 1; }
 .pay-y { display: flex; justify-content: space-between; align-items: baseline; padding: 8px 6px 2px; color: var(--soft); font-size: 12px; }
 .pay-y b { font-family: var(--display); font-size: 18px; color: var(--champ); font-weight: 500; }
+.pay-y.pay-wait b { color: var(--gold); font-style: italic; }
+.pay-tools { display: flex; justify-content: flex-end; margin: 4px 0 2px; }
+.pay-got { align-self: flex-start; margin-top: 6px; border: 1px solid rgba(205, 167, 94, .6); background: rgba(205, 167, 94, .16); color: #7A5A1E; border-radius: 999px; padding: 5px 11px; font: 600 12px/1 var(--sans); cursor: pointer; white-space: nowrap; position: relative; z-index: 2; }
+.pay-got:hover { background: rgba(205, 167, 94, .3); }
+.pay-csv { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; padding: 8px 14px; }
+.pay-csv svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 .payrow { display: grid; grid-template-columns: 50px minmax(0, 1fr) auto 30px; align-items: center; gap: 10px; background: var(--row); color: var(--ink); border-radius: 12px; padding: 8px 8px 8px 10px; }
 .payrow.wait { background: #F4E8EA; }
 .pay-d { display: flex; flex-direction: column; align-items: center; line-height: 1; }
@@ -1458,6 +1465,13 @@ body .sesbtn { overflow: hidden; }
 }
 .ses-news { margin-top: 8px; padding: 6px 12px; border-radius: 999px; background: rgba(205, 167, 94, .12); border: 1px solid rgba(205, 167, 94, .35); color: var(--champ); font: 500 12.5px/1.3 var(--sans); text-align: center; max-width: 92%; }
 .ses-news b { color: var(--gold); font-weight: 600; }
+.ses-hor { margin-top: 8px; display: inline-flex; align-items: center; gap: 7px; padding: 6px 12px; border-radius: 999px; max-width: 92%; text-align: center; font: 500 12.5px/1.3 var(--sans); color: var(--champ); background: rgba(205, 167, 94, .1); border: 1px solid rgba(205, 167, 94, .3); font-variant-numeric: tabular-nums; transition: background .4s, border-color .4s, box-shadow .6s; }
+.ses-hor[hidden] { display: none; }
+.ses-hor svg { width: 14px; height: 14px; flex: none; fill: none; stroke: var(--gold); stroke-width: 1.6; stroke-linecap: round; }
+.ses-hor b { color: var(--gold); font-weight: 600; }
+.ses-hor.h-out { background: rgba(0, 0, 0, .22); border-style: dashed; color: var(--soft); }
+.ses-hor.h-done { background: rgba(205, 167, 94, .16); border-color: rgba(205, 167, 94, .55); }
+.ses-hor.ring { box-shadow: 0 0 0 4px rgba(205, 167, 94, .18), 0 0 22px rgba(205, 167, 94, .45); }
 body.ses-open .sesbtn { display: none !important; }
 @media (min-width: 861px) { body .sesbtn { right: 28px; bottom: 28px; padding: 13px 20px 13px 16px; font-size: 15px; } }
 .ses { position: fixed; inset: 0; z-index: 35; background: radial-gradient(120% 70% at 50% 0%, #4A0E1E, #170307 70%); color: var(--champ); display: flex; flex-direction: column; align-items: center; padding: max(16px, env(safe-area-inset-top, 0px)) 16px max(18px, env(safe-area-inset-bottom, 0px)); overflow-y: auto; }
@@ -1517,6 +1531,11 @@ body.ses-open .sesbtn { display: none !important; }
 .dlg-card label { font-size: 12px; color: var(--soft); }
 .dlg-card textarea { width: 100%; min-height: 120px; resize: vertical; border-radius: 12px; border: 1px solid rgba(205, 167, 94, .3); background: rgba(0, 0, 0, .25); color: var(--champ); padding: 10px 12px; font: 14px/1.5 var(--sans); }
 .dlg-card textarea::placeholder { color: var(--soft); opacity: .7; }
+.dlg-copy { margin-top: 8px; display: inline-flex; align-items: center; gap: 7px; border: 1px dashed rgba(205, 167, 94, .45); background: none; color: var(--champ); border-radius: 999px; padding: 6px 12px; font: 500 12.5px/1.2 var(--sans); cursor: pointer; }
+.dlg-copy[hidden] { display: none; }
+.dlg-copy b { color: var(--gold); font-weight: 600; }
+.dlg-copy svg { width: 14px; height: 14px; fill: none; stroke: var(--gold); stroke-width: 1.4; stroke-linejoin: round; flex: none; }
+.dlg-copy:hover { background: rgba(205, 167, 94, .12); }
 .offtoggle { display: flex; gap: 10px; align-items: flex-start; padding: 10px 12px; border-radius: 12px; background: rgba(0, 0, 0, .2); cursor: pointer; }
 .offtoggle input { accent-color: #CDA75E; width: 16px; height: 16px; margin: 2px 0 0; }
 .offtoggle span { font-size: 13px; color: var(--champ); }
@@ -1928,6 +1947,17 @@ body.night .lrow.wk-now.d-zero { background-image: linear-gradient(100deg, #CFB3
 .cfg-par span { font-size: 11.5px; color: var(--soft); }
 .cfg-par input { width: 120px; height: 34px; border-radius: 10px; border: 1px solid rgba(205, 167, 94, .45); background: rgba(0, 0, 0, .3); color: #F3D98E; font: 700 14px/1 var(--sans); letter-spacing: .08em; text-transform: uppercase; padding: 0 10px; }
 .cfg-par input:focus { outline: 1.5px solid var(--gold); }
+.cfg-hor { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 12px; margin: 10px 0 4px; font-size: 12.5px; color: var(--soft); }
+.cfg-hor > span { font-size: 11.5px; margin-right: 2px; }
+.cfg-hor label { display: inline-flex; align-items: center; gap: 6px; }
+.cfg-hor input { height: 34px; border-radius: 10px; border: 1px solid rgba(205, 167, 94, .45); background: rgba(0, 0, 0, .3); color: #F3D98E; font: 600 14px/1 var(--sans); padding: 0 8px; color-scheme: dark; }
+.cfg-hor input:focus { outline: 1.5px solid var(--gold); }
+.horchip { display: inline-flex; align-items: center; gap: 6px; margin-top: 7px; border: 1px solid rgba(205, 167, 94, .5); background: rgba(0, 0, 0, .18); color: #F3D98E; border-radius: 999px; padding: 4px 11px 4px 8px; font: 600 12.5px/1.1 var(--sans); cursor: pointer; white-space: nowrap; }
+.horchip span { color: var(--soft); font-weight: 500; }
+.horchip svg { width: 13px; height: 13px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; flex: none; }
+.horchip.empty { border-style: dashed; color: var(--soft); font-weight: 500; }
+.horchip:hover { background: rgba(205, 167, 94, .2); }
+.horchip:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
 .cfg-card { max-height: calc(100vh - 40px); overflow-y: auto; }
 /* phone: the calculator moves into the pencil (day window), so the result has room in the Fusion / Prop rows */
 .dlg-calc { display: flex; align-items: center; gap: 12px; width: 100%; padding: 12px 14px; border-radius: 14px; border: 1px solid rgba(205, 167, 94, .45); background: rgba(0, 0, 0, .22); color: var(--champ); cursor: pointer; text-align: left; font: inherit; }
@@ -2506,7 +2536,7 @@ input.ink { animation: inkIn .55s ease-out; }
       <div class="sub">Pesquisar</div>
       <h3 id="srchTitle">Nas tuas notas</h3>
     </div>
-    <input type="search" id="srchIn" class="srch-in" placeholder="Ex.: CPI, cansada, regra…" autocomplete="off" aria-label="Palavra a procurar">
+    <input type="search" id="srchIn" class="srch-in" placeholder="Ex.: CPI, cansada, ou um dia: 12/11" autocomplete="off" aria-label="Palavra ou dia a procurar">
     <div class="srch-res" id="srchRes"></div>
     <div class="dlg-actions"><button type="button" class="btn" id="srchClose">Fechar</button></div>
   </div>
@@ -2569,6 +2599,7 @@ input.ink { animation: inkIn .55s ease-out; }
     <div>
       <label for="noteText">Nota do dia</label>
       <textarea id="noteText" placeholder="Escreve aqui uma observação sobre este dia…"></textarea>
+      <button type="button" class="dlg-copy" id="dlgCopy" hidden><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="5" y="5" width="8.5" height="9" rx="1.6"/><path d="M3.5 10.5h-.3A1.2 1.2 0 0 1 2 9.3V3.2A1.2 1.2 0 0 1 3.2 2h5.6A1.2 1.2 0 0 1 10 3.2v.3"/></svg><span>Copiar a nota de <b id="dlgCopyD">ontem</b></span></button>
     </div>
     <button type="button" class="dlg-calc" id="dlgCalc" hidden><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="1.8" width="10" height="12.4" rx="1.8"/><rect x="5" y="3.8" width="6" height="2.6" rx=".6"/><path d="M5.6 8.8h.01M8 8.8h.01M10.4 8.8h.01M5.6 11.4h.01M8 11.4h.01M10.4 11.4h.01" stroke-width="1.8"/></svg><span><b>Calculadora em euros</b><small id="dlgCalcS">Risco, resultado em € e comissão</small></span><i aria-hidden="true">›</i></button>
     <label class="offtoggle" for="offCheck">
@@ -3033,9 +3064,12 @@ input.ink { animation: inkIn .55s ease-out; }
   // ---------- data ----------
   // settings: how much a TP is worth (1 to 10 %) and whether to show the BE (break-even) box. Kept on the device and in Supabase.
   const LS_CFG = "diario-trading-config";
-  let TP_PCT = 2, TP_PROP = 2, SHOW_BE = false, PAR_F = "", PAR_P = ""; const SL_PCT = 1;
+  let TP_PCT = 2, TP_PROP = 2, SHOW_BE = false, PAR_F = "", PAR_P = "", HOR_F = "", HOR_P = ""; const SL_PCT = 1;
   const okTp = v => { v = Math.round(+v); return v >= 1 && v <= 10 ? v : null; };
-  try { const c = JSON.parse(localStorage.getItem(LS_CFG) || "{}"); TP_PCT = okTp(c.tp) || 2; TP_PROP = okTp(c.tpProp) || TP_PCT; SHOW_BE = c.be === true; PAR_F = String(c.parF || ""); PAR_P = String(c.parP || ""); } catch (_) {}
+  // trading hours of each account, kept as "HH:MM-HH:MM" (either side may be empty)
+  const okHor = v => { const m = /^(\d\d:\d\d)?-(\d\d:\d\d)?$/.exec(String(v || "")); return m && (m[1] || m[2]) ? m[0] : ""; };
+  const horTxt = v => { const [a, b] = okHor(v).split("-"); return a && b ? a.replace(":", "h") + " – " + b.replace(":", "h") : a ? "a partir das " + a.replace(":", "h") : b ? "até às " + b.replace(":", "h") : ""; };
+  try { const c = JSON.parse(localStorage.getItem(LS_CFG) || "{}"); TP_PCT = okTp(c.tp) || 2; TP_PROP = okTp(c.tpProp) || TP_PCT; SHOW_BE = c.be === true; PAR_F = String(c.parF || ""); PAR_P = String(c.parP || ""); HOR_F = okHor(c.horF); HOR_P = okHor(c.horP); } catch (_) {}
   const isPropKey = k => /^prop/.test(String(k || ""));
   const tpOf = k => isPropKey(k) ? TP_PROP : TP_PCT;   // how much a TP is worth in this table
   // three ledgers: one Estratégia, the Conta (Fusion Markets) and the Prop Firm. prop_estrategia is old data, kept but not shown.
@@ -3196,22 +3230,30 @@ input.ink { animation: inkIn .55s ease-out; }
   const SUPABASE_URL = "https://nexskfugwtmtwsexlhos.supabase.co";
   const SUPABASE_KEY = "sb_publishable_-OiT0kTGfY4MmMgD28LrEg_9cQ6kMXW";
   let sb = null, beCol = false, comCol = false, cfgDirty = false;
-  function saveCfgLocal() { try { localStorage.setItem(LS_CFG, JSON.stringify({ tp: TP_PCT, tpProp: TP_PROP, be: SHOW_BE, parF: PAR_F, parP: PAR_P })); } catch (_) {} }
+  function saveCfgLocal() { try { localStorage.setItem(LS_CFG, JSON.stringify({ tp: TP_PCT, tpProp: TP_PROP, be: SHOW_BE, parF: PAR_F, parP: PAR_P, horF: HOR_F, horP: HOR_P })); } catch (_) {} }
   async function saveCfg() {
     saveCfgLocal(); if (mode !== "db" || !sb) return;
     cfgDirty = true;
-    const r = await sb.from("dias").upsert({ serie: "config", dia: "2000-01-01", tp: TP_PCT, sl: SHOW_BE ? 1 : 0, nota: JSON.stringify({ tpProp: TP_PROP, parFusion: PAR_F, parProp: PAR_P }), sem_operar: false, risco: 0 });
+    const r = await sb.from("dias").upsert({ serie: "config", dia: "2000-01-01", tp: TP_PCT, sl: SHOW_BE ? 1 : 0, nota: JSON.stringify({ tpProp: TP_PROP, parFusion: PAR_F, parProp: PAR_P, horFusion: HOR_F, horProp: HOR_P }), sem_operar: false, risco: 0 });
     cfgDirty = false; return r.error;
   }
   async function loadRemote() {
-    let { data, error } = await sb.from("dias").select("serie,dia,tp,sl,be,comissao,comissoes,nota,sem_operar,risco").limit(10000);
+    // all five tables are asked for at the same time (faster than one after the other)
+    const [d0, crP, prrP, prP, hrP] = await Promise.all([
+      sb.from("dias").select("serie,dia,tp,sl,be,comissao,comissoes,nota,sem_operar,risco").limit(10000),
+      sb.from("contas").select("conta,dia,inicio,fim,risco,deposito,levantamento,nota").limit(20000),
+      sb.from("props").select("id,nome,tamanho,custo,criada,nota,ordem,arquivada").limit(500),
+      sb.from("pagamentos").select("id,conta,dia,valor,metodo,estado,nota,pessoa").limit(5000),
+      sb.from("humor").select("dia,humor").limit(20000)
+    ]);
+    let { data, error } = d0;
     if (error) { beCol = comCol = false; ({ data, error } = await sb.from("dias").select("serie,dia,tp,sl,nota,sem_operar,risco").limit(10000)); } else beCol = comCol = true;
     if (error) throw error;
     const cfgRow = (data || []).find(r => r.serie === "config");
     if (cfgRow && !cfgDirty) {
       TP_PCT = okTp(cfgRow.tp) || 2; SHOW_BE = +cfgRow.sl === 1;
       let x = {}; try { x = JSON.parse(cfgRow.nota || "{}") || {}; } catch (_) {}
-      TP_PROP = okTp(x.tpProp) || TP_PCT; PAR_F = String(x.parFusion || "").slice(0, 20); PAR_P = String(x.parProp || "").slice(0, 20); saveCfgLocal();
+      TP_PROP = okTp(x.tpProp) || TP_PCT; PAR_F = String(x.parFusion || "").slice(0, 20); PAR_P = String(x.parProp || "").slice(0, 20); HOR_F = okHor(x.horFusion); HOR_P = okHor(x.horProp); saveCfgLocal();
     }
     const maps = { estrategia: new Map(), conta: new Map(), prop_estrategia: new Map(), prop_conta: new Map() };
     for (const r of data || []) {
@@ -3225,7 +3267,7 @@ input.ink { animation: inkIn .55s ease-out; }
     }
     for (const key of ALLKEYS) store[key] = maps[key];
     // account balances (the table may be missing on an old database: then just skip)
-    const cr = await sb.from("contas").select("conta,dia,inicio,fim,risco,deposito,levantamento,nota").limit(20000);
+    const cr = crP;
     if (!cr.error) {
       const cm = accBag(() => new Map());
       for (const r of cr.data || []) { if (!isAcc(r.conta)) continue; const n = cnorm({ inicio: r.inicio, fim: r.fim, risco: r.risco, dep: r.deposito, lev: r.levantamento, nota: r.nota || "" }); if (!cIsEmpty(n)) cm[r.conta].set(String(r.dia).slice(0, 10), n); }
@@ -3233,16 +3275,16 @@ input.ink { animation: inkIn .55s ease-out; }
       cstore = cm;
     }
     // the list of props (table "props"; when it is missing, keep the one "Prop")
-    const prr = await sb.from("props").select("id,nome,tamanho,custo,criada,nota,ordem,arquivada").limit(500);
+    const prr = prrP;
     if (!prr.error) {
       props = (prr.data || []).filter(x => isAcc(x.id) && x.id !== "fusion").map(x => ({ id: x.id, nome: String(x.nome || "Prop").slice(0, 40), tamanho: numOrNull(x.tamanho), custo: numOrNull(x.custo), criada: x.criada ? String(x.criada).slice(0, 10) : null, nota: x.nota || "", ordem: +x.ordem || 0, arquivada: x.arquivada === true }));
       for (const k of Object.keys(cstore)) if (k !== "fusion" && !props.some(x => x.id === k)) props.push({ id: k, nome: "Prop", tamanho: null, custo: null, criada: null, nota: "", ordem: 99 });
       sortProps(); saveProps();
       if (!props.some(x => x.id === propSel)) propSel = "prop";
     }
-    const pr = await sb.from("pagamentos").select("id,conta,dia,valor,metodo,estado,nota,pessoa").limit(5000);
+    const pr = prP;
     if (!pr.error) { const pp = accBag(() => []); for (const r of pr.data || []) if (isAcc(r.conta)) pp[r.conta].push({ id: r.id, dia: String(r.dia).slice(0, 10), valor: +r.valor, metodo: r.metodo || "", estado: r.estado === "pedido" ? "pedido" : "recebido", nota: r.nota || "", pessoa: r.pessoa || "Carla" }); pays = pp; }
-    const hr = await sb.from("humor").select("dia,humor").limit(20000);
+    const hr = hrP;
     if (!hr.error) { const mm = new Map(); for (const r of hr.data || []) if (MOOD[r.humor]) mm.set(String(r.dia).slice(0, 10), r.humor); moods = mm; }
     const typing = document.activeElement && document.activeElement.matches && document.activeElement.matches("input, textarea");
     if (dlg.hidden && document.getElementById("calc").hidden && document.getElementById("acdlg").hidden && !typing) render();
@@ -3385,6 +3427,8 @@ input.ink { animation: inkIn .55s ease-out; }
     return '<div class="ftabs" role="tablist" aria-label="' + label + '">' + items.map(([k, l]) => '<button type="button" role="tab" class="ftab" ' + attr + '="' + k + '" aria-selected="' + (k === active) + '">' + l + '</button>').join("") + '</div>';
   }
   // the pair being traded in this account (written in the settings); tap it to change it
+  // the trading hours of this account, under the month on each table (tap to change)
+  const horChip = key => { const p = isPropKey(key), hv = horTxt(p ? HOR_P : HOR_F), nm = p ? "Prop" : "Fusion"; return '<button type="button" class="horchip' + (hv ? "" : " empty") + '" data-paredit="h' + (p ? "p" : "f") + '" aria-label="' + (hv ? "Horário da " + nm + ": " + hv + ". Tocar para mudar" : "Escrever o horário da " + nm) + '"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6"/><path d="M8 4.6V8l2.3 1.5"/></svg>' + (hv ? '<span>Horário</span> ' + hv : "Pôr horário") + '</button>'; };
   const parChip = key => { const par = isPropKey(key) ? PAR_P : PAR_F; return '<button type="button" class="parchip' + (par ? "" : " empty") + '" data-paredit="' + (isPropKey(key) ? "p" : "f") + '" aria-label="' + (par ? "Par: " + esc(par) + ". Tocar para mudar" : "Escrever o par") + '"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 5.5h8.5l-2-2M13 10.5H4.5l2 2"/></svg>' + (par ? esc(par) : "Par") + '</button>'; };
   function ptabHtml(s) {
     return '<div class="ptabrow">' + ftabs([[s.role, s.label]], s.role, "data-noop", s.full) + grpDots() + '</div>';
@@ -3436,7 +3480,7 @@ input.ink { animation: inkIn .55s ease-out; }
     const wkNow = isoWeek(now);
     const isCur = view.y === now.getFullYear() && view.m === now.getMonth();
     h += '<div class="phead"><div><h2' + (isCur ? ' class="cur"' : '') + '>' + cap(MONTHS[view.m]) + ' <em>' + view.y + '</em></h2>' +
-      '<div class="stats"><b>' + t.tp + '</b> TP, <b>' + t.sl + '</b> SL</div></div>' +
+      '<div class="stats"><b>' + t.tp + '</b> TP, <b>' + t.sl + '</b> SL</div>' + horChip(s.key) + '</div>' +
       '<div class="big ' + cls(t.pct) + '">' + fmt(t.pct) + '</div></div>';
     h += '<div class="spark"><div class="sv" data-spark="' + s.key + '"></div></div><div class="ledger">';
     const groups = [];
@@ -3956,8 +4000,11 @@ input.ink { animation: inkIn .55s ease-out; }
       h += '<div class="visor"><div class="vz-l"><small>Cofre · saldo atual</small><b>' + (C.last != null ? EUR.format(C.last) : "— — —") + '</b><span>' + (mStart != null ? "este mês " + eur(mp) : "escreve o início e o fim do dia") + '</span></div><div class="vz-coins" aria-hidden="true">' + Array.from({ length: nC }, (_, i) => '<i style="--i:' + i + '"></i>').join("") + '</div></div>'; }
     // three headline chips: this month, since the start, money already taken out
     const paid = payTotals(a);
+    // what the account made in the whole year on screen, in euros (days with start and end written)
+    let yP = 0, yN = 0; for (const id of C.ids) if (id.startsWith(view.y + "-")) { const r = C.rows.get(id); if (r && r.profit != null) { yP += r.profit; yN++; } }
     h += '<div class="achips">' +
       '<div class="achip"><span>Este mês</span><b class="' + cls(mp) + '">' + (mStart != null ? eur(mp) : "—") + '</b><small>' + (mStart ? fmt1(mp / mStart * 100) : "escreve o início e o fim do dia") + '</small></div>' +
+      '<div class="achip"><span>Em ' + view.y + '</span><b class="' + cls(yP) + '">' + (yN ? eur(yP) : "—") + '</b><small>' + (yN ? "ganho no ano, sem depósitos nem levantamentos" : "ainda sem dias neste ano") + '</small></div>' +
       '<div class="achip"><span>Desde o início</span><b class="' + cls(growth || 0) + '">' + eurS(growth) + '</b><small>' + (C.first && growth != null ? fmt1(growth / C.first * 100) + " desde " + EUR0.format(C.first) : "") + '</small></div>' +
       '<div class="achip lev"><span>Já levantaste</span><b>' + EUR.format(C.lev) + '</b><small>' + (C.nlev ? C.nlev + (C.nlev === 1 ? " levantamento" : " levantamentos") + " desta conta" : "põe-nos no lápis de cada dia") + '</small></div>' +
       '</div>';
@@ -4075,20 +4122,26 @@ input.ink { animation: inkIn .55s ease-out; }
       '<label><span>Data</span><input type="date" name="dia" value="' + iso(new Date()) + '" required></label>' +
       '<label><span>Valor</span><div class="pf-eur"><input type="text" name="valor" inputmode="decimal" placeholder="0,00" required autocomplete="off"><i>€</i></div></label>' +
       '<div class="pf-who" role="radiogroup" aria-label="Para quem foi"><span>Para quem</span><div>' + PESSOAS.map((n, i) => '<label><input type="radio" name="pessoa" value="' + n + '"' + (i ? '' : ' checked') + '><b>' + n + '</b></label>').join("") + '</div></div>' +
+      '<div class="pf-who pf-st" role="radiogroup" aria-label="Estado do pagamento"><span>Estado</span><div><label><input type="radio" name="estado" value="recebido" checked><b>Recebido</b></label><label><input type="radio" name="estado" value="pedido"><b>À espera</b></label></div></div>' +
       '<label class="pf-nota"><span>Nota</span><input type="text" name="nota" placeholder="Opcional" autocomplete="off"></label>' +
       '<button type="submit" class="btn primary pf-add">Adicionar</button></div></form>';
     // list
     if (!list.length) h += '<div class="ch-empty pay-empty">Ainda não registaste pagamentos nesta conta.</div>';
     else {
       let year = null;
+      // the ones still waiting ("pedido") first, apart, with their total
+      const waitL = list.filter(p => p.estado === "pedido"), recL = list.filter(p => p.estado !== "pedido");
+      h += '<div class="pay-tools"><button type="button" class="btn pay-csv" data-paycsv="' + a + '"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2.5v7.5M4.8 7 8 10.2 11.2 7M3 12.5h10"/></svg>Exportar para Excel</button></div>';
       h += '<div class="paylist">';
-      for (const p of list) {
-        const y = p.dia.slice(0, 4);
-        if (y !== year) { year = y; const ty = list.filter(q => q.dia.startsWith(y) && q.estado !== "pedido").reduce((s0, q) => s0 + q.valor, 0); h += '<div class="pay-y"><b>' + y + '</b><span>' + EUR.format(ty) + ' recebidos</span></div>'; }
+      if (waitL.length) h += '<div class="pay-y pay-wait"><b>À espera</b><span>' + EUR.format(waitL.reduce((s0, p) => s0 + p.valor, 0)) + ' pedidos, ainda não recebidos</span></div>';
+      for (const p of waitL.concat(recL)) {
+        const y = p.estado === "pedido" ? "wait" : p.dia.slice(0, 4);
+        if (y !== year && y !== "wait") { year = y; const ty = list.filter(q => q.dia.startsWith(y) && q.estado !== "pedido").reduce((s0, q) => s0 + q.valor, 0); h += '<div class="pay-y"><b>' + y + '</b><span>' + EUR.format(ty) + ' recebidos</span></div>'; }
+        year = y;
         const [yy, mm, dd] = p.dia.split("-").map(Number), dt = new Date(yy, mm - 1, dd);
         // each payout is drawn as a cheque, with a gold "Recebido" seal
         h += '<div class="payrow chq' + (p.estado === "pedido" ? " wait" : "") + '" data-payopen="' + a + '|' + p.id + '">' + (p.estado === "pedido" ? "" : '<span class="pago gseal" aria-hidden="true"><b>Recebido</b><small>' + dd + ' ' + MON3[mm - 1] + ' ' + yy + '</small></span>') + '<div class="pay-d"><b>' + dd + '</b><span>' + MON3[mm - 1] + '</span></div>' +
-          '<div class="pay-m"><small class="chq-to">Pague-se a ' + esc(p.pessoa || "Carla") + '</small><b><span class="chq-box">' + EUR.format(p.valor) + '</span></b><small>' + DOWL[dt.getDay()] + (p.nota ? ' · ' + esc(p.nota) : '') + '</small><svg class="chq-sig" viewBox="0 0 90 18" aria-hidden="true"><path d="M2 13c6-8 10-9 12-4s-3 7-1 3 7-9 10-6-1 8 2 5 6-7 9-5 0 6 3 4 7-5 11-4 6 3 10 1 9-4 14-3"/></svg></div>' +
+          '<div class="pay-m"><small class="chq-to">Pague-se a ' + esc(p.pessoa || "Carla") + '</small><b><span class="chq-box">' + EUR.format(p.valor) + '</span></b><small>' + DOWL[dt.getDay()] + (p.nota ? ' · ' + esc(p.nota) : '') + '</small>' + (p.estado === "pedido" ? '<button type="button" class="pay-got" data-payst="' + a + '|' + p.id + '">✓ Já recebi</button>' : '') + '<svg class="chq-sig" viewBox="0 0 90 18" aria-hidden="true"><path d="M2 13c6-8 10-9 12-4s-3 7-1 3 7-9 10-6-1 8 2 5 6-7 9-5 0 6 3 4 7-5 11-4 6 3 10 1 9-4 14-3"/></svg></div>' +
           '<span class="pay-who pw-' + (p.pessoa === "Miguel" ? "m" : "c") + '">' + esc(p.pessoa || "Carla") + '</span>' +
           '<button type="button" class="pay-x" data-paydel="' + a + '|' + p.id + '" aria-label="Apagar este pagamento">✕</button></div>';
       }
@@ -4639,14 +4692,38 @@ input.ink { animation: inkIn .55s ease-out; }
     an.onfinish = () => { L.remove(); if (tg) { tg.classList.remove("got-letter"); void tg.offsetWidth; tg.classList.add("got-letter"); setTimeout(() => tg.classList.remove("got-letter"), 900); } };
   }
   let sesTapped = false;
+  // the trading hours in the Sessão: how long until it starts / ends, and a soft note when outside them
+  function horState(key) {
+    const hv = okHor(isPropKey(key) ? HOR_P : HOR_F); if (!hv) return null;
+    const [a, b] = hv.split("-"), n = new Date(), wd = n.getDay(), lbl = horTxt(hv);
+    const at = t => { const [h, m] = t.split(":").map(Number); return new Date(n.getFullYear(), n.getMonth(), n.getDate(), h, m, 0); };
+    if (wd === 0 || wd === 6) return { st: "we", html: 'O teu horário: <b>' + lbl + '</b>' };
+    const s = a ? at(a) : null, e = b ? at(b) : null;
+    if (s && n < s) return { st: "out", html: 'Ainda estás fora do teu horário (' + lbl + ') · começa daqui a <b>' + hms(s - n) + '</b>' };
+    if (e && n >= e) return { st: "done", html: 'O teu horário terminou às <b>' + b.replace(":", "h") + '</b>. Bom descanso ✦' };
+    if (e) return { st: "on", html: 'Faltam <b>' + hms(e - n) + '</b> para fechar o teu horário (' + b.replace(":", "h") + ')' };
+    return { st: "on", html: 'Estás no teu horário (' + lbl + ')' };
+  }
+  const sesHorHtml = key => { const h = horState(key); return '<div class="ses-hor' + (h ? " h-" + h.st : "") + '" id="sesHor"' + (h ? '' : ' hidden') + '><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6"/><path d="M8 4.6V8l2.3 1.5"/></svg><span>' + (h ? h.html : '') + '</span></div>'; };
+  let horPrev = null, horRang = false;
+  setInterval(() => {
+    const el = document.getElementById("sesHor"); if (!el || typeof ses === "undefined" || ses.hidden) { horPrev = null; return; }
+    const h = horState(ses.dataset.hk || ""); el.hidden = !h; if (!h) return;
+    // the moment the hours end with the Sessão open: a soft glow (stays) and a little vibration, once
+    if (horPrev === "on" && h.st === "done") { horRang = true; try { haptic(); } catch (_) {} }
+    if (h.st !== "done") horRang = false;
+    el.className = "ses-hor h-" + h.st + (horRang ? " ring" : ""); el.querySelector("span").innerHTML = h.html;
+    horPrev = h.st;
+  }, 1000);
   function drawSes() {
     try { const mf = ses.querySelector(".mb-f"); if (mf) mbLeft = mf.scrollLeft; } catch (_) {}
     if (!SES().some(x => x.role === sesRole)) sesRole = "conta";
     const d = new Date(), id = iso(d), s = byRole(sesRole), e = entry(s.key, id), p = pctOf(e), we = d.getDay() === 0 || d.getDay() === 6;
     ses.dataset.res = !we && !e.off && traded(s.key, id) ? cls(p) : "";   // soft green / yellow / red glow behind the keys
+    ses.dataset.hk = s.key;
     ses.innerHTML = '<i class="ses-dusk" aria-hidden="true" style="--dusk:' + sesDusk().toFixed(3) + '"></i>' + (sesLast ? '<i class="ses-glow g-' + sesLast + '" aria-hidden="true"></i>' : '') + '<div class="ses-top"><div class="ses-tabs">' + SES().map(x => '<button type="button" data-sesr="' + x.role + '" aria-pressed="' + (x.role === sesRole) + '">' + x.label + '</button>').join("") + '</div><button type="button" class="ses-x" data-ses="close" aria-label="Fechar">✕</button></div>' +
       '<i class="ses-frame" aria-hidden="true"></i><i class="ses-grab" aria-hidden="true"></i>' + sesWatch() +
-      '<div class="ses-par">' + ((isPropKey(s.key) ? PAR_P : PAR_F) ? '<b>' + esc(isPropKey(s.key) ? PAR_P : PAR_F) + '</b>' : '') + '<span>1:' + tpOf(s.key) + '</span></div>' + '<div class="ses-date">' + DOWL[d.getDay()] + ', ' + d.getDate() + ' de ' + MONTHS[d.getMonth()] + '</div><div class="ses-clock" id="sesClock">' + dayClock().short + '</div><div class="ses-news" id="sesNews"' + (sesNewsTxt() ? '' : ' hidden') + '>' + sesNewsTxt() + '</div>' +
+      '<div class="ses-par">' + ((isPropKey(s.key) ? PAR_P : PAR_F) ? '<b>' + esc(isPropKey(s.key) ? PAR_P : PAR_F) + '</b>' : '') + '<span>1:' + tpOf(s.key) + '</span></div>' + '<div class="ses-date">' + DOWL[d.getDay()] + ', ' + d.getDate() + ' de ' + MONTHS[d.getMonth()] + '</div><div class="ses-clock" id="sesClock">' + dayClock().short + '</div>' + sesHorHtml(s.key) + '<div class="ses-news" id="sesNews"' + (sesNewsTxt() ? '' : ' hidden') + '>' + sesNewsTxt() + '</div>' +
       (we ? '<p class="ses-we">Hoje é fim de semana. O Diário só tem dias úteis.</p>' : e.off ? '<p class="ses-we">Este dia está marcado como "sem operar".</p>' :
         '<div class="ses-res ' + cls(p) + '">' + fmt(p) + '</div><div class="ses-cnt">' + e.tp + ' TP · ' + e.sl + ' SL' + (SHOW_BE ? ' · ' + (e.be || 0) + ' BE' : '') + (s.acct && e.risk ? ' · ' + eur(euroOf(e)) : '') + '</div>' +
         '<div class="ses-btns"><button type="button" class="key ses-tp" data-ses="tp" aria-label="Mais um TP">' + sesRing(e.tp, e.tp + e.sl, "tp") + '<span class="cap"><b>TP</b><small>Take profit</small><span class="cnt">' + e.tp + '</span></span></button><button type="button" class="key ses-sl" data-ses="sl" aria-label="Mais um SL">' + sesRing(e.sl, e.tp + e.sl, "sl") + '<span class="cap"><b>SL</b><small>Stop loss</small><span class="cnt">' + e.sl + '</span></span></button></div>' +
@@ -4833,10 +4910,22 @@ input.ink { animation: inkIn .55s ease-out; }
     const a = Math.max(0, i - 50), b = Math.min(text.length, i + nq.length + 80);
     return (a ? "…" : "") + esc(text.slice(a, i)) + '<mark>' + esc(text.slice(i, i + nq.length)) + '</mark>' + esc(text.slice(i + nq.length, b)) + (b < text.length ? "…" : "");
   }
+  // "12", "12/11", "12 nov", "12/11/2026": a day to jump to in the Diário
+  function dateQuery(q) {
+    const m = /^(\d{1,2})(?:\s*[\/\-. ]\s*(\d{1,2}|[a-zç]{3,}))?(?:\s*[\/\-. ]\s*(\d{4}))?$/.exec(norm0(q.trim())); if (!m) return null;
+    let mo = view.m; if (m[2]) { if (/^\d+$/.test(m[2])) mo = +m[2] - 1; else { mo = MONTHS.findIndex(x => norm0(x).startsWith(m[2].slice(0, 3))); if (mo < 0) return null; } }
+    const y = m[3] ? +m[3] : view.y, d = new Date(y, mo, +m[1]);
+    if (mo < 0 || mo > 11 || d.getMonth() !== mo || d.getDate() !== +m[1]) return null;
+    return d;
+  }
   function drawSearch() {
-    const q = $("srchIn").value, res = searchNotes(q), box = $("srchRes");
-    if (norm0(q.trim()).length < 2) { box.innerHTML = '<p class="srch-hint">Escreve pelo menos 2 letras. Procura nas notas do Diário e da Conta.</p>'; return; }
-    box.innerHTML = res.length ? res.map(r => { const [y, m, d] = r.id.split("-").map(Number), dt = new Date(y, m - 1, d); return '<button type="button" class="srch-it" data-sgo="' + r.k + '|' + r.key + '|' + r.id + '"><span class="srch-d"><b>' + d + ' ' + MON3[m - 1] + ' ' + y + '</b><small>' + DOW[dt.getDay()] + ' · ' + esc(r.label) + '</small></span><span class="srch-t">' + hl(r.text, q) + '</span></button>'; }).join("") : '<p class="srch-hint">Não encontrei nenhuma nota com "' + esc(q.trim()) + '".</p>';
+    const q = $("srchIn").value, res = searchNotes(q), box = $("srchRes"), dq = dateQuery(q);
+    let jump = "";
+    if (dq) { const we = dq.getDay() === 0 || dq.getDay() === 6, cur = SERIES.find(x => x.grp === grp && x.side === side) || SERIES[0];
+      jump = we ? '<p class="srch-hint">' + DOWL[dq.getDay()] + ', ' + dq.getDate() + ' de ' + MONTHS[dq.getMonth()] + ' é fim de semana. O Diário só tem dias úteis.</p>'
+        : '<button type="button" class="srch-it srch-jump" data-sgo="d|' + cur.key + '|' + iso(dq) + '"><span class="srch-d"><b>Ir para ' + dq.getDate() + ' ' + MON3[dq.getMonth()] + ' ' + dq.getFullYear() + '</b><small>' + DOWL[dq.getDay()] + ' · ' + esc(cur.full) + '</small></span><span class="srch-t">Abre o Diário nesse dia ›</span></button>'; }
+    if (norm0(q.trim()).length < 2) { box.innerHTML = jump || '<p class="srch-hint">Escreve uma palavra (pelo menos 2 letras) para procurar nas notas do Diário e da Conta, ou um dia para lá ir (ex.: 12 ou 12/11).</p>'; return; }
+    box.innerHTML = jump + (res.length ? res.map(r => { const [y, m, d] = r.id.split("-").map(Number), dt = new Date(y, m - 1, d); return '<button type="button" class="srch-it" data-sgo="' + r.k + '|' + r.key + '|' + r.id + '"><span class="srch-d"><b>' + d + ' ' + MON3[m - 1] + ' ' + y + '</b><small>' + DOW[dt.getDay()] + ' · ' + esc(r.label) + '</small></span><span class="srch-t">' + hl(r.text, q) + '</span></button>'; }).join("") : dq ? '' : '<p class="srch-hint">Não encontrei nenhuma nota com "' + esc(q.trim()) + '".</p>');
   }
   function goToDay(k, key, id) {
     const [y, m] = id.split("-").map(Number); view.y = y; view.m = m - 1;
@@ -5174,23 +5263,25 @@ input.ink { animation: inkIn .55s ease-out; }
   const cfgDlg = document.createElement("div"); cfgDlg.className = "dlg"; cfgDlg.id = "cfgdlg"; cfgDlg.hidden = true; document.body.appendChild(cfgDlg);
   let cfg = {};
   // one block per account: how much a TP is worth there, and the pair being traded
-  const cfgAcc = (k, name, tp, par) => '<div class="cfg-sec cfg-acc"><div class="cfg-ah"><b>' + name + '</b><label class="cfg-par"><span>Par</span><input type="text" data-cfgpar="' + k + '" value="' + esc(par) + '" maxlength="20" placeholder="ex.: EURUSD" autocomplete="off" autocapitalize="characters" spellcheck="false"></label></div>' +
+  const cfgAcc = (k, name, tp, par, hor) => { const [ha, hb] = okHor(hor).split("-"); return '<div class="cfg-sec cfg-acc"><div class="cfg-ah"><b>' + name + '</b><label class="cfg-par"><span>Par</span><input type="text" data-cfgpar="' + k + '" value="' + esc(par) + '" maxlength="20" placeholder="ex.: EURUSD" autocomplete="off" autocapitalize="characters" spellcheck="false"></label></div>' +
+    '<div class="cfg-hor"><span>Horário</span><label>das <input type="time" data-cfghor="' + k + '|a" value="' + (ha || "") + '"></label><label>às <input type="time" data-cfghor="' + k + '|b" value="' + (hb || "") + '"></label></div>' +
     '<small>Quanto vale um TP na ' + name + '? (o SL vale sempre −1%)</small><div class="cfg-tp" role="radiogroup" aria-label="Valor do TP na ' + name + '">' +
     [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(v => '<button type="button" role="radio" data-cfgtp="' + k + '|' + v + '" aria-checked="' + (v === tp) + '">1:' + v + '</button>').join("") + '</div>' +
-    '<div class="cfg-ex">1 TP = <b>+' + tp + '%</b> · 1 SL = <b>−1%</b> · ex.: 3 TP e 2 SL = <b>' + fmt(3 * tp - 2) + '</b></div></div>';
+    '<div class="cfg-ex">1 TP = <b>+' + tp + '%</b> · 1 SL = <b>−1%</b> · ex.: 3 TP e 2 SL = <b>' + fmt(3 * tp - 2) + '</b></div></div>'; };
   function drawCfg() {
     cfgDlg.innerHTML = '<div class="dlg-card cfg-card" role="dialog" aria-modal="true" aria-labelledby="cfgT"><div><div class="sub">Diário</div><h3 id="cfgT">Configurações</h3><p class="cfg-note">A Fusion e a Prop podem ter valores diferentes. A Estratégia de cada uma usa o mesmo valor da sua conta. Ao mudar, os resultados são recalculados.</p></div>' +
-      cfgAcc("f", "Fusion", cfg.tpF, cfg.parF) + cfgAcc("p", "Prop", cfg.tpP, cfg.parP) +
+      cfgAcc("f", "Fusion", cfg.tpF, cfg.parF, cfg.horF) + cfgAcc("p", "Prop", cfg.tpP, cfg.parP, cfg.horP) +
       '<div class="cfg-sec"><label class="cfg-sw"><input type="checkbox" id="cfgBe"' + (cfg.be ? " checked" : "") + '><span class="sw" aria-hidden="true"></span><span><b>Bolinha BE (break-even)</b><small>Para as operações que fecharam a zero, no preço de entrada. Contam no TO, mas não mexem no resultado.</small></span></label></div>' +
       '<div class="cfg-sec"><label class="cfg-sw"><input type="checkbox" id="cfgSom"' + (cfg.som ? " checked" : "") + '><span class="sw" aria-hidden="true"></span><span><b>Som de sino ao abrir</b><small>Um toque suave quando abres o site. Fica só neste telemóvel ou computador. No iPhone toca quando tocas no ecrã pela primeira vez.</small></span></label></div>' +
       (ro ? '<p class="cfg-ro">Só leitura: entra na tua conta para mudar as configurações.</p>' : '') +
       '<div class="dlg-actions"><button type="button" class="btn" data-cfg="cancel">Cancelar</button><button type="button" class="btn primary" data-cfg="save"' + (ro ? " disabled" : "") + '>Guardar</button></div></div>';
   }
-  const cfgRead = () => { const g = k => { const i = cfgDlg.querySelector('[data-cfgpar="' + k + '"]'); return i ? i.value.trim().toUpperCase().slice(0, 20) : ""; }; cfg.parF = g("f"); cfg.parP = g("p"); const b = $("cfgBe"); if (b) cfg.be = b.checked; const sm = $("cfgSom"); if (sm) cfg.som = sm.checked; };
+  const cfgRead = () => { const g = k => { const i = cfgDlg.querySelector('[data-cfgpar="' + k + '"]'); return i ? i.value.trim().toUpperCase().slice(0, 20) : ""; }; cfg.parF = g("f"); cfg.parP = g("p"); const hv = (k, s) => { const i = cfgDlg.querySelector('[data-cfghor="' + k + '|' + s + '"]'); return i && /^\d\d:\d\d/.test(i.value) ? i.value.slice(0, 5) : ""; }; if (cfgDlg.querySelector("[data-cfghor]")) { cfg.horF = okHor(hv("f", "a") + "-" + hv("f", "b")); cfg.horP = okHor(hv("p", "a") + "-" + hv("p", "b")); } const b = $("cfgBe"); if (b) cfg.be = b.checked; const sm = $("cfgSom"); if (sm) cfg.som = sm.checked; };
   function openCfg(focusPar) {
     let som = false; try { som = localStorage.getItem("diario-som-abrir") === "1"; } catch (_) {}
-    cfg = { tpF: TP_PCT, tpP: TP_PROP, be: SHOW_BE, parF: PAR_F, parP: PAR_P, som }; drawCfg(); cfgDlg.hidden = false;
-    if (focusPar) setTimeout(() => { const i = cfgDlg.querySelector('[data-cfgpar="' + focusPar + '"]'); if (i) { i.focus(); i.select(); } }, 60);
+    cfg = { tpF: TP_PCT, tpP: TP_PROP, be: SHOW_BE, parF: PAR_F, parP: PAR_P, horF: HOR_F, horP: HOR_P, som }; drawCfg(); cfgDlg.hidden = false;
+    if (focusPar && focusPar.startsWith("h")) setTimeout(() => { const i = cfgDlg.querySelector('[data-cfghor="' + focusPar.slice(1) + '|a"]'); if (i) { i.closest(".cfg-acc").scrollIntoView({ block: "center" }); i.focus(); } }, 60);
+    else if (focusPar) setTimeout(() => { const i = cfgDlg.querySelector('[data-cfgpar="' + focusPar + '"]'); if (i) { i.focus(); i.select(); } }, 60);
   }
   function closeCfg() { cfgDlg.hidden = true; }
   $("cfgBtn").addEventListener("click", () => openCfg());
@@ -5203,7 +5294,7 @@ input.ink { animation: inkIn .55s ease-out; }
     if (a.dataset.cfg === "cancel") return closeCfg();
     if (a.dataset.cfg === "save") { cfgRead(); try { localStorage.setItem("diario-som-abrir", cfg.som ? "1" : "0"); } catch (_) {} if (ro) closeCfg(); }
     if (a.dataset.cfg === "save" && !ro) {
-      cfgRead(); TP_PCT = cfg.tpF; TP_PROP = cfg.tpP; SHOW_BE = !!cfg.be; PAR_F = cfg.parF; PAR_P = cfg.parP; closeCfg(); render(); if (typeof ses !== "undefined" && !ses.hidden) drawSes();
+      cfgRead(); TP_PCT = cfg.tpF; TP_PROP = cfg.tpP; SHOW_BE = !!cfg.be; PAR_F = cfg.parF; PAR_P = cfg.parP; HOR_F = cfg.horF || ""; HOR_P = cfg.horP || ""; closeCfg(); render(); if (typeof ses !== "undefined" && !ses.hidden) drawSes();
       setStatus("saving", "A guardar…"); const err = await saveCfg(); if (err) setStatus("err", "Não foi guardado, tenta outra vez"); else idleStatus();
     }
   });
@@ -5345,6 +5436,11 @@ input.ink { animation: inkIn .55s ease-out; }
   // ---------- day dialog (note + day off) ----------
   const dlg = $("dlg");
   let dlgKey = null, lastFocus = null;
+  let copyFrom = null;
+  $("dlgCopy").addEventListener("click", () => {
+    if (!copyFrom) return; const t = $("noteText"), cur = t.value.trim();
+    t.value = cur ? cur + "\n" + copyFrom.note : copyFrom.note; t.focus(); t.setSelectionRange(t.value.length, t.value.length);
+  });
   function openDay(s, id, offOnly) {
     const [y, m, dd] = id.split("-").map(Number), d = new Date(y, m - 1, dd), e = entry(s, id);
     dlgKey = { s, id, offOnly: !!offOnly };
@@ -5355,6 +5451,10 @@ input.ink { animation: inkIn .55s ease-out; }
     $("dlgTitle").textContent = DOWL[d.getDay()] + ", " + d.getDate() + " de " + MONTHS[d.getMonth()];
     $("noteText").value = e.note || "";
     $("offCheck").checked = !!e.off;
+    // the last earlier day (up to 3 weeks back) of this table that has a note, to copy from
+    { let prev = null; const p = new Date(d); for (let i = 0; i < 21 && !prev; i++) { p.setDate(p.getDate() - 1); const n = entry(s, iso(p)).note; if (n && n.trim()) prev = { d: new Date(p), note: n }; }
+      copyFrom = prev; $("dlgCopy").hidden = !prev || ro || !!offOnly;
+      if (prev) { const df = Math.round((d - prev.d) / 864e5); $("dlgCopyD").textContent = df === 1 ? "ontem" : DOWL[prev.d.getDay()].toLowerCase() + ", " + prev.d.getDate() + " de " + MONTHS[prev.d.getMonth()]; } }
     // Fusion / Prop: the calculator is also here (on the phone it is no longer in the row)
     $("dlgCalc").hidden = !byKey(s).acct || !!offOnly;
     $("dlgCalcS").textContent = e.risk ? "Risco " + EUR.format(e.risk) + " · " + eur(euroOf(e)) + (e.com ? " (com. −" + EUR.format(e.com) + ")" : "") : "Risco, resultado em € e comissão";
@@ -5521,6 +5621,8 @@ input.ink { animation: inkIn .55s ease-out; }
     tip.style.left = left + "px"; tip.style.top = top + "px";
   }
   function hideTip() { tip.hidden = true; tipFor = null; }
+  let calNoteFor = null;   // Calendário on the phone: the day whose note is open (a 2nd tap opens the Diário)
+  window.addEventListener("scroll", () => { calNoteFor = null; }, { passive: true });
   const canHover = window.matchMedia && window.matchMedia("(hover: hover)").matches;
   $("view").addEventListener("mouseover", e => { if (!canHover) return; const el = e.target.closest("[data-tip]"); if (el && el !== tipFor) showTip(el); });
   $("view").addEventListener("mouseout", e => { const el = e.target.closest("[data-tip]"); if (el && !el.contains(e.relatedTarget)) hideTip(); });
@@ -5623,6 +5725,11 @@ input.ink { animation: inkIn .55s ease-out; }
     if (pg) { acMode = acMode === "pag" && pg.matches("[data-pag]") ? "conta" : "pag"; try { localStorage.setItem("diario-trading-conta-modo", acMode); } catch (_) {} render(); window.scrollTo({ top: Math.min(window.scrollY, document.querySelector(".tabbed").getBoundingClientRect().top + window.scrollY - 80) }); return; }
     const ps = e.target.closest("[data-payst]");
     if (ps) { const [a, id] = ps.dataset.payst.split("|"), p = pays[a].find(x => x.id === id); if (p) { setPayState(a, id, p.estado === "pedido" ? "recebido" : "pedido"); render(); } return; }
+    const pcv = e.target.closest("[data-paycsv]");
+    if (pcv) { const a = pcv.dataset.paycsv, q = v => '"' + String(v == null ? "" : v).replace(/"/g, '""') + '"';
+      let csv = "﻿" + ["Conta", "Dia", "Valor €", "Para quem", "Estado", "Nota"].join(";") + "\n";
+      for (const p of pays[a].slice().sort((x, y) => x.dia.localeCompare(y.dia))) csv += [q(acName(a)), p.dia, String(Math.round(p.valor * 100) / 100).replace(".", ","), q(p.pessoa || "Carla"), p.estado === "pedido" ? "à espera" : "recebido", q(p.nota)].join(";") + "\n";
+      download("pagamentos-" + acName(a).replace(/[^\w-]+/g, "-").toLowerCase() + "-" + iso(new Date()) + ".csv", csv, "text/csv;charset=utf-8"); return; }
     const pd = e.target.closest("[data-paydel]");
     if (pd) { const [a, id] = pd.dataset.paydel.split("|"); delPay(a, id); render(); return; }
     const ad = e.target.closest("button[data-acday]");
@@ -5634,6 +5741,13 @@ input.ink { animation: inkIn .55s ease-out; }
     const m = e.target.closest("button[data-m]");
     if (m) { view.m = +m.dataset.m; render(); return; }
     const go = e.target.closest("button[data-go]");
+    // on the phone (no hover): the first tap on a day with a note shows the note, the second opens the Diário
+    if (go && go.dataset.tip === "note" && window.matchMedia && window.matchMedia("(hover: none)").matches && calNoteFor !== go.dataset.go) {
+      calNoteFor = go.dataset.go;
+      setTimeout(() => { showTip(go); const h0 = document.createElement("small"); h0.className = "tgo"; h0.textContent = "Toca outra vez no dia para abrir o Diário"; tip.append(h0); }, 0);
+      return;
+    }
+    calNoteFor = null;
     if (go) {
       const [s, id] = go.dataset.go.split("|"), x = byKey(s);
       grp = x.grp; side = x.side; saveShown(); setTab("diario");
@@ -5664,7 +5778,7 @@ input.ink { animation: inkIn .55s ease-out; }
     e.preventDefault();
     const a = f.dataset.payform, v = parseNum(f.valor.value);
     if (!v || v <= 0) { f.valor.focus(); f.valor.setCustomValidity("Escreve o valor"); f.valor.reportValidity(); f.valor.setCustomValidity(""); return; }
-    const item = await addPay(a, { dia: f.dia.value || iso(new Date()), valor: v, estado: "recebido", pessoa: (f.querySelector('input[name="pessoa"]:checked') || {}).value, nota: f.nota.value.trim().slice(0, 300) });
+    const item = await addPay(a, { dia: f.dia.value || iso(new Date()), valor: v, estado: (f.querySelector('input[name="estado"]:checked') || {}).value === "pedido" ? "pedido" : "recebido", pessoa: (f.querySelector('input[name="pessoa"]:checked') || {}).value, nota: f.nota.value.trim().slice(0, 300) });
     pushUndo("Pagamento de " + EUR.format(v) + " guardado", () => { delPay(a, item.id); hideUndo(); render(); });
     render();
     envelopeShow(item);
