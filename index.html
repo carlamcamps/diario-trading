@@ -2553,6 +2553,18 @@ body.hc-eur .lrow .res .eur, body.hc-eur .lrow .res .com, body.hc-eur .weur { di
 .wk-notes li { padding: 8px 10px; border-radius: 10px; background: rgba(0, 0, 0, .16); font-size: 13px; line-height: 1.4; }
 .wk-notes li b { display: block; color: var(--gold); font-size: 12px; margin-bottom: 2px; }
 .wk-notes li span { white-space: pre-wrap; overflow-wrap: anywhere; }
+html.themed .sum-img { background-color: var(--t-lo) !important; }
+html.themed .dlg { background-color: color-mix(in srgb, var(--t-lo) 62%, transparent) !important; }
+.st-foot { display: flex; justify-content: center; margin: 22px 0 6px; }
+/* the line of the week, with the value written on each day */
+.wk-line { padding: 10px 6px 4px; border-radius: 14px; background: rgba(0, 0, 0, .18); border: 1px solid rgba(205, 167, 94, .22); }
+.wk-line svg { display: block; width: 100%; height: auto; overflow: visible; }
+.wk-line .wl-a { fill: url(#wkLg); } .wk-line .wl-l { fill: none; stroke: #CDA75E; stroke-width: 2.2; stroke-linejoin: round; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 1; animation: spDraw .9s ease-out .1s forwards; }
+.wk-line .wl-z { stroke: rgba(239, 220, 198, .25); stroke-dasharray: 3 4; }
+.wk-line .wl-p { fill: #F3D98E; stroke: #2A0A11; stroke-width: 1.4; }
+.wk-line .wl-v { font: 600 11px var(--sans); fill: #EFDCC6; text-anchor: middle; }
+.wk-line .wl-v.pos { fill: #8FD4A8; } .wk-line .wl-v.neg { fill: #F29AAE; }
+.wk-line .wl-d { font: 500 10px var(--sans); fill: var(--soft); text-anchor: middle; }
 /* floating "Hoje" */
 .fab-today { position: fixed; z-index: 16; left: 50%; bottom: max(76px, calc(env(safe-area-inset-bottom, 0px) + 70px)); transform: translateX(-50%); border: 1px solid rgba(255, 240, 200, .6); border-radius: 999px; padding: 8px 16px; background: linear-gradient(135deg, #EED39A, #CDA75E 40%, #A8833F); color: #2A0A11; font: 600 13px/1 var(--sans); box-shadow: 0 10px 22px -10px rgba(0, 0, 0, .8); cursor: pointer; animation: fabIn .3s ease both; }
 .fab-today span { margin-right: 4px; }
@@ -4041,7 +4053,7 @@ body.hc-eur .lrow .res .eur, body.hc-eur .lrow .res .com, body.hc-eur .weur { di
     const plabel = per === "m" ? cap(MONTHS[view.m]) + " " + view.y : per === "y" ? "Ano " + view.y : "Desde o início";
     let h = '<div class="stw"><section class="stp-card glass g-' + s.role + '"><svg class="wm" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4.5A1.5 1.5 0 0 1 6.5 3H19v15H6.5A1.5 1.5 0 0 0 5 19.5z"/><path d="M5 19.5A1.5 1.5 0 0 0 6.5 21H19v-3"/><path d="M9 7.5h6M9 11h4"/></svg>';
     h += '<div class="st-head"><div><div class="kind">Estatísticas</div><h2>' + plabel + '</h2></div>' +
-      '<div class="st-hr"><button type="button" class="sumbtn" data-sum="' + s.role + '">✦ Resumo de ' + MONTHS[view.m] + '</button><button type="button" class="sumbtn xlsbtn" data-csv="1"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="2.5" width="11" height="11" rx="1.5"/><path d="M2.5 6.2h11M2.5 9.8h11M6.2 2.5v11"/></svg>Exportar para Excel</button><div class="per pslide" role="group" data-pi="' + ["m", "y", "all"].indexOf(perPrev) + '|' + ["m", "y", "all"].indexOf(per) + '" aria-label="Período">' + [["m", "Mês"], ["y", "Ano"], ["all", "Tudo"]].map(([k, l]) => '<button type="button" data-per="' + k + '" aria-pressed="' + (per === k) + '">' + l + '</button>').join("") + '</div></div></div>';
+      '<div class="st-hr"><button type="button" class="sumbtn" data-sum="' + s.role + '">✦ Resumo de ' + MONTHS[view.m] + '</button><div class="per pslide" role="group" data-pi="' + ["m", "y", "all"].indexOf(perPrev) + '|' + ["m", "y", "all"].indexOf(per) + '" aria-label="Período">' + [["m", "Mês"], ["y", "Ano"], ["all", "Tudo"]].map(([k, l]) => '<button type="button" data-per="' + k + '" aria-pressed="' + (per === k) + '">' + l + '</button>').join("") + '</div></div></div>';
     setTimeout(() => { perPrev = per; }, 0);
     // no days yet: still show the NFP / CPI / FOMC table of the year (handy for backtesting)
     // no days yet: show everything at 0 (same layout as with data)
@@ -4083,6 +4095,7 @@ body.hc-eur .lrow .res .eur, body.hc-eur .lrow .res .com, body.hc-eur .weur { di
     h += sec("Comparação", "as quatro tabelas e os meses") + '<div class="cmp-w"><div class="cmp"><div class="cht">Comparar no mesmo período</div><table><thead><tr><th></th><th>Resultado</th><th>Acerto</th><th>Dias</th><th>Melhor dia</th></tr></thead><tbody>' +
       SERIES.map(x => { const q = statsOf(x, periodDays(x)); return '<tr' + (x.role === s.role ? ' class="me"' : '') + '><th>' + x.full + '</th><td class="' + cls(q.pct) + '">' + fmt(q.pct) + '</td><td>' + (q.win == null ? "—" : NUM1.format(q.win) + "%") + '</td><td>' + q.n + '</td><td>' + (q.best ? fmt(q.best.p) : "—") + '</td></tr>'; }).join("") + '</tbody></table></div>';
     h += rankCard(s) + '</div>';
+    h += '<div class="st-foot"><button type="button" class="sumbtn xlsbtn" data-csv="1"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="2.5" width="11" height="11" rx="1.5"/><path d="M2.5 6.2h11M2.5 9.8h11M6.2 2.5v11"/></svg>Exportar para Excel</button></div>';
     h += '</section></div>';
     return h;
   }
@@ -4766,13 +4779,23 @@ body.hc-eur .lrow .res .eur, body.hc-eur .lrow .res .com, body.hc-eur .weur { di
 
   // ---------- monthly summary: a pretty page you can save as an image ----------
   function rr(g, x, y, w, h, r) { g.beginPath(); g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r); g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath(); }
+  // the colours of the summary image follow the background colour chosen in Configurações → Site (the gold stays)
+  function sumColors() {
+    const hx = v => { v = v.replace("#", ""); return [0, 2, 4].map(i => parseInt(v.slice(i, i + 2), 16)); };
+    const mix = (a, b, t) => { const A = hx(a), B = hx(b); return "#" + A.map((x, i) => Math.round(x + (B[i] - x) * t).toString(16).padStart(2, "0")).join(""); };
+    const rgba = (a, al) => { const A = hx(a); return "rgba(" + A.join(",") + "," + al + ")"; };
+    const T = (window.DT_THEMES || []).find(t => t[0] === document.documentElement.dataset.bg);
+    if (!T || T[0] === "bordeaux") return { top: "#300813", bot: "#11030A", glow: "rgba(120,20,42,.55)", s1: "#330914", s2: "#1C0409", s3: "#0B0206", soft: "#C7A9A3" };
+    const p = T[3], b = T[4] ? T[3] : T[2];
+    return { top: mix(p, "#000000", .1), bot: mix(b, "#000000", .62), glow: rgba(mix(p, "#ffffff", .25), .5), s1: mix(p, "#000000", .05), s2: mix(b, "#000000", .45), s3: mix(b, "#000000", .75), soft: mix(p, "#E6DED6", .7) };
+  }
   async function summaryCanvas(s) {
     try { await document.fonts.ready; } catch (_) {}
-    const days = weekdays(view.y, view.m), r = statsOf(s, days), W = 1080, H = 1350;
+    const days = weekdays(view.y, view.m), r = statsOf(s, days), W = 1080, H = 1350, TC = sumColors();
     const c = document.createElement("canvas"); c.width = W; c.height = H; const g = c.getContext("2d");
-    const POS = "#A6DCB6", NEG = "#F4A6B2", GOLD = "#CDA75E", CH = "#EFDCC6", SOFT = "#C7A9A3";
-    const bg = g.createLinearGradient(0, 0, 0, H); bg.addColorStop(0, "#300813"); bg.addColorStop(1, "#11030A"); g.fillStyle = bg; g.fillRect(0, 0, W, H);
-    const gl = g.createRadialGradient(W * .3, H * .15, 20, W * .3, H * .15, W * .8); gl.addColorStop(0, "rgba(120,20,42,.55)"); gl.addColorStop(1, "rgba(0,0,0,0)"); g.fillStyle = gl; g.fillRect(0, 0, W, H);
+    const POS = "#A6DCB6", NEG = "#F4A6B2", GOLD = "#CDA75E", CH = "#EFDCC6", SOFT = TC.soft;
+    const bg = g.createLinearGradient(0, 0, 0, H); bg.addColorStop(0, TC.top); bg.addColorStop(1, TC.bot); g.fillStyle = bg; g.fillRect(0, 0, W, H);
+    const gl = g.createRadialGradient(W * .3, H * .15, 20, W * .3, H * .15, W * .8); gl.addColorStop(0, TC.glow); gl.addColorStop(1, "rgba(0,0,0,0)"); g.fillStyle = gl; g.fillRect(0, 0, W, H);
     g.strokeStyle = GOLD; g.globalAlpha = .7; g.lineWidth = 2; rr(g, 34, 34, W - 68, H - 68, 34); g.stroke(); g.globalAlpha = .35; g.lineWidth = 1; rr(g, 50, 50, W - 100, H - 100, 26); g.stroke(); g.globalAlpha = 1;
     g.textAlign = "center"; g.textBaseline = "alphabetic";
     g.fillStyle = GOLD; g.font = '64px "Pinyon Script", cursive'; g.fillText("Diário de Trading", W / 2, 150);
@@ -4783,9 +4806,8 @@ body.hc-eur .lrow .res .eur, body.hc-eur .lrow .res .com, body.hc-eur .weur { di
     g.fillStyle = SOFT; g.font = '400 34px "Jost", Arial, sans-serif'; g.fillText(r.tp + " TP · " + r.sl + " SL · " + r.n + (r.n === 1 ? " dia" : " dias"), W / 2, 668);
     // three boxes
     const box = (x, y, w, h, lab, val, col) => { g.fillStyle = "rgba(251,243,238,.07)"; rr(g, x, y, w, h, 22); g.fill(); g.strokeStyle = "rgba(205,167,94,.35)"; g.lineWidth = 1.5; rr(g, x, y, w, h, 22); g.stroke(); g.fillStyle = SOFT; g.font = '400 26px "Jost", Arial, sans-serif'; g.fillText(lab, x + w / 2, y + 46); g.fillStyle = col || CH; g.font = '600 52px "Playfair Display", Georgia, serif'; g.fillText(val, x + w / 2, y + 112); };
-    box(90, 720, 280, 140, "Dias verdes", r.pos + " de " + r.n);
-    box(400, 720, 280, 140, "Acerto", r.win == null ? "—" : Math.round(r.win) + "%");
-    box(710, 720, 280, 140, "Média por dia", fmt1(r.avg), r.avg > 0 ? POS : r.avg < 0 ? NEG : CH);
+    box(90, 720, 430, 140, "Dias verdes", r.pos + " de " + r.n, POS);
+    box(560, 720, 430, 140, "Média por dia", fmt1(r.avg), r.avg > 0 ? POS : r.avg < 0 ? NEG : CH);
     // curve
     if (r.curve.length > 1) {
       const x0 = 110, x1 = W - 110, y0 = 910, y1 = 1080, vs = r.curve.map(p => p.v), lo = Math.min(0, ...vs), hi = Math.max(0, ...vs) || 1;
@@ -4798,17 +4820,13 @@ body.hc-eur .lrow .res .eur, body.hc-eur .lrow .res .com, body.hc-eur .weur { di
     // best / worst
     const two = (x, lab, o) => { g.fillStyle = "rgba(251,243,238,.07)"; rr(g, x, 1110, 430, 120, 22); g.fill(); g.textAlign = "left"; g.fillStyle = SOFT; g.font = '400 26px "Jost", Arial, sans-serif'; g.fillText(lab, x + 30, 1155); g.fillStyle = CH; g.font = '500 30px "Jost", Arial, sans-serif'; g.fillText(o ? dShort(o.d) : "—", x + 30, 1200); g.textAlign = "right"; g.fillStyle = o ? (o.p > 0 ? POS : o.p < 0 ? NEG : CH) : CH; g.font = '600 56px "Playfair Display", Georgia, serif'; g.fillText(o ? fmt(o.p) : "", x + 400, 1192); g.textAlign = "center"; };
     two(90, "Melhor dia", r.best); two(560, "Pior dia", r.worst);
-    // mood of the month
-    const mc = {}; for (const d of days) { const m = moods.get(iso(d)); if (m) mc[m] = (mc[m] || 0) + 1; }
-    const top = Object.entries(mc).sort((a, b) => b[1] - a[1])[0];
     g.fillStyle = GOLD; g.font = '52px "Pinyon Script", cursive'; g.fillText("Trust the process", W / 2, 1290);
-    if (top) { g.font = '40px "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif'; g.textAlign = "right"; g.fillText(MOOD[top[0]][1], W - 90, 1292); g.textAlign = "center"; }
     return c;
   }
   // Instagram Stories size (1080 × 1920): the same summary, with a title on top and the quote of the day below
   async function storyCanvas(s) {
-    const base = await summaryCanvas(s), W = 1080, H = 1920, c = document.createElement("canvas"); c.width = W; c.height = H; const g = c.getContext("2d");
-    const bg = g.createLinearGradient(0, 0, 0, H); bg.addColorStop(0, "#330914"); bg.addColorStop(.5, "#1C0409"); bg.addColorStop(1, "#0B0206"); g.fillStyle = bg; g.fillRect(0, 0, W, H);
+    const base = await summaryCanvas(s), W = 1080, H = 1920, c = document.createElement("canvas"); c.width = W; c.height = H; const g = c.getContext("2d"), TC = sumColors();
+    const bg = g.createLinearGradient(0, 0, 0, H); bg.addColorStop(0, TC.s1); bg.addColorStop(.5, TC.s2); bg.addColorStop(1, TC.s3); g.fillStyle = bg; g.fillRect(0, 0, W, H);
     const gl = g.createRadialGradient(W / 2, 260, 20, W / 2, 260, 700); gl.addColorStop(0, "rgba(205,167,94,.22)"); gl.addColorStop(1, "rgba(0,0,0,0)"); g.fillStyle = gl; g.fillRect(0, 0, W, H);
     g.textAlign = "center"; g.fillStyle = "#CDA75E"; g.font = '500 30px "Jost", Arial, sans-serif'; g.fillText("R E S U M O   D O   M Ê S", W / 2, 190);
     g.strokeStyle = "rgba(205,167,94,.6)"; g.lineWidth = 1.5; g.beginPath(); g.moveTo(W / 2 - 160, 220); g.lineTo(W / 2 + 160, 220); g.stroke();
@@ -5543,10 +5561,19 @@ body.hc-eur .lrow .res .eur, body.hc-eur .lrow .res .com, body.hc-eur .weur { di
     const hit = wt.tp + wt.sl ? Math.round(wt.tp / (wt.tp + wt.sl) * 100) : null, ew = s.acct ? eurSum(s.key, ids) : { n: 0 };
     const bars = rows.map(r => '<div class="wk-b"><span class="wk-d"><b>' + DOW[r.d.getDay()] + '</b> ' + r.d.getDate() + '</span><span class="wk-t">' +
       (r.e.off ? '<em class="wk-off">sem operar</em>' : r.tr ? '<i class="' + cls(r.p) + '" style="--w:' + Math.max(4, Math.abs(r.p) / mx * 100).toFixed(1) + '%"></i>' : '<em class="wk-off">—</em>') + '</span><span class="wk-v ' + (r.tr ? cls(r.p) : "") + '">' + (r.tr ? fmt(r.p) : "") + '<small>' + (r.tr ? r.e.tp + ' TP · ' + r.e.sl + ' SL' : '') + '</small></span></div>').join("");
+    // the line of the week: how the result added up day by day, with the value written on each point
+    let acc = 0; const cum = rows.map(r => (acc += r.tr ? r.p : 0));
+    const lo = Math.min(0, ...cum), hi = Math.max(0, ...cum), span = (hi - lo) || 1, VW = 320, VH = 128, PL = 24, PR = 24, PT = 24, PB = 24;
+    const X = i => PL + (VW - PL - PR) * i / (rows.length - 1), Y = v => PT + (VH - PT - PB) * (1 - (v - lo) / span);
+    const lineD = cum.map((v, i) => (i ? "L" : "M") + X(i).toFixed(1) + " " + Y(v).toFixed(1)).join(" ");
+    const lineSvgW = '<div class="wk-line"><svg viewBox="0 0 ' + VW + ' ' + VH + '" role="img" aria-label="Linha da semana: ' + cum.map((v, i) => DOW[rows[i].d.getDay()] + " " + fmt(v)).join(", ") + '"><defs><linearGradient id="wkLg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#CDA75E" stop-opacity=".38"/><stop offset="1" stop-color="#CDA75E" stop-opacity="0"/></linearGradient></defs>' +
+      '<line class="wl-z" x1="' + PL + '" x2="' + (VW - PR) + '" y1="' + Y(0).toFixed(1) + '" y2="' + Y(0).toFixed(1) + '"/>' +
+      '<path class="wl-a" d="' + lineD + ' L' + X(rows.length - 1).toFixed(1) + ' ' + Y(0).toFixed(1) + ' L' + X(0).toFixed(1) + ' ' + Y(0).toFixed(1) + ' Z"/><path class="wl-l" pathLength="1" d="' + lineD + '"/>' +
+      cum.map((v, i) => { const up = Y(v) > PT + 10; return '<circle class="wl-p" cx="' + X(i).toFixed(1) + '" cy="' + Y(v).toFixed(1) + '" r="3.6"/><text class="wl-v ' + cls(v) + '" x="' + X(i).toFixed(1) + '" y="' + (up ? Y(v) - 9 : Y(v) + 17).toFixed(1) + '">' + fmt(v) + '</text><text class="wl-d" x="' + X(i).toFixed(1) + '" y="' + (VH - 4) + '">' + DOW[rows[i].d.getDay()] + '</text>'; }).join("") + '</svg></div>';
     const notesH = rows.filter(r => r.e.note).map(r => '<li><b>' + DOWL[r.d.getDay()] + ', ' + r.d.getDate() + '</b><span>' + esc(r.e.note) + '</span></li>').join("");
     wkDlg.innerHTML = '<div class="dlg-card wk-card" role="dialog" aria-modal="true" aria-labelledby="wkT"><div><div class="sub">' + esc(s.full) + '</div><h3 id="wkT">Semana ' + w.dataset.wkt.split("-")[1] + ' <small>' + weekLabel(wk) + '</small></h3></div>' +
       '<div class="wk-top"><div class="wk-big ' + cls(wt.pct) + '">' + fmt(wt.pct) + '</div><div class="wk-kpi"><span><b>' + wt.tp + '</b> TP</span><span><b>' + wt.sl + '</b> SL</span><span><b>' + wt.to + '</b> TO</span>' + (hit != null ? '<span><b>' + hit + '%</b> acerto</span>' : '') + '</div></div>' +
-      '<div class="wk-bars">' + bars + '</div>' +
+      lineSvgW + '<div class="wk-bars">' + bars + '</div>' +
       '<div class="wk-facts">' + (best ? '<div><small>Melhor dia</small><b class="' + cls(best.p) + '">' + DOWL[best.d.getDay()] + ' ' + best.d.getDate() + ' · ' + fmt(best.p) + '</b></div>' : '') + (worst && worst !== best ? '<div><small>Pior dia</small><b class="' + cls(worst.p) + '">' + DOWL[worst.d.getDay()] + ' ' + worst.d.getDate() + ' · ' + fmt(worst.p) + '</b></div>' : '') +
       (ew.n ? '<div><small>Em euros</small><b class="' + cls(ew.v) + '">' + eur(ew.v) + '</b></div>' : '') + (ot ? '<div><small>' + esc(other.full) + ' nesta semana</small><b class="' + cls(ot.pct) + '">' + fmt(ot.pct) + '</b></div>' : '') + '</div>' +
       (notesH ? '<div class="wk-notes"><small>Notas da semana</small><ul>' + notesH + '</ul></div>' : '') +
