@@ -287,8 +287,10 @@
 
   // ---------- data ----------
   let all = null, err = null, loading = false, root = null;
-  const LS_CUR = "diario-noticias-moeda2";
-  let cur = "USD"; try { cur = localStorage.getItem(LS_CUR) || "USD"; } catch (_) {}
+  // the currencies shown: one or several together (e.g. EUA + Austrália), or all of them
+  const LS_CUR = "diario-noticias-moedas";
+  let curSet = ["USD"]; try { const v = JSON.parse(localStorage.getItem(LS_CUR) || "null"); if (Array.isArray(v) && v.length) curSet = v; } catch (_) {}
+  const saveCur = () => { try { localStorage.setItem(LS_CUR, JSON.stringify(curSet)); } catch (_) {} };
   const nowD = new Date();
   let vy = nowD.getFullYear(), vm = nowD.getMonth(), sel = null;
   let loadP = null;
@@ -359,14 +361,17 @@
   // what the Notícias tab shows: the dollar by default, or another currency / all of them (filter chips)
   const CUR_NAME = { USD: "EUA", EUR: "Euro", GBP: "Libra", JPY: "Iene", CAD: "Canadá", AUD: "Austrália", NZD: "Nova Zelândia", CHF: "Suíça", CNY: "China" };
   const CUR_LONG = { USD: "Estados Unidos", EUR: "Zona Euro", GBP: "Reino Unido", JPY: "Japão", CAD: "Canadá", AUD: "Austrália", NZD: "Nova Zelândia", CHF: "Suíça", CNY: "China" };
-  const shown = () => cur === "ALL" ? (all || []) : (all || []).filter(e => e.country === cur);
+  const isAll = () => curSet.includes("ALL");
+  const shown = () => isAll() ? (all || []) : (all || []).filter(e => curSet.includes(e.country));
+  const curWhere = () => isAll() ? "Todas as moedas" : curSet.length === 1 ? (CUR_LONG[curSet[0]] || curSet[0]) : curSet.map(c => CUR_NAME[c] || c).join(" + ");
   function curBar() {
     const n = {}; for (const e of all || []) n[e.country] = (n[e.country] || 0) + 1;
     const cs = Object.keys(n).filter(c => c !== "USD" && c !== "All").sort((a, b) => n[b] - n[a]);
-    if (cur !== "USD" && cur !== "ALL" && !n[cur]) cur = "USD";
-    const b = (c, label) => '<button type="button" data-cur="' + c + '" aria-pressed="' + (cur === c) + '">' + (c === "ALL" ? "" : flag(c)) + esc(label) + '</button>';
-    return '<div class="nw-cur" role="group" aria-label="Filtrar por moeda">' + b("USD", "EUA") + cs.map(c => b(c, CUR_NAME[c] || c)).join("") + b("ALL", "Todas") + '</div>' +
-      (cur !== "USD" ? '<p class="nw-curnote">As outras moedas só ficam guardadas desde 16 de novembro de 2026. Os avisos, o Diário e as Estatísticas continuam a usar só as notícias dos EUA.</p>' : '');
+    if (!isAll()) { curSet = curSet.filter(c => c === "USD" || n[c]); if (!curSet.length) curSet = ["USD"]; }
+    const on = c => c === "ALL" ? isAll() : !isAll() && curSet.includes(c);
+    const b = (c, label) => '<button type="button" data-cur="' + c + '" aria-pressed="' + on(c) + '">' + (c === "ALL" ? "" : flag(c)) + esc(label) + (on(c) && c !== "ALL" ? ' <i aria-hidden="true">✓</i>' : '') + '</button>';
+    return '<div class="nw-cur" role="group" aria-label="Filtrar por moeda: toca em uma ou em várias">' + b("USD", "EUA") + cs.map(c => b(c, CUR_NAME[c] || c)).join("") + b("ALL", "Todas") + '</div>' +
+      '<p class="nw-curnote">Toca em uma ou em várias para as juntar.' + (curSet.join() !== "USD" ? ' As outras moedas só ficam guardadas desde 16 de novembro de 2026. Os avisos, o Diário e as Estatísticas continuam a usar só as notícias dos EUA.' : '') + '</p>';
   }
 
   // ---------- styles ----------
@@ -498,12 +503,12 @@
   function draw(anim) {
     if (!root || !document.contains(root)) return;
     if (!all) { root.innerHTML = '<div class="nw"><div class="nw-msg">' + (err ? "Não foi possível carregar as notícias. Tenta outra vez daqui a pouco." : "A carregar as notícias…") + '</div></div>'; return; }
-    const cb = curBar(), evs = shown(), now = Date.now(), todayK = dayKey(new Date()), where = cur === "ALL" ? "Todas as moedas" : CUR_LONG[cur] || cur;
+    const cb = curBar(), evs = shown(), now = Date.now(), todayK = dayKey(new Date()), where = curWhere();
     const next = evs.filter(e => e.d.getTime() > now - 10 * 60000 && e.impact !== "Holiday").slice(0, 8);
     let h = '<div class="nw">';
     // hero with the next strong news as cards (names as on Forex Factory)
     h += '<section class="nw-hero"><div class="nw-mast" aria-hidden="true"><span>' + esc(cap(fmtLong.format(new Date()))) + '</span><b>Notícias do Dia</b><span>' + esc(where) + ' · alto impacto · horas de Portugal</span></div><svg class="bg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width=".6">' + IC.talk + '</svg>' +
-      '<div class="k"><svg class="globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9.2"/><path d="M2.8 12h18.4M12 2.8c2.6 2.6 3.9 5.7 3.9 9.2s-1.3 6.6-3.9 9.2c-2.6-2.6-3.9-5.7-3.9-9.2S9.4 5.4 12 2.8z"/><path d="M4.4 7.2h15.2M4.4 16.8h15.2"/></svg>Notícias</div><h2>O que vem aí</h2><p>As notícias de alto impacto ' + (cur === "USD" ? "dos Estados Unidos" : cur === "ALL" ? "de todas as moedas" : "de " + esc(CUR_LONG[cur] || cur)) + ', com os nomes do Forex Factory e em horas de Portugal. Toca numa para veres a explicação e o resultado.</p>' + cb;
+      '<div class="k"><svg class="globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9.2"/><path d="M2.8 12h18.4M12 2.8c2.6 2.6 3.9 5.7 3.9 9.2s-1.3 6.6-3.9 9.2c-2.6-2.6-3.9-5.7-3.9-9.2S9.4 5.4 12 2.8z"/><path d="M4.4 7.2h15.2M4.4 16.8h15.2"/></svg>Notícias</div><h2>O que vem aí</h2><p>As notícias de alto impacto ' + (curSet.join() === "USD" ? "dos Estados Unidos" : isAll() ? "de todas as moedas" : "de " + esc(curWhere())) + ', com os nomes do Forex Factory e em horas de Portugal. Toca numa para veres a explicação e o resultado.</p>' + cb;
     if (next.length) {
       const e0 = next[0];
       // the next one, big and highlighted; then the ones after it
@@ -538,7 +543,9 @@
       h += '</button>';
     }
     h += '</div><div class="nw-legend">' + ["infl", "jobs", "bank", "talk", "shop", "gdp", "pmi"].map(kk => '<span><span class="chip">' + icon(kk) + '</span>' + KIND_NAME[kk] + '</span>').join("") + '<span>' + US_FLAG + 'Feriado</span></div></section>';
-    h = '<div class="nw">' + heroH + h.slice('<div class="nw">'.length) + srchH + '</div>';
+    const pmD = new Date(Date.UTC(vy, vm - 1, 1, 12)), nmD = new Date(Date.UTC(vy, vm + 1, 1, 12));
+    const turnH = '<div class="turnbar" role="group" aria-label="Mudar de mês"><button type="button" class="turn prev" data-nwturn="-1"><i aria-hidden="true">‹</i><span><small>Mês anterior</small>' + cap(MONTHS[pmD.getUTCMonth()]) + ' ' + pmD.getUTCFullYear() + '</span></button><button type="button" class="turn next" data-nwturn="1"><span><small>Mês seguinte</small>' + cap(MONTHS[nmD.getUTCMonth()]) + ' ' + nmD.getUTCFullYear() + '</span><i aria-hidden="true">›</i></button></div>';
+    h = '<div class="nw">' + heroH + h.slice('<div class="nw">'.length) + srchH + turnH + '</div>';
     root.innerHTML = h;
     drawSearch();
   }
@@ -623,7 +630,7 @@
     sheet.querySelector("#nwPK").textContent = list.length ? (list.length === 1 ? "1 notícia" : list.length + " notícias") : "Dia calmo";
     const H = window.DiarioHook, wd = new Date(Date.UTC(y, m - 1, d, 12)).getUTCDay(), R = H ? H.result(k) : null;
     const goH = H && wd > 0 && wd < 6 ? '<div class="nw-godi"><div><small>No teu Diário · ' + esc(R ? R.who : "Estratégia") + '</small><b class="' + (R ? R.cls : "") + '">' + (R ? esc(R.txt) + (R.tp != null ? ' <span>' + R.tp + ' TP · ' + R.sl + ' SL</span>' : '') : 'ainda sem registo') + '</b></div><button type="button" class="nw-gobtn" data-godiario="' + k + '">Abrir no Diário ›</button></div>' : '';
-    sheet.querySelector("#nwPL").innerHTML = goH + (list.length ? list.map((e, n) => evHtml(e, focusEv != null ? e.i === focusEv : list.length === 1, n)).join("") : '<div class="nw-empty">Sem notícias de alto impacto ' + (cur === "USD" ? "dos EUA" : cur === "ALL" ? "" : "de " + esc(CUR_LONG[cur] || cur)) + ' neste dia.</div>');
+    sheet.querySelector("#nwPL").innerHTML = goH + (list.length ? list.map((e, n) => evHtml(e, focusEv != null ? e.i === focusEv : list.length === 1, n)).join("") : '<div class="nw-empty">Sem notícias de alto impacto neste dia (' + esc(curWhere()) + ').</div>');
     lastFocus = document.activeElement;
     sheet.setAttribute("aria-hidden", "false");
     requestAnimationFrame(() => sheet.classList.add("open"));
@@ -668,7 +675,14 @@
         const mv = e.target.closest("[data-mv]");
         if (mv) { vm += +mv.dataset.mv; if (vm < 0) { vm = 11; vy--; } if (vm > 11) { vm = 0; vy++; } draw(true); return; }
         const c = e.target.closest("[data-cur]");
-        if (c) { cur = c.dataset.cur; try { localStorage.setItem(LS_CUR, cur); } catch (_) {} draw(); return; }
+        if (c) {
+          const k = c.dataset.cur;
+          if (k === "ALL") curSet = isAll() ? ["USD"] : ["ALL"];
+          else { const base = isAll() ? [] : curSet; curSet = base.includes(k) ? base.filter(x => x !== k) : base.concat(k); if (!curSet.length) curSet = ["USD"]; }
+          saveCur(); draw(); return;
+        }
+        const tn = e.target.closest("[data-nwturn]");
+        if (tn) { vm += +tn.dataset.nwturn; if (vm < 0) { vm = 11; vy--; } if (vm > 11) { vm = 0; vy++; } draw(true); const cal = root.querySelector(".nw-cal"); if (cal) cal.scrollIntoView({ block: "start", behavior: "smooth" }); return; }
         const dd = e.target.closest("[data-day]");
         if (dd) { openDay(dd.dataset.day); return; }
         const ev = e.target.closest("[data-ev]");

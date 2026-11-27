@@ -2515,6 +2515,8 @@ body.hc-eur .lrow .res .eur, body.hc-eur .lrow .res .com, body.hc-eur .weur { di
 .cfg-mini { display: block; margin-top: 10px; font-size: 11.5px; color: var(--soft); }
 /* turning the page: at the end of the month */
 .turnbar { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; max-width: 760px; margin: 4px auto 90px; }
+.panels + .turnbar { margin-top: -44px; }
+@media (max-width: 860px) { .panels + .turnbar { margin-top: -4px; } }
 .turn { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 16px; border: 1px solid rgba(205, 167, 94, .45); background: linear-gradient(180deg, color-mix(in srgb, var(--t-panel, #4A1420) 92%, transparent), color-mix(in srgb, var(--t-panel, #4A1420) 70%, #000)); color: var(--champ); cursor: pointer; font: 500 15px/1.2 var(--display); text-align: left; }
 .turn.next { justify-content: flex-end; text-align: right; }
 .turn small { display: block; font: 500 10.5px/1.3 var(--sans); letter-spacing: .08em; text-transform: uppercase; color: var(--gold); }
@@ -2523,7 +2525,7 @@ body.hc-eur .lrow .res .eur, body.hc-eur .lrow .res .com, body.hc-eur .weur { di
 .turn:active { transform: scale(.98); }
 /* week bar: hold it to open the summary (a gold line fills while you hold) */
 .wrow { position: relative; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
-.wrow.pressing::after { content: ""; position: absolute; left: 0; bottom: 0; height: 3px; width: 100%; border-radius: 0 0 10px 10px; background: linear-gradient(90deg, #E3BD6A, #F6E0A4); transform-origin: 0 50%; animation: wkHold 2s linear forwards; pointer-events: none; }
+.wrow.pressing::after { content: ""; position: absolute; left: 0; bottom: 0; height: 3px; width: 100%; border-radius: 0 0 10px 10px; background: linear-gradient(90deg, #E3BD6A, #F6E0A4); transform-origin: 0 50%; animation: wkHold 1s linear forwards; pointer-events: none; }
 @keyframes wkHold { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 .wk-card { width: min(480px, 100%); max-height: 88vh; overflow-y: auto; }
 .wk-card h3 small { font: 500 13px/1 var(--sans); color: var(--soft); margin-left: 6px; }
@@ -2555,6 +2557,23 @@ body.hc-eur .lrow .res .eur, body.hc-eur .lrow .res .com, body.hc-eur .weur { di
 .wk-notes li span { white-space: pre-wrap; overflow-wrap: anywhere; }
 html.themed .sum-img { background-color: var(--t-lo) !important; }
 html.themed .dlg { background-color: color-mix(in srgb, var(--t-lo) 62%, transparent) !important; }
+/* Calendário: no constellation lines, and the mood emojis on their own (no gem ring around them) */
+.cal > .consts { display: none !important; }
+.cmood.set { background: none !important; box-shadow: none !important; }
+/* light backgrounds: the Sessão stays dark, in the tone of the Estratégia table, a little see-through */
+html.th-light .ses { background: radial-gradient(120% 70% at 50% 0%, color-mix(in srgb, var(--t-panel) 94%, transparent), color-mix(in srgb, color-mix(in srgb, var(--t-panel) 72%, #000) 96%, transparent) 70%) !important; -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
+/* the payment envelope: the name written on it and a little bundle of notes coming out */
+.ev-name { position: absolute; z-index: 4; left: 0; right: 0; bottom: 14px; text-align: center; font: 30px/1 "Pinyon Script", cursive; color: #6B4A12; text-shadow: 0 1px 0 rgba(255, 245, 210, .6); pointer-events: none; }
+.ev-cash { position: absolute; left: 30px; right: 30px; top: 22px; height: 100px; z-index: 1; animation: evCash .8s cubic-bezier(.3, 1.2, .5, 1) .6s forwards; }
+.ev-cash i { position: absolute; inset: 0; border-radius: 4px; background: repeating-linear-gradient(90deg, rgba(255, 255, 255, .08) 0 2px, transparent 2px 7px), linear-gradient(160deg, #9FD3AE, #5E9C74); box-shadow: inset 0 0 0 2px rgba(255, 255, 255, .35), 0 2px 6px rgba(0, 0, 0, .3); }
+.ev-cash i::after { content: "€"; position: absolute; right: 12px; top: 8px; font: 600 26px/1 var(--display); color: rgba(20, 60, 36, .55); }
+.ev-cash i:nth-child(1) { transform: rotate(-9deg) translateX(-14px); } .ev-cash i:nth-child(2) { transform: rotate(6deg) translateX(12px); } .ev-cash i:nth-child(3) { transform: rotate(-2deg); }
+@keyframes evCash { to { transform: translateY(-62px); } }
+.pay-filter { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 14px 0 4px; }
+.pay-filter > span { font-size: 12px; color: var(--soft); margin-right: 4px; }
+.pay-filter button { border: 1px solid rgba(205, 167, 94, .4); background: rgba(0, 0, 0, .18); color: var(--soft); border-radius: 999px; padding: 7px 14px; font: 500 13px/1 var(--sans); cursor: pointer; }
+.pay-filter button[aria-pressed="true"] { background: var(--gold); border-color: var(--gold); color: #2A1A08; font-weight: 600; }
+.pay-ftot { margin-left: auto; font-size: 12.5px; color: var(--champ); } .pay-ftot b { color: var(--gold); }
 .st-foot { display: flex; justify-content: center; margin: 22px 0 6px; }
 /* the line of the week, with the value written on each day */
 .wk-line { padding: 10px 6px 4px; border-radius: 14px; background: rgba(0, 0, 0, .18); border: 1px solid rgba(205, 167, 94, .22); }
@@ -4399,6 +4418,7 @@ html.themed .dlg { background-color: color-mix(in srgb, var(--t-lo) 62%, transpa
     try { if (mode === "db") { const r = await sb.from("pagamentos").update({ estado }).eq("id", id); if (r.error) throw r.error; } else savePayLocal(); }
     catch (_) { setStatus("err", "Não foi guardado, tenta outra vez"); }
   }
+  var payWho = "todos";   // Pagamentos: show all, or only Carla's / Miguel's
   function pagHtml(a) {
     const list = pays[a].slice().sort((x, y) => y.dia.localeCompare(x.dia)), T = payTotals(a), last = list.find(p => p.estado !== "pedido");
     const avg = T.n ? T.rec / T.n : 0;
@@ -4420,22 +4440,22 @@ html.themed .dlg { background-color: color-mix(in srgb, var(--t-lo) 62%, transpa
     h += '<form class="payform" data-payform="' + a + '"><div class="pf-t">Registar um pagamento</div><div class="pf-g">' +
       '<label><span>Data</span><input type="date" name="dia" value="' + iso(new Date()) + '" required></label>' +
       '<label><span>Valor</span><div class="pf-eur"><input type="text" name="valor" inputmode="decimal" placeholder="0,00" required autocomplete="off"><i>€</i></div></label>' +
-      '<div class="pf-who" role="radiogroup" aria-label="Para quem foi"><span>Para quem</span><div>' + PESSOAS.map((n, i) => '<label><input type="radio" name="pessoa" value="' + n + '"' + (i ? '' : ' checked') + '><b>' + n + '</b></label>').join("") + '</div></div>' +
-      '<div class="pf-who pf-st" role="radiogroup" aria-label="Estado do pagamento"><span>Estado</span><div><label><input type="radio" name="estado" value="recebido" checked><b>Recebido</b></label><label><input type="radio" name="estado" value="pedido"><b>À espera</b></label></div></div>' +
-      '<label class="pf-nota"><span>Nota</span><input type="text" name="nota" placeholder="Opcional" autocomplete="off"></label>' +
+      '<div class="pf-who" role="radiogroup" aria-label="Para quem foi"><span>Para quem</span><div>' + PESSOAS.map((n, i) => '<label><input type="radio" name="pessoa" value="' + n + '"' + (i ? '' : ' checked') + '><b>' + n + '</b></label>').join("") + '</div></div>' +      '<label class="pf-nota"><span>Nota</span><input type="text" name="nota" placeholder="Opcional" autocomplete="off"></label>' +
       '<button type="submit" class="btn primary pf-add">Adicionar</button></div></form>';
     // list
     if (!list.length) h += '<div class="ch-empty pay-empty">Ainda não registaste pagamentos nesta conta.</div>';
     else {
       let year = null;
-      // the ones still waiting ("pedido") first, apart, with their total
-      const waitL = list.filter(p => p.estado === "pedido"), recL = list.filter(p => p.estado !== "pedido");
+      // filter: all the payouts, only the ones for Carla, or only the ones for Miguel
+      const who = p => p.pessoa || "Carla", fl = list.filter(p => payWho === "todos" || who(p) === payWho);
       h += '<div class="pay-tools"><button type="button" class="btn pay-csv" data-paycsv="' + a + '"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 2.5v7.5M4.8 7 8 10.2 11.2 7M3 12.5h10"/></svg>Exportar para Excel</button></div>';
+      h += '<div class="pay-filter" role="group" aria-label="Ver pagamentos de"><span>Ver:</span>' + [["todos", "Todos"]].concat(PESSOAS.map(n => [n, n])).map(([k, l]) => '<button type="button" data-payw="' + k + '" aria-pressed="' + (payWho === k) + '">' + l + '</button>').join("") +
+        '<span class="pay-ftot">' + fl.length + (fl.length === 1 ? ' pagamento' : ' pagamentos') + ' · <b>' + EUR.format(fl.reduce((s0, p) => s0 + p.valor, 0)) + '</b></span></div>';
       h += '<div class="paylist">';
-      if (waitL.length) h += '<div class="pay-y pay-wait"><b>À espera</b><span>' + EUR.format(waitL.reduce((s0, p) => s0 + p.valor, 0)) + ' pedidos, ainda não recebidos</span></div>';
-      for (const p of waitL.concat(recL)) {
-        const y = p.estado === "pedido" ? "wait" : p.dia.slice(0, 4);
-        if (y !== year && y !== "wait") { year = y; const ty = list.filter(q => q.dia.startsWith(y) && q.estado !== "pedido").reduce((s0, q) => s0 + q.valor, 0); h += '<div class="pay-y"><b>' + y + '</b><span>' + EUR.format(ty) + ' recebidos</span></div>'; }
+      if (!fl.length) h += '<div class="ch-empty pay-empty">Ainda não há pagamentos para ' + esc(payWho) + ' nesta conta.</div>';
+      for (const p of fl) {
+        const y = p.dia.slice(0, 4);
+        if (y !== year) { const ty = fl.filter(q => q.dia.startsWith(y)).reduce((s0, q) => s0 + q.valor, 0); h += '<div class="pay-y"><b>' + y + '</b><span>' + EUR.format(ty) + ' recebidos</span></div>'; }
         year = y;
         const [yy, mm, dd] = p.dia.split("-").map(Number), dt = new Date(yy, mm - 1, dd);
         // each payout is drawn as a cheque, with a gold "Recebido" seal
@@ -5371,14 +5391,14 @@ html.themed .dlg { background-color: color-mix(in srgb, var(--t-lo) 62%, transpa
         '<div class="tr-r">' + (wide ? gTabs("prop").replace('class="ftabs"', 'class="ftabs proptabs"') : "") + (yItems.length ? ftabs(yItems, calMode === "y" ? "cy" : "", "data-show", "Ver o ano todo").replace('class="ftabs"', 'class="ftabs ytabs"') : '') + grpDots() + '</div></div>';
       if (yearTab) $("view").innerHTML = '<div class="tabbed">' + tabsH + yearCalHtml(+stab.slice(1)) + '</div>';
       else {
-        $("view").innerHTML = '<div class="tabbed">' + tabsH + '<div class="slides">' + GS().map(s => '<div class="slide" data-role="' + s.role + '">' + (tab === "cal" ? '<div class="calwrap">' + calHtml(s) + '</div>' : statsHtml(s)) + '</div>').join("") + '</div></div>';
+        $("view").innerHTML = '<div class="tabbed">' + tabsH + '<div class="slides">' + GS().map(s => '<div class="slide" data-role="' + s.role + '">' + (tab === "cal" ? '<div class="calwrap">' + calHtml(s) + '</div>' : statsHtml(s)) + '</div>').join("") + '</div></div>' + (tab === "cal" && calMode === "y" ? "" : turnBarHtml());
         slideCtl = slider($("view").querySelector(".slides"), side, i => { side = i; saveShown(); markSwitch(); });
       }
     } else if (tab === "acct" && !pinOk) {
       $("view").innerHTML = pinHtml(false);
     } else if (tab === "acct") {
       const pagB = '<button type="button" class="pagbtn' + (acMode === "pag" ? " on" : "") + '" data-pag>' + (acMode === "pag" ? '<span aria-hidden="true">←</span> Voltar à conta' : '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="1.8" y="4" width="12.4" height="8.4" rx="1.6"/><circle cx="8" cy="8.2" r="1.8"/><path d="M4.2 6.2v.01M11.8 10.2v.01" stroke-width="1.8"/></svg>Pagamentos') + '</button>';
-      $("view").innerHTML = '<div class="tabbed"><div class="tabrow">' + ftabs([["fusion", "Fusion"], ["prop", "Prop"], ["tudo", "Tudo"]], acView, "data-ac", "Escolher conta") + pagB + '</div><div class="slides">' + AC_VIEWS.map(a => { if (a === "tudo") return '<div class="slide" data-ac="tudo">' + tudoHtml() + '</div>'; const k = a === "prop" ? propSel : a; return '<div class="slide" data-ac="' + a + '">' + (a === "prop" ? propBar() : "") + (acMode === "pag" ? pagHtml(k) : acHtml(k)) + '</div>'; }).join("") + '</div></div>';
+      $("view").innerHTML = '<div class="tabbed"><div class="tabrow">' + ftabs([["fusion", "Fusion"], ["prop", "Prop"], ["tudo", "Tudo"]], acView, "data-ac", "Escolher conta") + pagB + '</div><div class="slides">' + AC_VIEWS.map(a => { if (a === "tudo") return '<div class="slide" data-ac="tudo">' + tudoHtml() + '</div>'; const k = a === "prop" ? propSel : a; return '<div class="slide" data-ac="' + a + '">' + (a === "prop" ? propBar() : "") + (acMode === "pag" ? pagHtml(k) : acHtml(k)) + '</div>'; }).join("") + '</div></div>' + turnBarHtml();
       slideCtl = slider($("view").querySelector(".slides"), Math.max(0, AC_VIEWS.indexOf(acView)), i => { acView = AC_VIEWS[i] || "fusion"; try { localStorage.setItem(LS_AC, acView); } catch (_) {} markSwitch(); });
     } else {
       const nn = nextNewsHtml();
@@ -5596,7 +5616,7 @@ html.themed .dlg { background-color: color-mix(in srgb, var(--t-lo) 62%, transpa
   document.addEventListener("pointerdown", e => {
     const w = e.target.closest && e.target.closest("[data-wkt]"); if (!w || e.button > 0) return;
     holdStop(); w.classList.add("pressing");
-    wkHold = { el: w, x: e.clientX, y: e.clientY, tm: setTimeout(() => { const el = wkHold && wkHold.el; holdStop(); if (el) { wkSkipClick = true; setTimeout(() => { wkSkipClick = false; }, 700); openWeek(el); } }, 2000) };
+    wkHold = { el: w, x: e.clientX, y: e.clientY, tm: setTimeout(() => { const el = wkHold && wkHold.el; holdStop(); if (el) { wkSkipClick = true; setTimeout(() => { wkSkipClick = false; }, 700); openWeek(el); } }, 1000) };
   });
   document.addEventListener("pointermove", e => { if (wkHold && Math.hypot(e.clientX - wkHold.x, e.clientY - wkHold.y) > 10) holdStop(); });
   ["pointerup", "pointercancel"].forEach(t => document.addEventListener(t, holdStop));
@@ -5806,7 +5826,7 @@ html.themed .dlg { background-color: color-mix(in srgb, var(--t-lo) 62%, transpa
     if (!p || r50rm()) return;
     const [yy, mm, dd] = String(p.dia || "").split("-").map(Number);
     const o = document.createElement("div"); o.className = "envl"; o.setAttribute("aria-hidden", "true");
-    o.innerHTML = '<div class="ev-box"><i class="ev-back"></i><div class="ev-card"><small>Pagamento recebido</small><b>' + EUR.format(p.valor) + '</b><span>' + esc(p.pessoa || "Carla") + (dd ? ' · ' + dd + ' ' + MON3[mm - 1] + ' ' + yy : '') + '</span></div><i class="ev-front"></i><i class="ev-flap"></i><i class="ev-seal"></i></div>';
+    o.innerHTML = '<div class="ev-box"><i class="ev-back"></i><div class="ev-cash"><i></i><i></i><i></i></div><div class="ev-card"><small>Pagamento recebido</small><b>' + EUR.format(p.valor) + '</b><span>' + esc(p.pessoa || "Carla") + (dd ? ' · ' + dd + ' ' + MON3[mm - 1] + ' ' + yy : '') + '</span></div><i class="ev-front"></i><span class="ev-name">Para ' + esc(p.pessoa || "Carla") + '</span><i class="ev-flap"></i><i class="ev-seal"></i></div>';
     document.body.appendChild(o);
     const bye = () => { o.classList.add("bye"); setTimeout(() => o.remove(), 400); };
     o.addEventListener("click", bye); setTimeout(bye, 2600);
@@ -6143,6 +6163,8 @@ html.themed .dlg { background-color: color-mix(in srgb, var(--t-lo) 62%, transpa
     if (pg) { acMode = acMode === "pag" && pg.matches("[data-pag]") ? "conta" : "pag"; try { localStorage.setItem("diario-trading-conta-modo", acMode); } catch (_) {} render(); window.scrollTo({ top: Math.min(window.scrollY, document.querySelector(".tabbed").getBoundingClientRect().top + window.scrollY - 80) }); return; }
     const ps = e.target.closest("[data-payst]");
     if (ps) { const [a, id] = ps.dataset.payst.split("|"), p = pays[a].find(x => x.id === id); if (p) { setPayState(a, id, p.estado === "pedido" ? "recebido" : "pedido"); render(); } return; }
+    const pw = e.target.closest("[data-payw]");
+    if (pw) { payWho = pw.dataset.payw; const y0 = window.scrollY; render(); window.scrollTo(0, y0); return; }
     const pcv = e.target.closest("[data-paycsv]");
     if (pcv) { const a = pcv.dataset.paycsv, q = v => '"' + String(v == null ? "" : v).replace(/"/g, '""') + '"';
       let csv = "﻿" + ["Conta", "Dia", "Valor €", "Para quem", "Estado", "Nota"].join(";") + "\n";
@@ -6196,7 +6218,7 @@ html.themed .dlg { background-color: color-mix(in srgb, var(--t-lo) 62%, transpa
     e.preventDefault();
     const a = f.dataset.payform, v = parseNum(f.valor.value);
     if (!v || v <= 0) { f.valor.focus(); f.valor.setCustomValidity("Escreve o valor"); f.valor.reportValidity(); f.valor.setCustomValidity(""); return; }
-    const item = await addPay(a, { dia: f.dia.value || iso(new Date()), valor: v, estado: (f.querySelector('input[name="estado"]:checked') || {}).value === "pedido" ? "pedido" : "recebido", pessoa: (f.querySelector('input[name="pessoa"]:checked') || {}).value, nota: f.nota.value.trim().slice(0, 300) });
+    const item = await addPay(a, { dia: f.dia.value || iso(new Date()), valor: v, estado: "recebido", pessoa: (f.querySelector('input[name="pessoa"]:checked') || {}).value, nota: f.nota.value.trim().slice(0, 300) });
     pushUndo("Pagamento de " + EUR.format(v) + " guardado", () => { delPay(a, item.id); hideUndo(); render(); });
     render();
     envelopeShow(item);
