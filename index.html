@@ -24,6 +24,27 @@ img { max-width: 100%; }
 .loginmsg { font-size: 13px; color: #C7A9A3; }
 .dlg-card input[type="email"] { width: 100%; border-radius: 12px; border: 1px solid rgba(205, 167, 94, .3); background: rgba(0, 0, 0, .25); color: #EFDCC6; padding: 12px; font: 15px/1.4 "Jost", Arial, sans-serif; }
 </style>
+<script>
+/* the site background colour (Configurações → Site). The gold always stays. Saved on this phone / computer only. */
+window.DT_THEMES = [
+  ["bordeaux", "Bordeaux", "#2A0A11", "#4A1420"], ["azul-noite", "Azul-noite", "#0E1626", "#1B2A44"], ["preto", "Preto", "#121110", "#24211D"], ["ameixa", "Ameixa", "#241329", "#3B2142"],
+  ["chocolate", "Chocolate", "#241812", "#3A271E"], ["verde-garrafa", "Verde-garrafa", "#0E1E19", "#1A3229"], ["petroleo", "Azul-petróleo", "#0F2229", "#19363F"], ["grafite", "Grafite", "#1A1C20", "#2A2D33"],
+  ["beringela", "Beringela", "#1E1030", "#33204D"], ["taupe", "Taupe escuro", "#2A2420", "#3E3630"], ["marinho", "Marinho real", "#101A3A", "#1F2C5A"], ["esmeralda", "Esmeralda", "#08261F", "#14392F"],
+  ["borgonha", "Borgonha-preto", "#1A0609", "#2E0E14"], ["malva", "Malva noite", "#2B1621", "#432534"], ["expresso", "Café expresso", "#1B120D", "#2C1F17"], ["ardosia", "Azul-ardósia", "#1C2530", "#2C3846"],
+  ["oliva", "Verde-oliva", "#1C1F12", "#2E3220"], ["terracota", "Terracota escuro", "#2B140D", "#44221A"], ["indigo", "Índigo", "#161435", "#26235A"], ["cinza", "Cinza quente", "#232020", "#363131"],
+  ["branco", "Branco", "#FFFFFF", "#4A1420", 1], ["marfim", "Marfim", "#F6F0E4", "#3A271E", 1], ["rosa", "Rosa bebé", "#F9E4EA", "#4A2238", 1], ["pessego", "Pêssego", "#FBE6D8", "#4A2418", 1],
+  ["manteiga", "Amarelo-manteiga", "#FBF1CF", "#3E2C14", 1], ["champanhe", "Champanhe", "#F1E6D2", "#4A1420", 1], ["lavanda", "Lavanda clara", "#ECE6F5", "#2D2950", 1], ["ceu", "Azul-céu", "#E6EEF6", "#1F2C5A", 1],
+  ["areia", "Areia", "#EDE3D6", "#3E3630", 1], ["perola", "Cinza-pérola", "#ECEBEA", "#2A2D33", 1]
+];
+window.DT_setTheme = function (id) {
+  var T = window.DT_THEMES.find(function (t) { return t[0] === id; }) || window.DT_THEMES[0], h = document.documentElement;
+  h.classList.toggle("themed", T[0] !== "bordeaux"); h.classList.toggle("th-light", !!T[4]); h.dataset.bg = T[0];
+  if (T[0] === "bordeaux") { h.style.removeProperty("--t-bg"); h.style.removeProperty("--t-panel"); } else { h.style.setProperty("--t-bg", T[2]); h.style.setProperty("--t-panel", T[3]); }
+  var m = document.querySelector('meta[name="theme-color"]'); if (m) m.setAttribute("content", T[0] === "bordeaux" ? "#170307" : T[4] ? T[2] : T[2]);
+  return T;
+};
+try { window.DT_setTheme(localStorage.getItem("diario-fundo") || "bordeaux"); } catch (_) {}
+</script>
 </head>
 <body class="loading">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -33,6 +54,8 @@ img { max-width: 100%; }
 /* Layout: deep bordeaux velvet page with soft sheen and a fine weave; closed gold rings and edge-cut circles scattered down the page; stickers scattered behind the content (seen through the glass panels) and in the side margins. Centered masthead. Two views: Diário (two translucent panels) and Calendário (one translucent month calendar per account). Single committed dark look. */
 :root {
   --wine: #170307;
+  --vel-a: rgba(100, 16, 34, .38); --vel-b: rgba(84, 12, 27, .30); --vel-c: rgba(78, 10, 24, .28); --vel-d: rgba(88, 12, 28, .28);
+  --vel-top: #1D0409; --vel-mid: #170307; --vel-bot: #110205;
   --champ: #EFDCC6;
   --gold: #CDA75E;
   --soft: #C7A9A3;
@@ -2362,6 +2385,89 @@ input.ink { animation: inkIn .55s ease-out; }
 .mcorn, .fili { display: none !important; }
 /* notebook rings only on the computer */
 @media (max-width: 900px) { .rings { display: none !important; } }
+
+/* ================= background colours (Configurações → Site): the gold stays, the wine is swapped ================= */
+html.themed, html.th-light {
+  --t-lo: color-mix(in srgb, var(--t-bg) 58%, #000);
+  --t-mid: color-mix(in srgb, var(--t-bg) 55%, var(--t-panel));
+  --t-hi: color-mix(in srgb, var(--t-panel) 82%, #fff);
+}
+html.themed {
+  --wine: color-mix(in srgb, var(--t-bg) 64%, #000); --dark: var(--t-lo); --weekbg: var(--t-lo);
+  --glass-a: color-mix(in srgb, var(--t-panel) 86%, transparent); --glass-a-b: rgba(205, 167, 94, .22);
+  --glass-b: color-mix(in srgb, color-mix(in srgb, var(--t-panel) 62%, #5C3422) 86%, transparent);
+  --soft: color-mix(in srgb, var(--t-panel) 28%, #E6DED6);
+  --vel-a: color-mix(in srgb, var(--t-panel) 50%, transparent); --vel-b: color-mix(in srgb, var(--t-panel) 40%, transparent);
+  --vel-c: color-mix(in srgb, var(--t-panel) 36%, transparent); --vel-d: color-mix(in srgb, var(--t-panel) 36%, transparent);
+  --vel-top: color-mix(in srgb, var(--t-bg) 76%, #000); --vel-mid: color-mix(in srgb, var(--t-bg) 64%, #000); --vel-bot: color-mix(in srgb, var(--t-bg) 50%, #000);
+}
+html.themed .mpick, html.themed .moodpop, html.themed .ptr, html.themed .undo { background: var(--t-mid) !important; }
+html.themed .dlg-card { background: var(--t-panel) !important; }
+html.themed .ptab, html.themed .ftab[aria-selected="true"], html.themed .ftabs.ytabs .ftab[aria-selected="true"] { background-color: color-mix(in srgb, var(--t-lo) 84%, transparent) !important; }
+html.themed .ftab, html.themed .midx button { background-image: var(--leather), linear-gradient(180deg, color-mix(in srgb, var(--t-panel) 70%, transparent), color-mix(in srgb, var(--t-lo) 70%, transparent)) !important; }
+html.themed .wrow { background-image: var(--leather), linear-gradient(180deg, color-mix(in srgb, var(--t-panel) 45%, transparent), color-mix(in srgb, var(--t-lo) 30%, transparent)) !important; }
+html.themed .nw-first { background: radial-gradient(120% 140% at 0% 0%, rgba(227, 189, 106, .22), transparent 55%), linear-gradient(135deg, var(--t-panel), var(--t-lo)) !important; }
+html.themed .moodbar { background: linear-gradient(135deg, color-mix(in srgb, var(--t-panel) 94%, transparent), color-mix(in srgb, var(--t-lo) 94%, transparent)) !important; }
+html.themed .splash, html.themed .splash::before { background: radial-gradient(70% 50% at 50% 40%, var(--t-panel), var(--t-lo) 70%, #050505) !important; }
+html.themed .vshow { background: radial-gradient(60% 45% at 50% 45%, color-mix(in srgb, var(--t-panel) 92%, transparent), rgba(5, 5, 5, .96)) !important; }
+html.themed .nextnews { background: linear-gradient(90deg, rgba(205, 167, 94, .16), color-mix(in srgb, var(--t-lo) 60%, transparent)) !important; border-color: rgba(205, 167, 94, .3) !important; }
+html.themed .gbar { background: color-mix(in srgb, var(--t-lo) 85%, transparent) !important; }
+html.themed .ses { background: radial-gradient(120% 70% at 50% 0%, var(--t-panel), var(--wine) 70%) !important; }
+html.themed .ckeys button, html.themed .cfg-tp button { background: linear-gradient(180deg, var(--t-panel), var(--t-lo)) !important; }
+html.themed .nw-card .bubble, html.themed .nw-ev .bubble, html.themed .nw-first .bubble { background: radial-gradient(circle at 35% 30%, var(--t-hi), var(--t-lo) 70%) !important; }
+html.themed .nw-sheet .panel { background: radial-gradient(120% 50% at 50% 0%, var(--t-panel), var(--wine) 60%) !important; }
+html.themed .pchip { background: color-mix(in srgb, var(--t-lo) 55%, transparent) !important; }
+html.themed .nw-srch { background: color-mix(in srgb, var(--t-lo) 50%, transparent) !important; }
+html.themed .nw-sy { background: color-mix(in srgb, var(--t-lo) 96%, transparent) !important; }
+html.themed .envl { background: color-mix(in srgb, var(--t-lo) 55%, transparent) !important; }
+html.themed .ticker { background: linear-gradient(180deg, rgba(255, 255, 255, .08), transparent 45%, rgba(0, 0, 0, .25)), linear-gradient(90deg, var(--t-lo), var(--t-panel) 30%, var(--t-lo) 50%, var(--t-panel) 75%, var(--t-lo)) !important; }
+html.themed .yrc { background: radial-gradient(120% 80% at 50% 0%, color-mix(in srgb, var(--t-hi) 40%, transparent), transparent 60%), linear-gradient(160deg, var(--t-panel), var(--t-lo) 70%) !important; }
+html.themed .netbar { background: linear-gradient(135deg, var(--t-panel), var(--t-lo)) !important; }
+html.themed .pinbox { background: radial-gradient(120% 80% at 50% 0%, var(--t-panel), var(--t-lo) 75%) !important; }
+html.themed .pinbox .pin-pad { background-image: var(--leather), linear-gradient(180deg, var(--t-panel), var(--t-lo)) !important; }
+html.themed .nw-hero { background: linear-gradient(135deg, color-mix(in srgb, var(--t-panel) 94%, transparent), color-mix(in srgb, var(--t-lo) 94%, transparent)) !important; border-color: rgba(205, 167, 94, .22) !important; }
+html.themed .nw-cal { background: var(--glass-b) !important; }
+html.themed .nw-d:not(.hol) .chip, html.themed .nw-legend .chip { background: var(--t-lo) !important; }
+html.themed .flipc .fd i { background: linear-gradient(180deg, var(--t-panel) 0 49%, var(--t-lo) 51% 100%) !important; }
+html.themed .nw-root .nw-wax { background: radial-gradient(circle at 36% 32%, var(--t-hi), var(--t-panel) 50%, var(--t-lo)) !important; box-shadow: 0 3px 6px rgba(0, 0, 0, .45), inset 0 0 0 4px rgba(0, 0, 0, .3), inset 0 0 0 5px rgba(205, 167, 94, .35) !important; }
+
+/* light backgrounds: the page is light, the boxes keep a deep colour that goes with it (so their text stays as it is) */
+html.th-light {
+  --wine: var(--t-bg); --vel-top: color-mix(in srgb, var(--t-bg) 92%, #fff); --vel-mid: var(--t-bg); --vel-bot: color-mix(in srgb, var(--t-bg) 94%, #000);
+  --vel-a: color-mix(in srgb, var(--t-bg) 60%, #fff); --vel-b: color-mix(in srgb, var(--t-bg) 70%, #fff); --vel-c: color-mix(in srgb, var(--t-bg) 80%, #000 3%); --vel-d: color-mix(in srgb, var(--t-bg) 70%, #fff);
+  --pg-ink: color-mix(in srgb, var(--t-panel) 88%, #000); --pg-soft: color-mix(in srgb, var(--t-panel) 62%, var(--t-bg)); --pg-gold: #8E6A26;
+  --t-lo: color-mix(in srgb, var(--t-panel) 62%, #000); --t-mid: color-mix(in srgb, var(--t-panel) 82%, #000);
+  --glass-a: var(--t-panel); --glass-b: color-mix(in srgb, var(--t-panel) 62%, #5C3422);
+}
+html.th-light .monthnav, html.th-light .srchbtn, html.th-light .tools button, html.th-light .tools > *, html.th-light .ptr,
+html.th-light .nw-mnav, html.th-light .nw-srch, html.th-light .pagbtn, html.th-light .pchip, html.th-light .pinfo { background-color: var(--t-panel) !important; }
+html.th-light .ftab { background-color: var(--t-panel) !important; }
+html.th-light .ftab, html.th-light .midx button { background-image: var(--leather), linear-gradient(180deg, var(--t-panel), var(--t-lo)) !important; }
+html.th-light .wrow { background-image: var(--leather), linear-gradient(180deg, var(--t-mid), var(--t-lo)) !important; }
+html.th-light .motto { color: var(--pg-gold) !important; -webkit-text-fill-color: var(--pg-gold); }
+html.th-light .status, html.th-light .sign, html.th-light .sign *, html.th-light .wkl-l span, html.th-light .pairs small { color: var(--pg-soft) !important; }
+html.th-light .wkl-l .now { color: var(--pg-gold) !important; }
+html.th-light .pairs b { background: none !important; -webkit-text-fill-color: var(--pg-gold) !important; color: var(--pg-gold) !important; }
+html.th-light body { color-scheme: light; }
+html.th-light .mast h1 { color: var(--pg-ink) !important; -webkit-text-fill-color: var(--pg-ink); }
+html.th-light .mast h1 em { -webkit-text-fill-color: var(--pg-gold) !important; color: var(--pg-gold) !important; }
+html.th-light .tabs { background: color-mix(in srgb, var(--t-panel) 92%, transparent) !important; }
+html.th-light #nightsky { display: none !important; }
+html.th-light body.night .page::after { background: rgba(0, 0, 0, .06); }
+
+/* Configurações: two parts, Técnicas and Site */
+.cfg-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px; border-radius: 999px; background: rgba(0, 0, 0, .22); border: 1px solid rgba(205, 167, 94, .3); }
+.cfg-tabs button { border: 0; border-radius: 999px; padding: 9px 10px; background: none; color: var(--soft); font: 600 13.5px/1 var(--sans); cursor: pointer; }
+.cfg-tabs button[aria-selected="true"] { background: var(--gold); color: #2A1A08; }
+.cfg-bgs { display: grid; grid-template-columns: repeat(auto-fill, minmax(62px, 1fr)); gap: 8px; margin-top: 8px; }
+.cfg-bg { display: flex; flex-direction: column; align-items: center; gap: 5px; border: 0; background: none; padding: 0; cursor: pointer; color: var(--soft); font: 500 10.5px/1.2 var(--sans); text-align: center; }
+.cfg-bg i { position: relative; width: 100%; aspect-ratio: 1.15; border-radius: 12px; border: 1px solid rgba(205, 167, 94, .35); overflow: hidden; }
+.cfg-bg i::before { content: ""; position: absolute; left: 22%; right: 22%; top: 30%; bottom: 0; border-radius: 6px 6px 0 0; background: var(--p); border: 1px solid rgba(205, 167, 94, .45); border-bottom: 0; }
+.cfg-bg i::after { content: ""; position: absolute; left: 30%; right: 30%; top: 16%; height: 3px; border-radius: 3px; background: #CDA75E; }
+.cfg-bg[aria-pressed="true"] i { border: 2px solid var(--gold); box-shadow: 0 0 0 3px rgba(205, 167, 94, .25); }
+.cfg-bg[aria-pressed="true"] { color: var(--champ); font-weight: 600; }
+.cfg-h { display: block; font-family: var(--display); font-size: 18px; font-weight: 500; color: var(--champ); margin-bottom: 2px; }
+.cfg-sub { margin: 12px 0 0; font: 500 11.5px/1 var(--sans); letter-spacing: .1em; text-transform: uppercase; color: var(--soft); }
 </style>
 
 <!-- opening screen: the icon, the title and the quote of the day (once per visit) -->
@@ -2626,11 +2732,11 @@ input.ink { animation: inkIn .55s ease-out; }
       u(grain),
       "repeating-linear-gradient(45deg, rgba(255,255,255,.016) 0 1px, transparent 1px 5px)",
       "repeating-linear-gradient(-45deg, rgba(0,0,0,.07) 0 1px, transparent 1px 5px)",
-      "radial-gradient(55% 32% at 18% 6%, rgba(100,16,34,.38), transparent 72%)",
-      "radial-gradient(45% 30% at 88% 30%, rgba(84,12,27,.30), transparent 72%)",
-      "radial-gradient(60% 34% at 25% 62%, rgba(78,10,24,.28), transparent 72%)",
-      "radial-gradient(50% 30% at 80% 88%, rgba(88,12,28,.28), transparent 72%)",
-      "linear-gradient(180deg, #1D0409 0%, #170307 55%, #110205 100%)"
+      "radial-gradient(55% 32% at 18% 6%, var(--vel-a), transparent 72%)",
+      "radial-gradient(45% 30% at 88% 30%, var(--vel-b), transparent 72%)",
+      "radial-gradient(60% 34% at 25% 62%, var(--vel-c), transparent 72%)",
+      "radial-gradient(50% 30% at 80% 88%, var(--vel-d), transparent 72%)",
+      "linear-gradient(180deg, var(--vel-top) 0%, var(--vel-mid) 55%, var(--vel-bot) 100%)"
     ].join(",");
     st.backgroundSize = "200px 200px, auto, auto, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%";
   })();
@@ -5269,14 +5375,23 @@ input.ink { animation: inkIn .55s ease-out; }
     [1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(v => '<button type="button" role="radio" data-cfgtp="' + k + '|' + v + '" aria-checked="' + (v === tp) + '">1:' + v + '</button>').join("") + '</div>' +
     '<div class="cfg-ex">1 TP = <b>+' + tp + '%</b> · 1 SL = <b>−1%</b> · ex.: 3 TP e 2 SL = <b>' + fmt(3 * tp - 2) + '</b></div></div>'; };
   function drawCfg() {
-    cfgDlg.innerHTML = '<div class="dlg-card cfg-card" role="dialog" aria-modal="true" aria-labelledby="cfgT"><div><div class="sub">Diário</div><h3 id="cfgT">Configurações</h3><p class="cfg-note">A Fusion e a Prop podem ter valores diferentes. A Estratégia de cada uma usa o mesmo valor da sua conta. Ao mudar, os resultados são recalculados.</p></div>' +
-      cfgAcc("f", "Fusion", cfg.tpF, cfg.parF, cfg.horF) + cfgAcc("p", "Prop", cfg.tpP, cfg.parP, cfg.horP) +
-      '<div class="cfg-sec"><label class="cfg-sw"><input type="checkbox" id="cfgBe"' + (cfg.be ? " checked" : "") + '><span class="sw" aria-hidden="true"></span><span><b>Bolinha BE (break-even)</b><small>Para as operações que fecharam a zero, no preço de entrada. Contam no TO, mas não mexem no resultado.</small></span></label></div>' +
-      '<div class="cfg-sec"><label class="cfg-sw"><input type="checkbox" id="cfgSom"' + (cfg.som ? " checked" : "") + '><span class="sw" aria-hidden="true"></span><span><b>Som de sino ao abrir</b><small>Um toque suave quando abres o site. Fica só neste telemóvel ou computador. No iPhone toca quando tocas no ecrã pela primeira vez.</small></span></label></div>' +
-      (ro ? '<p class="cfg-ro">Só leitura: entra na tua conta para mudar as configurações.</p>' : '') +
-      '<div class="dlg-actions"><button type="button" class="btn" data-cfg="cancel">Cancelar</button><button type="button" class="btn primary" data-cfg="save"' + (ro ? " disabled" : "") + '>Guardar</button></div></div>';
+    const site = cfg.tab === "site", curBg = document.documentElement.dataset.bg || "bordeaux";
+    const bgBtn = t => '<button type="button" class="cfg-bg" data-cfgbg="' + t[0] + '" aria-pressed="' + (t[0] === curBg) + '"><i style="background:' + t[2] + ';--p:' + t[3] + '"></i>' + t[1] + '</button>';
+    cfgDlg.innerHTML = '<div class="dlg-card cfg-card" role="dialog" aria-modal="true" aria-labelledby="cfgT"><div><div class="sub">Diário</div><h3 id="cfgT">Configurações</h3></div>' +
+      '<div class="cfg-tabs" role="tablist"><button type="button" role="tab" data-cfgtab="tec" aria-selected="' + !site + '">Técnicas</button><button type="button" role="tab" data-cfgtab="site" aria-selected="' + site + '">Site</button></div>' +
+      (site
+        ? '<div class="cfg-sec"><b class="cfg-h">Cor do fundo</b><small>Muda o fundo do site todo. O dourado fica sempre igual. Fica guardada só neste telemóvel ou computador.</small>' +
+          '<p class="cfg-sub">Escuras</p><div class="cfg-bgs">' + window.DT_THEMES.filter(t => !t[4]).map(bgBtn).join("") + '</div>' +
+          '<p class="cfg-sub">Claras</p><div class="cfg-bgs">' + window.DT_THEMES.filter(t => t[4]).map(bgBtn).join("") + '</div></div>' +
+          '<div class="cfg-sec"><label class="cfg-sw"><input type="checkbox" id="cfgSom"' + (cfg.som ? " checked" : "") + '><span class="sw" aria-hidden="true"></span><span><b>Som de sino ao abrir</b><small>Um toque suave quando abres o site. Fica só neste telemóvel ou computador. No iPhone toca quando tocas no ecrã pela primeira vez.</small></span></label></div>' +
+          '<div class="dlg-actions"><button type="button" class="btn primary" data-cfg="site-ok">Fechar</button></div></div>'
+        : '<p class="cfg-note">A Fusion e a Prop podem ter valores diferentes. A Estratégia de cada uma usa o mesmo valor da sua conta. Ao mudar, os resultados são recalculados.</p>' +
+          cfgAcc("f", "Fusion", cfg.tpF, cfg.parF, cfg.horF) + cfgAcc("p", "Prop", cfg.tpP, cfg.parP, cfg.horP) +
+          '<div class="cfg-sec"><label class="cfg-sw"><input type="checkbox" id="cfgBe"' + (cfg.be ? " checked" : "") + '><span class="sw" aria-hidden="true"></span><span><b>Bolinha BE (break-even)</b><small>Para as operações que fecharam a zero, no preço de entrada. Contam no TO, mas não mexem no resultado.</small></span></label></div>' +
+          (ro ? '<p class="cfg-ro">Só leitura: entra na tua conta para mudar as configurações.</p>' : '') +
+          '<div class="dlg-actions"><button type="button" class="btn" data-cfg="cancel">Cancelar</button><button type="button" class="btn primary" data-cfg="save"' + (ro ? " disabled" : "") + '>Guardar</button></div></div>');
   }
-  const cfgRead = () => { const g = k => { const i = cfgDlg.querySelector('[data-cfgpar="' + k + '"]'); return i ? i.value.trim().toUpperCase().slice(0, 20) : ""; }; cfg.parF = g("f"); cfg.parP = g("p"); const hv = (k, s) => { const i = cfgDlg.querySelector('[data-cfghor="' + k + '|' + s + '"]'); return i && /^\d\d:\d\d/.test(i.value) ? i.value.slice(0, 5) : ""; }; if (cfgDlg.querySelector("[data-cfghor]")) { cfg.horF = okHor(hv("f", "a") + "-" + hv("f", "b")); cfg.horP = okHor(hv("p", "a") + "-" + hv("p", "b")); } const b = $("cfgBe"); if (b) cfg.be = b.checked; const sm = $("cfgSom"); if (sm) cfg.som = sm.checked; };
+  const cfgRead = () => { const g = k => { const i = cfgDlg.querySelector('[data-cfgpar="' + k + '"]'); return i ? i.value.trim().toUpperCase().slice(0, 20) : (k === "f" ? cfg.parF : cfg.parP); }; cfg.parF = g("f"); cfg.parP = g("p"); const hv = (k, s) => { const i = cfgDlg.querySelector('[data-cfghor="' + k + '|' + s + '"]'); return i && /^\d\d:\d\d/.test(i.value) ? i.value.slice(0, 5) : ""; }; if (cfgDlg.querySelector("[data-cfghor]")) { cfg.horF = okHor(hv("f", "a") + "-" + hv("f", "b")); cfg.horP = okHor(hv("p", "a") + "-" + hv("p", "b")); } const b = $("cfgBe"); if (b) cfg.be = b.checked; const sm = $("cfgSom"); if (sm) cfg.som = sm.checked; };
   function openCfg(focusPar) {
     let som = false; try { som = localStorage.getItem("diario-som-abrir") === "1"; } catch (_) {}
     cfg = { tpF: TP_PCT, tpP: TP_PROP, be: SHOW_BE, parF: PAR_F, parP: PAR_P, horF: HOR_F, horP: HOR_P, som }; drawCfg(); cfgDlg.hidden = false;
@@ -5289,6 +5404,10 @@ input.ink { animation: inkIn .55s ease-out; }
   document.addEventListener("click", e => { const c = e.target.closest("[data-paredit]"); if (c) { e.preventDefault(); e.stopPropagation(); openCfg(c.dataset.paredit); } }, true);
   cfgDlg.addEventListener("click", async e => {
     if (e.target === cfgDlg) return closeCfg();
+    const tb = e.target.closest("[data-cfgtab]"); if (tb) { cfgRead(); cfg.tab = tb.dataset.cfgtab; drawCfg(); cfgDlg.querySelector(".dlg-card").scrollTop = 0; return; }
+    const bg = e.target.closest("[data-cfgbg]");
+    if (bg) { const sc = cfgDlg.querySelector(".dlg-card").scrollTop; cfgRead(); window.DT_setTheme(bg.dataset.cfgbg); try { localStorage.setItem("diario-fundo", bg.dataset.cfgbg); } catch (_) {} drawCfg(); cfgDlg.querySelector(".dlg-card").scrollTop = sc; return; }
+    if (e.target.closest('[data-cfg="site-ok"]')) { cfgRead(); try { localStorage.setItem("diario-som-abrir", cfg.som ? "1" : "0"); } catch (_) {} return closeCfg(); }
     const t = e.target.closest("[data-cfgtp]"); if (t) { const [k, v] = t.dataset.cfgtp.split("|"); cfgRead(); if (k === "f") cfg.tpF = +v; else cfg.tpP = +v; drawCfg(); return; }
     const a = e.target.closest("[data-cfg]"); if (!a) return;
     if (a.dataset.cfg === "cancel") return closeCfg();
