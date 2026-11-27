@@ -2455,6 +2455,53 @@ html.th-light .tabs { background: color-mix(in srgb, var(--t-panel) 92%, transpa
 html.th-light #nightsky { display: none !important; }
 html.th-light body.night .page::after { background: rgba(0, 0, 0, .06); }
 
+/* ================= entrada, calmer: light slow lines, falling sparkles, a sealed notebook that opens into the site ================= */
+.sp-frame, .sp-stars, .sp-tips, .sp-dt, .sp-candle, .sp-sign, .sp-line, .sp-icon .sp-ring, .sp-icon .sp-halo, .sp-icon .sp-glow, .sp-icon .sp-shine, .sp-icon .sp-dotspk, .sp-icon .sp-spk { display: none !important; }
+.splash.in .sp-title { animation: none !important; text-shadow: none !important; }
+.splash .sp-title { white-space: nowrap; font-size: min(38px, 10.4vw); }
+.splash.in::before { animation: none !important; }
+.sp-lines .spl { stroke-width: .8 !important; }
+.splash.in .spl { animation: spDraw 3.4s ease-in-out forwards !important; stroke-opacity: .26 !important; }
+.splash.in .spl.s2 { animation-delay: .35s !important; stroke-opacity: .17 !important; } .splash.in .spl.s3 { animation-delay: .7s !important; stroke-opacity: .11 !important; }
+.sp-lines .spl-t { stroke-width: 1.5 !important; filter: drop-shadow(0 0 2px rgba(243, 217, 142, .6)) !important; }
+.splash.in .spl-t { animation: spTipSoft 3.4s ease-in-out forwards !important; } .splash.in .spl-t.s2 { animation-delay: .35s !important; } .splash.in .spl-t.s3 { animation-delay: .7s !important; }
+@keyframes spTipSoft { 0% { opacity: 0; stroke-dashoffset: .035; } 10% { opacity: .55; } 85% { opacity: .55; } 100% { opacity: 0; stroke-dashoffset: -.965; } }
+.sp-dust i { width: 9px !important; height: 9px !important; border-radius: 0 !important; background: linear-gradient(135deg, #FFF6D0, #E3BD6A 60%, #B8893A) !important; clip-path: polygon(50% 0, 60% 40%, 100% 50%, 60% 60%, 50% 100%, 40% 60%, 0 50%, 40% 40%); }
+@keyframes spDust { 0% { opacity: 0; transform: translate(0, 0) rotate(0) scale(var(--sc, 1)); } 15% { opacity: .85; } 80% { opacity: .6; } 100% { opacity: 0; transform: translate(var(--sx), 82vh) rotate(var(--r, 200deg)) scale(var(--sc, 1)); } }
+.splash .sp-icon { width: min(340px, 88vw); height: auto; aspect-ratio: 2; filter: drop-shadow(0 16px 22px rgba(0, 0, 0, .55)); }
+.sp-icon .bk-board { fill: #2A211B; stroke: #CDA75E; stroke-width: 1; }
+.sp-book { transform-box: view-box; transform-origin: 0 0; }
+.splash.in .sp-book { animation: bkCenter .9s cubic-bezier(.5, 0, .3, 1) 1.6s forwards; }
+@keyframes bkCenter { to { transform: translateX(26px); } }
+.sp-left { transform-box: view-box; transform-origin: 34px 60px; transform: scaleX(0); }
+.splash.in .sp-left { animation: bkLeft .45s cubic-bezier(.2, .6, .3, 1) 2.05s forwards; }
+@keyframes bkLeft { 0% { transform: scaleX(0) skewY(10deg); } 100% { transform: none; } }
+/* the chart on the right page keeps going up and down once it is drawn */
+.splash.in .sp-icon .spc rect:nth-child(1) { animation: spGrowB .6s ease-out 2.4s both, spBob 1.3s ease-in-out 3s infinite alternate !important; }
+.splash.in .sp-icon .spc rect:nth-child(2) { animation: spGrowB .6s ease-out 2.48s both, spBob 1.1s ease-in-out 3.08s infinite alternate-reverse !important; }
+.splash.in .sp-icon .spc rect:nth-child(3) { animation: spGrowB .6s ease-out 2.56s both, spBob 1.5s ease-in-out 3.16s infinite alternate !important; }
+.splash.in .sp-icon .spc rect:nth-child(4) { animation: spGrowB .6s ease-out 2.64s both, spBob 1.2s ease-in-out 3.24s infinite alternate-reverse !important; }
+.splash.in .sp-icon .spc rect:nth-child(5) { animation: spGrowB .6s ease-out 2.72s both, spBob 1.4s ease-in-out 3.32s infinite alternate !important; }
+@keyframes spBob { from { transform: scaleY(1); } to { transform: scaleY(.55); } }
+.splash.in .sp-icon .sp-dot { animation: spPop .35s cubic-bezier(.2, 1.6, .4, 1) 3.05s forwards, spDotBob 1.4s ease-in-out 3.4s infinite alternate !important; }
+@keyframes spDotBob { from { translate: 0 0; } to { translate: 0 5px; } }
+.splash.in .sp-icon { animation: spBookIn 1s cubic-bezier(.2, .8, .2, 1) .15s both !important; -webkit-box-reflect: none !important; }
+@keyframes spBookIn { from { opacity: 0; transform: translateY(14px) scale(.92); } to { opacity: 1; transform: none; } }
+.sp-cover .cv-b { fill: var(--t-panel, #4A1420); stroke: #CDA75E; stroke-width: 1; }
+.sp-cover { transform-box: view-box; transform-origin: 34px 60px; }
+.splash.in .sp-cover { animation: cvOpen .45s cubic-bezier(.6, 0, .9, .5) 1.6s forwards; }
+@keyframes cvOpen { 0% { transform: none; } 99% { transform: scaleX(.02) skewY(-10deg); opacity: 1; } 100% { transform: scaleX(0); opacity: 0; } }
+.sp-seal { transform-box: view-box; transform-origin: 0 0; transform: translate(62.5px, 60px) scale(.36) translate(-60px, -60px); }
+.splash.in .sp-crack { animation: spDraw .3s ease-out 1s forwards, spGone .2s ease 1.3s forwards !important; }
+.splash.in .sp-medl { animation: spMedL .6s cubic-bezier(.6, 0, .3, 1) 1.3s forwards !important; }
+.splash.in .sp-medr { animation: spMedR .6s cubic-bezier(.6, 0, .3, 1) 1.3s forwards !important; }
+.splash.in .sp-icon .sp-chart { animation: spDraw .7s ease-out 2.45s forwards !important; }
+/* entering: the open notebook comes towards you and the site appears */
+.splash.enter { pointer-events: none; opacity: 0; transition: opacity .55s ease .35s !important; -webkit-backdrop-filter: blur(0); backdrop-filter: blur(0); }
+.splash.enter .sp-icon { animation: none !important; opacity: 0 !important; transform: scale(6) !important; transition: transform .85s cubic-bezier(.6, 0, .2, 1), opacity .45s ease .35s !important; }
+.splash.enter > :not(.sp-icon) { opacity: 0 !important; transition: opacity .3s ease !important; }
+@media (prefers-reduced-motion: reduce) { .sp-cover, .sp-seal { display: none; } .sp-dust { display: none; } }
+
 /* Configurações: two parts, Técnicas and Site */
 .cfg-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px; border-radius: 999px; background: rgba(0, 0, 0, .22); border: 1px solid rgba(205, 167, 94, .3); }
 .cfg-tabs button { border: 0; border-radius: 999px; padding: 9px 10px; background: none; color: var(--soft); font: 600 13.5px/1 var(--sans); cursor: pointer; }
@@ -2487,33 +2534,31 @@ html.th-light body.night .page::after { background: rgba(0, 0, 0, .06); }
   <i class="sp-moon" aria-hidden="true"></i>
   <canvas class="sp-dt" aria-hidden="true"></canvas>
   <div class="sp-ribbon" aria-hidden="true"><i class="rh"></i><i class="rv"></i><svg class="bow" viewBox="0 0 120 70"><defs><linearGradient id="spbw" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F6E0A4"/><stop offset=".5" stop-color="#CDA75E"/><stop offset="1" stop-color="#8A6420"/></linearGradient></defs><path class="bl" d="M60 35C44 14 18 6 10 16 4 26 18 44 60 35z" fill="url(#spbw)"/><path class="br" d="M60 35C76 14 102 6 110 16 116 26 102 44 60 35z" fill="url(#spbw)"/><path class="tl" d="M56 37 40 66 50 62 58 69 60 38z" fill="url(#spbw)"/><path class="tr" d="M64 37 80 66 70 62 62 69 60 38z" fill="url(#spbw)"/><rect x="52" y="28" width="16" height="15" rx="5" fill="url(#spbw)"/></svg></div>
-  <svg class="sp-icon" viewBox="0 0 120 120">
+  <svg class="sp-icon" viewBox="-60 0 240 120">
     <defs><linearGradient id="spg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F3DDA0"/><stop offset="1" stop-color="#A8833F"/></linearGradient>
-      <radialGradient id="spglow"><stop offset="0" stop-color="#F3D98E" stop-opacity=".42"/><stop offset=".45" stop-color="#CDA75E" stop-opacity=".14"/><stop offset="1" stop-color="#CDA75E" stop-opacity="0"/></radialGradient>
-      <linearGradient id="spsh" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#FFF6DA" stop-opacity=".55"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
-      <clipPath id="spclip"><rect x="1.5" y="1.5" width="117" height="117" rx="27"/></clipPath></defs>
-    <circle class="sp-glow" cx="60" cy="60" r="150" fill="url(#spglow)"/>
-    <circle class="sp-ring" cx="60" cy="60" r="76" pathLength="1" fill="none" stroke="url(#spg)" stroke-width="1.3" transform="rotate(-90 60 60)"/>
-    <circle class="sp-ring r2" cx="60" cy="60" r="81" pathLength="1" fill="none" stroke="#CDA75E" stroke-width=".6" stroke-dasharray=".004 .012" transform="rotate(90 60 60)"/>
-    <rect x="1.5" y="1.5" width="117" height="117" rx="27" fill="#110D0B" stroke="url(#spg)" stroke-width="1.6"/>
-    <rect x="29" y="20" width="64" height="80" rx="6" fill="#2A211B" stroke="#CDA75E" stroke-width="1"/>
-    <rect x="35" y="24" width="55" height="72" rx="3" fill="#F7EFE4"/>
-    <g stroke="url(#spg)" stroke-width="2.2" fill="none" stroke-linecap="round"><path d="M27 32a4 3 0 0 0 10 0"/><path d="M27 44a4 3 0 0 0 10 0"/><path d="M27 56a4 3 0 0 0 10 0"/><path d="M27 68a4 3 0 0 0 10 0"/><path d="M27 80a4 3 0 0 0 10 0"/></g>
-    <rect x="41" y="29" width="22" height="3" rx="1.5" fill="#6B1A2C" opacity=".8"/>
-    <g class="spc"><rect x="44" y="72" width="5" height="12" rx="1" fill="#2F7D55"/><rect x="53" y="66" width="5" height="13" rx="1" fill="#2F7D55"/><rect x="62" y="70" width="5" height="8" rx="1" fill="#8E2A40"/><rect x="71" y="58" width="5" height="13" rx="1" fill="#2F7D55"/><rect x="80" y="48" width="5" height="14" rx="1" fill="#2F7D55"/></g>
-    <polyline class="sp-chart" pathLength="1" points="40,86 51,77 60,80 70,67 84,50" fill="none" stroke="#CDA75E" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
-    <circle class="sp-dot" cx="84" cy="50" r="3.4" fill="#CDA75E"/>
-    <g class="sp-spk" fill="#F3D98E"><path d="M44 80l1.2 3 3 1.2-3 1.2-1.2 3-1.2-3-3-1.2 3-1.2z"/><path d="M62 74l1 2.4 2.4 1-2.4 1-1 2.4-1-2.4-2.4-1 2.4-1z"/><path d="M76 62l1.3 3.2 3.2 1.3-3.2 1.3-1.3 3.2-1.3-3.2-3.2-1.3 3.2-1.3z"/><path d="M86 48l1 2.4 2.4 1-2.4 1-1 2.4-1-2.4-2.4-1 2.4-1z"/><path d="M53 70l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/><path d="M90 58l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/></g>
-    <g clip-path="url(#spclip)"><rect class="sp-shine" x="-60" y="-20" width="46" height="160" fill="url(#spsh)" transform="rotate(20 60 60)"/></g>
-    <circle class="sp-halo" cx="60" cy="60" r="62" fill="none" stroke="#F3D98E" stroke-width="1.6"/>
-    <g class="sp-dotspk" stroke="#FFF1C2" stroke-width="1.3" stroke-linecap="round"><path d="M84 44v-4"/><path d="M89.2 47l3.4-2"/><path d="M89.2 53l3.4 2"/><path d="M84 56v4"/><path d="M78.8 53l-3.4 2"/><path d="M78.8 47l-3.4-2"/></g>
-    <defs><clipPath id="spcl"><rect x="-20" y="-20" width="80" height="160"/></clipPath><clipPath id="spcr"><rect x="60" y="-20" width="80" height="160"/></clipPath>
+      <clipPath id="spcl"><rect x="-20" y="-20" width="80" height="160"/></clipPath><clipPath id="spcr"><rect x="60" y="-20" width="80" height="160"/></clipPath>
       <radialGradient id="spwax" cx=".38" cy=".35" r=".7"><stop offset="0" stop-color="#C2364F"/><stop offset=".6" stop-color="#8E1A2E"/><stop offset="1" stop-color="#5A0E1C"/></radialGradient>
       <g id="spmed"><circle cx="60" cy="60" r="54" fill="#2A0811" stroke="url(#spg)" stroke-width="3"/><circle cx="60" cy="60" r="47" fill="none" stroke="url(#spg)" stroke-width=".8" stroke-dasharray="1.5 2.5"/><circle cx="60" cy="60" r="40" fill="none" stroke="rgba(205,167,94,.35)" stroke-width=".6"/>
         <path d="M60 20l2 4-2 4-2-4zM60 92l2 4-2 4-2-4zM20 60l4-2 4 2-4 2zM92 60l4-2 4 2-4 2z" fill="#CDA75E"/>
         <path d="M60 39c9 0 13 3 16 2 2 4 3 8 1 11 4 3 4 8 1 11 1 4-2 8-6 9-2 4-7 5-11 4-4 2-9 1-11-2-5 0-8-4-7-8-4-3-4-8-1-11-2-4 1-9 5-10 2-4 8-6 13-6z" fill="url(#spwax)"/><circle cx="60" cy="60" r="14.5" fill="none" stroke="rgba(255,200,200,.25)" stroke-width=".8"/>
         <text x="60" y="65.5" text-anchor="middle" font-family="DM Serif Display, Didot, serif" font-size="15" fill="#F3D98E">DT</text></g></defs>
-    <g class="sp-med" aria-hidden="true"><g class="sp-medl"><use href="#spmed" clip-path="url(#spcl)"/></g><g class="sp-medr"><use href="#spmed" clip-path="url(#spcr)"/></g><path class="sp-crack" pathLength="1" d="M60 41l-3 6 4 4-3 5 3 4-4 5 3 5-1 7" fill="none" stroke="#2A0510" stroke-width="1.4" stroke-linejoin="round"/></g>
+    <g class="sp-book">
+      <g class="sp-left" aria-hidden="true">
+        <rect x="-25" y="20" width="60" height="80" rx="6" class="bk-board"/>
+        <rect x="-21" y="24" width="54" height="72" rx="3" fill="#F7EFE4"/>
+        <rect x="-15" y="31" width="22" height="3" rx="1.5" fill="#CDA75E"/>
+        <g fill="#D9CBB8"><rect x="-15" y="42" width="40" height="1.6" rx=".8"/><rect x="-15" y="50" width="36" height="1.6" rx=".8"/><rect x="-15" y="58" width="40" height="1.6" rx=".8"/><rect x="-15" y="66" width="30" height="1.6" rx=".8"/><rect x="-15" y="74" width="38" height="1.6" rx=".8"/><rect x="-15" y="82" width="26" height="1.6" rx=".8"/></g>
+      </g>
+      <rect x="33" y="20" width="60" height="80" rx="6" class="bk-board"/>
+      <rect x="35" y="24" width="55" height="72" rx="3" fill="#F7EFE4"/>
+      <rect x="41" y="29" width="22" height="3" rx="1.5" fill="#CDA75E"/>
+      <g class="spc"><rect x="44" y="72" width="5" height="12" rx="1" fill="#2F7D55"/><rect x="53" y="66" width="5" height="13" rx="1" fill="#2F7D55"/><rect x="62" y="70" width="5" height="8" rx="1" fill="#8E2A40"/><rect x="71" y="58" width="5" height="13" rx="1" fill="#2F7D55"/><rect x="80" y="48" width="5" height="14" rx="1" fill="#2F7D55"/></g>
+      <polyline class="sp-chart" pathLength="1" points="40,86 51,77 60,80 70,67 84,50" fill="none" stroke="#CDA75E" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle class="sp-dot" cx="84" cy="50" r="3.4" fill="#CDA75E"/>
+      <g class="sp-cover" aria-hidden="true"><rect x="34" y="21" width="58" height="78" rx="5" class="cv-b"/><rect x="38.5" y="26" width="49" height="68" rx="2.5" fill="none" stroke="#CDA75E" stroke-width=".8" opacity=".75"/><rect x="34" y="21" width="5" height="78" rx="2" fill="#000" opacity=".25"/></g>
+      <g stroke="url(#spg)" stroke-width="2.2" fill="none" stroke-linecap="round"><path d="M29 32a5 3 0 0 0 10 0"/><path d="M29 44a5 3 0 0 0 10 0"/><path d="M29 56a5 3 0 0 0 10 0"/><path d="M29 68a5 3 0 0 0 10 0"/><path d="M29 80a5 3 0 0 0 10 0"/></g>
+      <g class="sp-seal"><g class="sp-med" aria-hidden="true"><g class="sp-medl"><use href="#spmed" clip-path="url(#spcl)"/></g><g class="sp-medr"><use href="#spmed" clip-path="url(#spcr)"/></g><path class="sp-crack" pathLength="1" d="M60 41l-3 6 4 4-3 5 3 4-4 5 3 5-1 7" fill="none" stroke="#2A0510" stroke-width="1.4" stroke-linejoin="round"/></g></g>
+    </g>
   </svg>
   <div class="sp-candle" aria-hidden="true"><i class="cg"></i><i class="fl"></i><i class="wk"></i><i class="wx"></i></div>
   <div class="sp-title">Diário <em>de</em> Trading</div>
@@ -3068,31 +3113,106 @@ html.th-light body.night .page::after { background: rgba(0, 0, 0, .06); }
 
   // ---------- a different inspiring line every day ----------
   const QUOTES = [
-    "Discipline today, freedom tomorrow.", "Small wins, every single day.", "Protect your capital like it's your peace.", "One good trade at a time.",
-    "The market rewards patience, not panic.", "Stay calm. Follow the plan.", "Consistency beats intensity.", "Your edge is your discipline.",
-    "Losses are tuition, not failure.", "Trade what you see, not what you feel.", "Progress, not perfection.", "Be the calm in a loud market.",
-    "Show up, stick to the rules, repeat.", "Every red day teaches, every green day confirms.", "Patience is a position too.", "Focus on the process, the results will follow.",
-    "You don't need every trade, just your trades.", "Rest is part of the strategy.", "Confidence comes from preparation.", "The best traders are the most patient ones.",
-    "Stop chasing, start choosing.", "Calm mind, clear charts.", "Your future self is watching. Make her proud.", "A plan followed is a win, whatever the result.",
-    "Risk small, think big.", "Let the setups come to you.", "Today is a new chart.", "Mistakes are data, not drama.",
-    "You are building something that lasts.", "Slow is smooth, smooth is fast.", "Trust your work, not your fear.", "Keep your head when the candles lose theirs.",
-    "Wins are earned in the quiet moments.", "Every day you show up, you get better.", "Respect the stop. Respect yourself.", "The goal is to stay in the game.",
-    "Be stubborn about your rules, flexible about the market.", "No revenge, only recovery.", "Grow quietly, shine loudly.", "Hard days make strong traders.",
-    "Your consistency is your superpower.", "Do the boring things beautifully.", "The market will always be there. Protect your energy.", "Fall in love with the process.",
-    "Execute, review, improve.", "Big dreams, small risk.", "One step at a time builds a mountain.", "Be patient with your growth.",
-    "Clarity before action.", "What you repeat, you become.", "Stay humble in green, stay strong in red.", "Your rules are your armour.",
-    "Good habits compound like good trades.", "Keep going. It's working, even when it doesn't feel like it.", "Peace over profit, and profit follows.", "Be proud of how far you've come.",
-    "Today, just follow the plan.", "Every pip of patience pays.", "Elegance is a calm decision.", "Strong women trade with a plan.",
-    "Don't force it. Flow with it.", "Your journal is your mentor.", "Learn, adjust, rise.", "Excellence is a daily habit.",
-    "Detach from the outcome, attach to the process.", "Breathe. Then click.", "Doubt kills more trades than the market.", "There is always another setup.",
-    "Fear and greed are not part of your plan.", "Stay focused, stay fabulous.", "You are the CEO of your account.", "Quiet consistency, loud results.",
-    "Believe in your edge.", "Discipline is self-love.", "Every session is a chance to be better.", "The chart doesn't know your mood. Leave it outside.",
-    "Today's patience is tomorrow's profit.", "Win the day, then rest.", "Keep it simple, keep it sharp.", "Make the market come to you.",
-    "Courage is taking the trade. Wisdom is skipping the wrong one.", "Focus on what you control.", "You've survived every hard day so far.", "Shine through the drawdown.",
-    "Be the trader you'd want to copy.", "Small risk, steady mind, strong future.", "Let your results speak softly.", "Gratitude for every lesson.",
-    "Your best investment is in yourself.", "Great things take time.", "Stay in your lane, own your lane.", "Repeat what works.",
-    "Emotions off, strategy on.", "Every expert was once a beginner.", "Know your plan, live your plan.", "Calm is a competitive advantage.",
-    "You were made for this.", "Make today count.", "Fortune favours the prepared.", "Keep your standards higher than your fears."
+    "Progress, not perfection.", "Small wins, every single day.", "Be proud of how far you've come.", "You are building something that lasts.",
+    "Great things take time.", "Every expert was once a beginner.", "You were made for this.", "Make today count.",
+    "Be patient with your growth.", "What you repeat, you become.", "One step at a time builds a mountain.", "Fall in love with the process.",
+    "Your future self is watching. Make her proud.", "Keep going. It's working, even when it doesn't feel like it.", "You've survived every hard day so far.", "Your best investment is in yourself.",
+    "Keep your standards higher than your fears.", "Grow quietly, shine loudly.", "Excellence is a daily habit.", "Discipline is self-love.",
+    "Believe you can, and you're halfway there.", "She believed she could, so she did.", "Your only limit is the one you accept.", "Bloom where you are planted.",
+    "You are stronger than you think.", "Be the energy you want to attract.", "Choose joy, even on the slow days.", "Today is a beautiful day to begin again.",
+    "Be gentle with yourself. You're doing your best.", "Your dreams are valid.", "Start where you are. Use what you have.", "You are allowed to take up space.",
+    "Kindness is never wasted.", "Collect moments, not things.", "Trust the timing of your life.", "You are exactly where you need to be.",
+    "Good things are coming your way.", "Make yourself a priority.", "Rise and shine, it's a new day.", "Let your light be seen.",
+    "You are worthy of the life you want.", "Little by little, a little becomes a lot.", "Do it with love or don't do it at all.", "Choose courage over comfort.",
+    "Be the reason someone smiles today.", "You are enough, just as you are.", "The best is yet to come.", "Every day is a fresh page.",
+    "Dream big, start small, act now.", "Hold your head high, darling.", "Elegance never goes out of style.", "Be soft, but never weak.",
+    "Your story isn't over yet.", "Happiness looks good on you.", "Glow from the inside out.", "Be fearless in the pursuit of what sets your soul on fire.",
+    "Do more of what makes you happy.", "Trust yourself. You know more than you think.", "Your heart knows the way.", "Stars can't shine without darkness.",
+    "Turn your wounds into wisdom.", "You grow through what you go through.", "Difficult roads often lead to beautiful places.", "Be a voice, not an echo.",
+    "Life is better when you're laughing.", "Wake up with determination, go to bed with satisfaction.", "Make it happen.", "Your potential is endless.",
+    "Never stop learning.", "Be curious, not judgmental.", "The sun will rise and we will try again.", "Breathe in courage, breathe out fear.",
+    "Every flower blooms at its own pace.", "You are the author of your life.", "Celebrate every small victory.", "Be your own kind of beautiful.",
+    "Today, choose peace.", "Your calm is your power.", "Gratitude turns what we have into enough.", "Life is short. Make it sweet.",
+    "Work hard in silence.", "Shine like the whole universe is yours.", "You are a work of art in progress.", "Believe in the magic of new beginnings.",
+    "Strong women build each other up.", "She is clothed in strength and dignity.", "You are capable of amazing things.", "Don't wait for the perfect moment. Make it.",
+    "Let today be the start of something new.", "Bravery is being scared and doing it anyway.", "Your smile is your best accessory.", "There is beauty in simplicity.",
+    "Stay humble, work hard, be kind.", "Peace begins with a smile.", "Choose progress over pressure.", "Rest, but never quit.",
+    "A calm mind brings inner strength.", "Take a deep breath. You've got this.", "Your journey is uniquely yours.", "Don't compare your chapter one to someone else's chapter twenty.",
+    "Every sunset brings the promise of a new dawn.", "Love yourself first.", "You deserve the love you keep giving to others.", "Be brave enough to be a beginner.",
+    "Courage starts with showing up.", "Choose to see the good.", "Life happens for you, not to you.", "Your energy is precious. Spend it wisely.",
+    "Inhale the future, exhale the past.", "Water your own garden.", "Be a light in someone's day.", "The world needs your magic.",
+    "Let your faith be bigger than your fear.", "Hope is a beautiful thing.", "Patience is a quiet kind of strength.", "Become the woman you needed.",
+    "Keep your heart open.", "Today, I choose me.", "Don't shrink to fit in.", "You are not behind. You are on your way.",
+    "Growth is a beautiful mess.", "Good energy only.", "Your hard work will pay off.", "You are a masterpiece and a work in progress.",
+    "Be fierce, be kind, be you.", "Life is made of little moments like this one.", "Comfort zones are pretty, but nothing grows there.", "The comeback is always stronger than the setback.",
+    "You were born to stand out.", "Let it be easy.", "Shine, even on cloudy days.", "Find magic in the ordinary.",
+    "You glow differently when you're happy.", "Choose your thoughts like you choose your clothes.", "Be the main character of your life.", "Healing is not linear.",
+    "Self-care is not selfish.", "Do something today your future self will thank you for.", "Make peace with your past.", "Keep blooming.",
+    "Your mind is a garden. Plant beautiful thoughts.", "Confidence is quiet. Insecurity is loud.", "Never apologise for being yourself.", "Your pace is perfect.",
+    "Courage looks good on you.", "Live with intention.", "Joy is a choice you can make every morning.", "Be thankful for today.",
+    "Wherever you go, go with all your heart.", "Your effort today is your strength tomorrow.", "Sparkle in your own way.", "Good days are coming.",
+    "Let go of what you can't control.", "Embrace the glorious mess that you are.", "You can do hard things.", "Fill your cup first.",
+    "Remember why you started.", "Be stronger than your excuses.", "Dreams don't work unless you do.", "Turn your can'ts into cans.",
+    "Elegance is an attitude.", "Kind words cost nothing.", "Choose to be optimistic. It feels better.", "The secret of getting ahead is getting started.",
+    "You are someone's reason to smile.", "Little things make big days.", "Hope anchors the soul.", "Make room for joy.",
+    "Trust the journey, even when you don't understand it.", "Today is full of possibilities.", "Every new day is another chance.", "You are loved more than you know.",
+    "Let your dreams be bigger than your fears.", "Strength grows in the moments you think you can't go on.", "Be soft with your heart, strong with your goals.", "Grace under pressure.",
+    "Bloom in your own time.", "You have the power to change your story.", "Never lose your sparkle.", "Simplicity is the ultimate sophistication.",
+    "Your worth is not up for discussion.", "Calm is a superpower.", "Do it for the girl you used to be.", "The best view comes after the hardest climb.",
+    "Life is a journey, not a race.", "Stay true to you.", "Be the light you wish to see.", "Make your life a masterpiece.",
+    "Good vibes are contagious.", "Speak kindly to yourself.", "Gentle reminder: you are doing great.", "Every storm runs out of rain.",
+    "Your future is bright.", "Choose happiness today.", "Smile at the little things.", "You are strong. You are brave. You are enough.",
+    "Kindness is the most beautiful style.", "Embrace your journey.", "Faith over fear.", "Start the day with a grateful heart.",
+    "Love the life you're living.", "Live slowly, dream big.", "Be bold, be brave, be you.", "Everything you need is already inside you.",
+    "Mornings are for new beginnings.", "Rest is productive too.", "A positive mind finds a way.", "Your light is needed.",
+    "Stay patient and trust your journey.", "You deserve beautiful things.", "Make your heart the most beautiful thing about you.", "Be the reason you believe in yourself.",
+    "Sunshine is the best medicine.", "Grow through it.", "The sky is not the limit, your mind is.", "Make every day a little brighter.",
+    "Your dreams don't have an expiry date.", "Live in the moment.", "Better days are on their way.", "You are a gift to the world.",
+    "Love is always the answer.", "It's a good day to have a good day.", "Be proud of the woman you're becoming.", "The best things in life aren't things.",
+    "Trust yourself more.", "Your courage is contagious.", "Life is beautiful. Notice it.", "Keep shining, beautiful soul.",
+    "Hope is the heartbeat of the soul.", "Don't stop until you're proud.", "Plant seeds of kindness.", "Your possibilities are endless.",
+    "Every day is a second chance.", "Courage, dear heart.", "Choose love, always.", "Strength is quiet. So is grace.",
+    "Breathe and let it be.", "Happiness is homemade.", "Create a life you don't need a holiday from.", "You are the sunshine in someone's day.",
+    "Do small things with great love.", "Your spirit is unbreakable.", "Be grateful for small things.", "Be patient. Good things take time.",
+    "You are allowed to grow at your own pace.", "Peace is the new luxury.", "Let your soul shine.", "Gold never stops shining.",
+    "Always believe something wonderful is about to happen.", "Be a rainbow in someone's cloud.", "Choose kindness over being right.", "Life is a beautiful adventure.",
+    "Your inner peace is worth protecting.", "Dream it, believe it, achieve it.", "Your heart is your compass.", "The present moment is a gift.",
+    "Make yourself proud.", "You are braver than you believe.", "Write your own story.", "Let love lead the way.",
+    "Be the best version of you.", "Every ending is a new beginning.", "There's a whole world of good waiting for you.", "Wear your confidence like your favourite dress.",
+    "Shine with grace.", "Your inner light can't be dimmed.", "Fear is temporary. Regret is forever.", "You are a force of nature.",
+    "Life rewards those who keep going.", "Be patient with yourself. Nothing in nature blooms all year.", "Choose growth.", "Do it scared.",
+    "Today will be a good day.", "You can, and you will.", "Laughter is the best medicine.", "Live boldly.",
+    "Find joy in the journey.", "Be a good human.", "Feel the fear and do it anyway.", "Your best days are ahead of you.",
+    "Make kindness your signature.", "Love yourself loudly.", "Believe in your magic.", "Small steps still move you forward.",
+    "Quiet the noise, find your voice.", "Keep your heart full and your mind calm.", "Let your heart be light.", "Be grateful, be graceful, be great.",
+    "Trust your intuition.", "Fortune favours the brave.", "Make memories, not excuses.", "Stay wild, stay kind.",
+    "You were born to be real, not perfect.", "Find your sparkle.", "Kindness is a superpower.", "Bloom like nobody's watching.",
+    "Believe in the beauty of your dreams.", "Shine your light and let others shine too.", "Tough times never last, tough people do.", "You are the magic.",
+    "Every moment matters.", "Life is better with a little sparkle.", "Your heart is gold.", "Let go and grow.",
+    "You are the sky. Everything else is just the weather.", "Peace, love and patience.", "Choose faith, not worry.", "Do what you love, love what you do.",
+    "Live your truth.", "Laugh often, love always.", "Your soul is beautiful.", "Today is your day.",
+    "Inner peace is the new success.", "A grateful heart is a magnet for miracles.", "Be an original.", "Love the journey, not just the destination.",
+    "Gentle hearts change the world.", "The world is brighter with you in it.", "Rise above the storm and you will find the sunshine.", "Elegance is when the inside is as beautiful as the outside.",
+    "Make today amazing.", "Keep your face to the sunshine.", "Spread love everywhere you go.", "Strong is the new beautiful.",
+    "Life is tough, but so are you.", "Your best is good enough.", "Let your actions speak.", "You make the world more beautiful.",
+    "Every day is a gift. Unwrap it slowly.", "Courage is grace under pressure.", "Your future needs you. Your past doesn't.", "Shine from within.",
+    "Joy is in the little things.", "Trust the magic of beginnings.", "Make your dreams happen.", "Your kindness is your crown.",
+    "The best is yet to be.", "Stay positive, work hard, make it happen.", "Be someone who makes you happy.", "Find the beauty in every day.",
+    "Don't be afraid to sparkle.", "You were born to shine.", "Your heart is stronger than you know.", "Life is a gift. Open it every day.",
+    "Love deeply, live fully.", "Hope never goes out of style.", "Be confident in who you are.", "You are worthy of good things.",
+    "Courage is a beautiful habit.", "Happiness is an inside job.", "Keep growing, keep glowing.", "Each day is a new opportunity.",
+    "Stay golden.", "You're on the right path.", "Choose to shine.", "Make it a beautiful day.",
+    "Be your own sunshine.", "Live with grace.", "Hold on to hope.", "You are wonderfully made.",
+    "Patience and love make everything bloom.", "Today, be unstoppable.", "You carry so much love in your heart.", "Every step forward is a victory.",
+    "Be a little kinder than yesterday.", "Your journey is worth it.", "Peace looks beautiful on you.", "Your growth is beautiful to watch.",
+    "Wonderful things take time.", "You are the best thing that ever happened to you.", "Do what makes your soul shine.", "Let your light guide you.",
+    "Keep dreaming, keep doing.", "The best project you'll ever work on is you.", "Calm hearts make wise choices.", "Grace is a beautiful strength.",
+    "You are a reason to celebrate.", "Love who you are becoming.", "Every day, in every way, you're getting better.", "Breathe deeply. Live fully.",
+    "Golden days are ahead.", "Believe in yourself and all that you are.", "Be at peace with who you are.", "Take time to do what makes your soul happy.",
+    "The future belongs to those who believe in their dreams.", "Make today ridiculously amazing.", "Your light is beautiful.", "Hard days end. Good days return.",
+    "Your heart deserves rest too.", "Joy suits you.", "Choose yourself, every time.", "The world is waiting for your magic.",
+    "Trust that good things take time.", "You bring something special to this world.", "With love, everything is possible.", "Be thankful for the little things.",
+    "Brave hearts, bright futures.", "Make your own sunshine.", "Gentleness is strength.", "You are loved, you are worthy, you are enough."
   ];
   (function () {
     const d = new Date(), n = Math.floor((new Date(d.getFullYear(), d.getMonth(), d.getDate()) - new Date(2026, 0, 1)) / 864e5), txt = QUOTES[((n % QUOTES.length) + QUOTES.length) % QUOTES.length];
@@ -3105,7 +3225,7 @@ html.th-light body.night .page::after { background: rgba(0, 0, 0, .06); }
     const wrapChars = (el, d0, step) => { let i = 0; const walk = n => { [...n.childNodes].forEach(c => { if (c.nodeType === 3) { const f = document.createDocumentFragment(); [...c.textContent].forEach(ch => { const s = document.createElement("span"); s.className = "ch"; s.textContent = ch; s.style.animationDelay = (d0 + i * step).toFixed(2) + "s, " + (2.05 + i * .035).toFixed(2) + "s"; i++; f.appendChild(s); }); c.replaceWith(f); } else walk(c); }); }; walk(el); };
     const tt = sp.querySelector(".sp-title"); if (tt) wrapChars(tt, .45, .05);
     const qq = document.getElementById("spQuote"); qq.innerHTML = qq.textContent.split(" ").map((w, i) => '<span class="wd" style="animation-delay:' + (1.25 + i * .09).toFixed(2) + 's">' + w.replace(/[&<>]/g, "") + '</span>').join(" ");
-    const du = sp.querySelector(".sp-dust"); if (du) { let h = ""; for (let i = 0; i < 16; i++) h += '<i style="left:' + (4 + Math.random() * 92).toFixed(1) + '%;animation-delay:' + (1.3 + Math.random() * 1.5).toFixed(2) + 's;animation-duration:' + (2.4 + Math.random() * 1.6).toFixed(2) + 's;--sx:' + ((Math.random() - .5) * 70).toFixed(0) + 'px;--r:' + Math.round(180 + Math.random() * 360) + 'deg;--sc:' + (.7 + Math.random() * .6).toFixed(2) + '"></i>'; du.innerHTML = h; }
+    const du = sp.querySelector(".sp-dust"); if (du) { let h = ""; for (let i = 0; i < 11; i++) h += '<i style="left:' + (4 + Math.random() * 92).toFixed(1) + '%;animation-delay:' + (.3 + Math.random() * 2.2).toFixed(2) + 's;animation-duration:' + (4.5 + Math.random() * 2.5).toFixed(2) + 's;--sx:' + ((Math.random() - .5) * 70).toFixed(0) + 'px;--r:' + Math.round(180 + Math.random() * 360) + 'deg;--sc:' + (.7 + Math.random() * .6).toFixed(2) + '"></i>'; du.innerHTML = h; }
     const st = sp.querySelector(".sp-stars"); if (st) { let h = ""; for (let i = 0; i < 26; i++) { const z = 1 + Math.round(Math.random() * 2); h += '<i style="left:' + (Math.random() * 100).toFixed(1) + '%;top:' + (Math.random() * 100).toFixed(1) + '%;width:' + z + 'px;height:' + z + 'px;animation-delay:' + (.2 + i * .07).toFixed(2) + 's"></i>'; } st.innerHTML = h; }
     try { const dd = document.getElementById("spDate"); if (dd) dd.textContent = new Intl.DateTimeFormat("pt-PT", { weekday: "long", day: "numeric", month: "long" }).format(d); } catch (_) {}
     // at night the opening is a moonlit one
@@ -3113,7 +3233,7 @@ html.th-light body.night .page::after { background: rgba(0, 0, 0, .06); }
     const rmS = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     // gold dust gathers into "DT", then blows away
     try { (function () {
-      const cv = sp.querySelector(".sp-dt"); if (!cv || rmS) return;
+      const cv = sp.querySelector(".sp-dt"); if (!cv || rmS || cv.offsetParent === null) return;
       const W = Math.min(window.innerWidth || 0, 480), H = 120; if (W < 100) return; const dpr = Math.min(2, window.devicePixelRatio || 1);
       cv.width = W * dpr; cv.height = H * dpr; cv.style.width = W + "px"; cv.style.height = H + "px";
       const x = cv.getContext("2d"); if (!x) return; x.scale(dpr, dpr);
@@ -3155,16 +3275,17 @@ html.th-light body.night .page::after { background: rgba(0, 0, 0, .06); }
     let closing = false;
     const close = () => {
       if (closing) return; closing = true;
-      // the icon flies up to the DT monogram next to the title
+      // the open notebook comes towards you and the site appears behind it
       const ic = sp.querySelector(".sp-icon"), mono = document.querySelector(".mast h1 .mono");
       const rm = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (ic && !rm) { sp.classList.add("enter"); setTimeout(() => sp.remove(), 950); return; }
       if (ic && mono && !rm) {
         const a = ic.getBoundingClientRect(), b = mono.getBoundingClientRect();
         if (b.width && b.bottom > 0) { ic.style.setProperty("--fx", (b.left + b.width / 2 - (a.left + a.width / 2)).toFixed(1) + "px"); ic.style.setProperty("--fy", (b.top + b.height / 2 - (a.top + a.height / 2)).toFixed(1) + "px"); ic.style.setProperty("--fs", (b.width / a.width).toFixed(3)); sp.classList.add("fly"); setTimeout(() => sp.remove(), 800); return; }
       }
       sp.classList.add("out"); setTimeout(() => sp.remove(), 500);
     };
-    setTimeout(close, 3700); sp.addEventListener("click", close);
+    setTimeout(close, 4000); sp.addEventListener("click", close);
   })();
 
   // ---------- data ----------
