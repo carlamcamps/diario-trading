@@ -2502,6 +2502,65 @@ html.th-light body.night .page::after { background: rgba(0, 0, 0, .06); }
 .splash.enter > :not(.sp-icon) { opacity: 0 !important; transition: opacity .3s ease !important; }
 @media (prefers-reduced-motion: reduce) { .sp-cover, .sp-seal { display: none; } .sp-dust { display: none; } }
 
+/* ================= Diário: columns to show, one table on the phone, turning the month, week summary, floating Hoje ================= */
+body.hc-tp .lrow .stp.tp, body.hc-sl .lrow .stp.sl, body.hc-to .lrow .to { visibility: hidden; width: 0 !important; min-width: 0 !important; padding: 0 !important; margin: 0 -3px 0 0 !important; border: 0 !important; overflow: hidden; }
+body.hc-eur .lrow .res .eur, body.hc-eur .lrow .res .com, body.hc-eur .weur { display: none !important; }
+@media (max-width: 860px) {
+  body.one-estr .panels > .panel:nth-child(2), body.one-conta .panels > .panel:nth-child(1) { display: none !important; }
+  body.one-estr .dots, body.one-conta .dots { display: none !important; }
+}
+.cfg-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.cfg-chips button { border: 1px solid rgba(205, 167, 94, .4); background: rgba(0, 0, 0, .18); color: var(--soft); border-radius: 999px; padding: 8px 13px; font: 500 13px/1 var(--sans); cursor: pointer; }
+.cfg-chips button[aria-pressed="true"] { background: var(--gold); border-color: var(--gold); color: #2A1A08; font-weight: 600; }
+.cfg-mini { display: block; margin-top: 10px; font-size: 11.5px; color: var(--soft); }
+/* turning the page: at the end of the month */
+.turnbar { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; max-width: 760px; margin: 4px auto 90px; }
+.turn { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 16px; border: 1px solid rgba(205, 167, 94, .45); background: linear-gradient(180deg, color-mix(in srgb, var(--t-panel, #4A1420) 92%, transparent), color-mix(in srgb, var(--t-panel, #4A1420) 70%, #000)); color: var(--champ); cursor: pointer; font: 500 15px/1.2 var(--display); text-align: left; }
+.turn.next { justify-content: flex-end; text-align: right; }
+.turn small { display: block; font: 500 10.5px/1.3 var(--sans); letter-spacing: .08em; text-transform: uppercase; color: var(--gold); }
+.turn i { font-style: normal; font-size: 24px; color: var(--gold); line-height: 1; }
+.turn:hover { border-color: var(--gold); }
+.turn:active { transform: scale(.98); }
+/* week bar: hold it to open the summary (a gold line fills while you hold) */
+.wrow { position: relative; -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+.wrow.pressing::after { content: ""; position: absolute; left: 0; bottom: 0; height: 3px; width: 100%; border-radius: 0 0 10px 10px; background: linear-gradient(90deg, #E3BD6A, #F6E0A4); transform-origin: 0 50%; animation: wkHold 2s linear forwards; pointer-events: none; }
+@keyframes wkHold { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+.wk-card { width: min(480px, 100%); max-height: 88vh; overflow-y: auto; }
+.wk-card h3 small { font: 500 13px/1 var(--sans); color: var(--soft); margin-left: 6px; }
+.wk-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 14px; border-radius: 14px; background: rgba(0, 0, 0, .2); border: 1px solid rgba(205, 167, 94, .3); }
+.wk-big { font: 500 34px/1 var(--display); }
+.wk-big.pos { color: #8FD4A8; } .wk-big.neg { color: #F29AAE; } .wk-big.zero { color: #E6CD92; }
+.wk-kpi { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 4px 12px; font-size: 12.5px; color: var(--soft); }
+.wk-kpi b { color: var(--champ); font-weight: 600; }
+.wk-bars { display: flex; flex-direction: column; gap: 8px; }
+.wk-b { display: grid; grid-template-columns: 58px minmax(0, 1fr) 92px; align-items: center; gap: 10px; }
+.wk-d { font-size: 13px; color: var(--soft); } .wk-d b { color: var(--champ); font-weight: 600; }
+.wk-t { height: 14px; border-radius: 999px; background: rgba(255, 255, 255, .06); overflow: hidden; display: flex; align-items: center; }
+.wk-t i { display: block; height: 100%; width: var(--w); border-radius: inherit; animation: wkGrow .6s cubic-bezier(.2, .8, .2, 1) both; }
+.wk-t i.pos { background: linear-gradient(90deg, #3C7859, #8FD4A8); } .wk-t i.neg { background: linear-gradient(90deg, #8E2A40, #F29AAE); } .wk-t i.zero { background: linear-gradient(90deg, #B8913F, #E6CD92); }
+@keyframes wkGrow { from { width: 0; } }
+.wk-off { font-style: italic; font-size: 12px; color: var(--soft); padding-left: 8px; }
+.wk-v { text-align: right; font: 600 14px/1.1 var(--sans); color: var(--champ); }
+.wk-v.pos { color: #8FD4A8; } .wk-v.neg { color: #F29AAE; } .wk-v.zero { color: #E6CD92; }
+.wk-v small { display: block; font: 500 10.5px/1.3 var(--sans); color: var(--soft); }
+.wk-facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 8px; }
+.wk-facts > div { padding: 9px 11px; border-radius: 12px; background: rgba(0, 0, 0, .18); border: 1px solid rgba(205, 167, 94, .22); }
+.wk-facts small { display: block; font-size: 11px; color: var(--soft); margin-bottom: 3px; }
+.wk-facts b { font: 600 13.5px/1.25 var(--sans); color: var(--champ); }
+.wk-facts b.pos { color: #8FD4A8; } .wk-facts b.neg { color: #F29AAE; }
+.wk-notes small { font-size: 11px; color: var(--soft); }
+.wk-notes ul { list-style: none; margin: 6px 0 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.wk-notes li { padding: 8px 10px; border-radius: 10px; background: rgba(0, 0, 0, .16); font-size: 13px; line-height: 1.4; }
+.wk-notes li b { display: block; color: var(--gold); font-size: 12px; margin-bottom: 2px; }
+.wk-notes li span { white-space: pre-wrap; overflow-wrap: anywhere; }
+/* floating "Hoje" */
+.fab-today { position: fixed; z-index: 16; left: 50%; bottom: max(76px, calc(env(safe-area-inset-bottom, 0px) + 70px)); transform: translateX(-50%); border: 1px solid rgba(255, 240, 200, .6); border-radius: 999px; padding: 8px 16px; background: linear-gradient(135deg, #EED39A, #CDA75E 40%, #A8833F); color: #2A0A11; font: 600 13px/1 var(--sans); box-shadow: 0 10px 22px -10px rgba(0, 0, 0, .8); cursor: pointer; animation: fabIn .3s ease both; }
+.fab-today span { margin-right: 4px; }
+@keyframes fabIn { from { opacity: 0; transform: translate(-50%, 8px); } }
+@media (min-width: 861px) { .fab-today { bottom: 24px; } }
+/* weekday under the day number: a bit darker on the computer */
+@media (min-width: 861px) { .lrow .date .dw { color: #7A5560; font-weight: 500; } body.night .lrow .date .dw { color: #6B4A52; } }
+
 /* Configurações: two parts, Técnicas and Site */
 .cfg-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px; border-radius: 999px; background: rgba(0, 0, 0, .22); border: 1px solid rgba(205, 167, 94, .3); }
 .cfg-tabs button { border: 0; border-radius: 999px; padding: 9px 10px; background: none; color: var(--soft); font: 600 13.5px/1 var(--sans); cursor: pointer; }
@@ -5305,7 +5364,7 @@ html.th-light body.night .page::after { background: rgba(0, 0, 0, .06); }
       slideCtl = slider($("view").querySelector(".slides"), Math.max(0, AC_VIEWS.indexOf(acView)), i => { acView = AC_VIEWS[i] || "fusion"; try { localStorage.setItem(LS_AC, acView); } catch (_) {} markSwitch(); });
     } else {
       const nn = nextNewsHtml();
-      $("view").innerHTML = moodBarHtml() + weekLineHtml() + '<div class="nextnews" id="nextnews"' + (nn ? '' : ' hidden') + ' role="status">' + nn + '</div><div class="dots" aria-hidden="true"><i></i><i></i></div><div class="panels">' + GS().map(s => '<section class="panel" data-key="' + s.role + '" aria-label="' + s.full + '">' + panelHtml(s, days) + '</section>').join("") + '</div>';
+      $("view").innerHTML = moodBarHtml() + weekLineHtml() + '<div class="nextnews" id="nextnews"' + (nn ? '' : ' hidden') + ' role="status">' + nn + '</div><div class="dots" aria-hidden="true"><i></i><i></i></div><div class="panels">' + GS().map(s => '<section class="panel" data-key="' + s.role + '" aria-label="' + s.full + '">' + panelHtml(s, days) + '</section>').join("") + '</div>' + turnBarHtml();
       setupSwipe();
       drawSparks(days);
     }
@@ -5451,6 +5510,85 @@ html.th-light body.night .page::after { background: rgba(0, 0, 0, .06); }
     document.querySelectorAll('[data-wkt="' + key + '"]').forEach(x => x.classList.toggle("shut", !open));
     document.querySelectorAll('.lrow[data-wk="' + key + '"]').forEach(x => x.classList.toggle("wk-shut", !open));
   });
+  // ---------- Diário: what to show (Configurações → Site), turning the month, the week summary, the floating "Hoje" ----------
+  const LS_COLS = "diario-colunas", LS_ONE = "diario-uma-tabela";
+  function layoutPrefs() { let hid = [], one = "ambas"; try { hid = JSON.parse(localStorage.getItem(LS_COLS) || "[]") || []; one = localStorage.getItem(LS_ONE) || "ambas"; } catch (_) {} return { hid, one }; }
+  function applyLayoutPrefs() {
+    const P = layoutPrefs(), b = document.body;
+    ["tp", "sl", "to", "eur"].forEach(c => b.classList.toggle("hc-" + c, P.hid.includes(c)));
+    b.classList.toggle("one-estr", P.one === "estr"); b.classList.toggle("one-conta", P.one === "conta");
+  }
+  applyLayoutPrefs();
+  // at the end of the month: turn the page to the month before / after (a deliberate tap, not a swipe)
+  function turnBarHtml() {
+    const pm = new Date(view.y, view.m - 1, 1), nm = new Date(view.y, view.m + 1, 1);
+    return '<div class="turnbar" role="group" aria-label="Mudar de mês"><button type="button" class="turn prev" data-turn="-1"><i aria-hidden="true">‹</i><span><small>Mês anterior</small>' + cap(MONTHS[pm.getMonth()]) + ' ' + pm.getFullYear() + '</span></button>' +
+      '<button type="button" class="turn next" data-turn="1"><span><small>Mês seguinte</small>' + cap(MONTHS[nm.getMonth()]) + ' ' + nm.getFullYear() + '</span><i aria-hidden="true">›</i></button></div>';
+  }
+  document.addEventListener("click", e => {
+    const t = e.target.closest("[data-turn]"); if (!t) return;
+    $(t.dataset.turn === "1" ? "next" : "prev").click();
+    const top = document.querySelector(".tabbed"); window.scrollTo({ top: top ? Math.max(0, top.getBoundingClientRect().top + window.scrollY - 70) : 0, behavior: "smooth" });
+  });
+  // week summary: double tap / double click on the week bar, or hold it for 2 seconds
+  const wkDlg = document.createElement("div"); wkDlg.className = "dlg"; wkDlg.id = "wkdlg"; wkDlg.hidden = true; document.body.appendChild(wkDlg);
+  function openWeek(w) {
+    const pan = w.closest(".panel"); if (!pan) return;
+    const s = byRole(pan.dataset.key), r0 = pan.querySelector('.lrow[data-wk="' + w.dataset.wkt + '"]'); if (!r0) return;
+    const [y0, m0, d0] = r0.dataset.row.split("|")[1].split("-").map(Number), wk = fullWeek(new Date(y0, m0 - 1, d0)), ids = wk.map(iso), wt = sum(s.key, ids);
+    const other = SERIES.find(x => x.grp === s.grp && x.key !== s.key), ot = other ? sum(other.key, ids) : null;
+    const rows = wk.map(d => { const id = iso(d), e = entry(s.key, id), tr = traded(s.key, id), p = tr ? pctOf(e) : 0; return { d, id, e, tr, p }; });
+    const mx = Math.max(1, ...rows.map(r => Math.abs(r.p)));
+    const tradedR = rows.filter(r => r.tr), best = tradedR.length ? tradedR.reduce((a, b) => b.p > a.p ? b : a) : null, worst = tradedR.length ? tradedR.reduce((a, b) => b.p < a.p ? b : a) : null;
+    const hit = wt.tp + wt.sl ? Math.round(wt.tp / (wt.tp + wt.sl) * 100) : null, ew = s.acct ? eurSum(s.key, ids) : { n: 0 };
+    const bars = rows.map(r => '<div class="wk-b"><span class="wk-d"><b>' + DOW[r.d.getDay()] + '</b> ' + r.d.getDate() + '</span><span class="wk-t">' +
+      (r.e.off ? '<em class="wk-off">sem operar</em>' : r.tr ? '<i class="' + cls(r.p) + '" style="--w:' + Math.max(4, Math.abs(r.p) / mx * 100).toFixed(1) + '%"></i>' : '<em class="wk-off">—</em>') + '</span><span class="wk-v ' + (r.tr ? cls(r.p) : "") + '">' + (r.tr ? fmt(r.p) : "") + '<small>' + (r.tr ? r.e.tp + ' TP · ' + r.e.sl + ' SL' : '') + '</small></span></div>').join("");
+    const notesH = rows.filter(r => r.e.note).map(r => '<li><b>' + DOWL[r.d.getDay()] + ', ' + r.d.getDate() + '</b><span>' + esc(r.e.note) + '</span></li>').join("");
+    wkDlg.innerHTML = '<div class="dlg-card wk-card" role="dialog" aria-modal="true" aria-labelledby="wkT"><div><div class="sub">' + esc(s.full) + '</div><h3 id="wkT">Semana ' + w.dataset.wkt.split("-")[1] + ' <small>' + weekLabel(wk) + '</small></h3></div>' +
+      '<div class="wk-top"><div class="wk-big ' + cls(wt.pct) + '">' + fmt(wt.pct) + '</div><div class="wk-kpi"><span><b>' + wt.tp + '</b> TP</span><span><b>' + wt.sl + '</b> SL</span><span><b>' + wt.to + '</b> TO</span>' + (hit != null ? '<span><b>' + hit + '%</b> acerto</span>' : '') + '</div></div>' +
+      '<div class="wk-bars">' + bars + '</div>' +
+      '<div class="wk-facts">' + (best ? '<div><small>Melhor dia</small><b class="' + cls(best.p) + '">' + DOWL[best.d.getDay()] + ' ' + best.d.getDate() + ' · ' + fmt(best.p) + '</b></div>' : '') + (worst && worst !== best ? '<div><small>Pior dia</small><b class="' + cls(worst.p) + '">' + DOWL[worst.d.getDay()] + ' ' + worst.d.getDate() + ' · ' + fmt(worst.p) + '</b></div>' : '') +
+      (ew.n ? '<div><small>Em euros</small><b class="' + cls(ew.v) + '">' + eur(ew.v) + '</b></div>' : '') + (ot ? '<div><small>' + esc(other.full) + ' nesta semana</small><b class="' + cls(ot.pct) + '">' + fmt(ot.pct) + '</b></div>' : '') + '</div>' +
+      (notesH ? '<div class="wk-notes"><small>Notas da semana</small><ul>' + notesH + '</ul></div>' : '') +
+      '<div class="dlg-actions"><button type="button" class="btn primary" data-wkclose>Fechar</button></div></div>';
+    wkDlg.hidden = false; try { haptic(); } catch (_) {}
+  }
+  wkDlg.addEventListener("click", e => { if (e.target === wkDlg || e.target.closest("[data-wkclose]")) wkDlg.hidden = true; });
+  document.addEventListener("keydown", e => { if (e.key === "Escape" && !wkDlg.hidden) wkDlg.hidden = true; });
+  let wkTap = { key: null, t: 0 }, wkHold = null, wkSkipClick = false;
+  document.addEventListener("click", e => {
+    if (wkSkipClick && e.target.closest("[data-wkt]")) { wkSkipClick = false; e.stopPropagation(); e.preventDefault(); }
+  }, true);
+  document.addEventListener("click", e => {
+    const w = e.target.closest("[data-wkt]"); if (!w) return;
+    const k = w.dataset.wkt + "|" + (w.closest(".panel") || {}).dataset?.key, n = Date.now();
+    if (wkTap.key === k && n - wkTap.t < 380) { wkTap = { key: null, t: 0 }; openWeek(w); return; }
+    wkTap = { key: k, t: n };
+  });
+  const holdStop = () => { if (wkHold) { clearTimeout(wkHold.tm); wkHold.el.classList.remove("pressing"); wkHold = null; } };
+  document.addEventListener("pointerdown", e => {
+    const w = e.target.closest && e.target.closest("[data-wkt]"); if (!w || e.button > 0) return;
+    holdStop(); w.classList.add("pressing");
+    wkHold = { el: w, x: e.clientX, y: e.clientY, tm: setTimeout(() => { const el = wkHold && wkHold.el; holdStop(); if (el) { wkSkipClick = true; setTimeout(() => { wkSkipClick = false; }, 700); openWeek(el); } }, 2000) };
+  });
+  document.addEventListener("pointermove", e => { if (wkHold && Math.hypot(e.clientX - wkHold.x, e.clientY - wkHold.y) > 10) holdStop(); });
+  ["pointerup", "pointercancel"].forEach(t => document.addEventListener(t, holdStop));
+  window.addEventListener("scroll", holdStop, { passive: true });
+  document.addEventListener("contextmenu", e => { if (e.target.closest && e.target.closest("[data-wkt]")) e.preventDefault(); });
+  // a small "Hoje" button that appears when today is out of sight in the Diário
+  const fab = document.createElement("button"); fab.type = "button"; fab.className = "fab-today"; fab.hidden = true; document.body.appendChild(fab);
+  fab.addEventListener("click", () => $("today").click());
+  function fabCheck() {
+    if (tab !== "diario") { fab.hidden = true; return; }
+    const isCur = view.y === now.getFullYear() && view.m === now.getMonth();
+    let dir = "";
+    if (!isCur) dir = (view.y * 12 + view.m) > (now.getFullYear() * 12 + now.getMonth()) ? "←" : "→";
+    else { const r = [...document.querySelectorAll(".panel .lrow.today")].find(x => { const b = x.getBoundingClientRect(); return b.height > 0 && b.right > 0 && b.left < window.innerWidth; }); if (r) { const b = r.getBoundingClientRect(); if (b.bottom < 60) dir = "↑"; else if (b.top > window.innerHeight - 60) dir = "↓"; } }
+    fab.hidden = !dir; if (dir) fab.innerHTML = '<span aria-hidden="true">' + dir + '</span> Hoje';
+  }
+  window.addEventListener("scroll", () => requestAnimationFrame(fabCheck), { passive: true });
+  setInterval(fabCheck, 1200);
+
   // phone: the Fusion/Prop bar and the Sessão button slide away while scrolling down, and come back when scrolling up
   (function () {
     let lastY = window.scrollY;
@@ -5504,6 +5642,10 @@ html.th-light body.night .page::after { background: rgba(0, 0, 0, .06); }
         ? '<div class="cfg-sec"><b class="cfg-h">Cor do fundo</b><small>Muda o fundo do site todo. O dourado fica sempre igual. Fica guardada só neste telemóvel ou computador.</small>' +
           '<p class="cfg-sub">Escuras</p><div class="cfg-bgs">' + window.DT_THEMES.filter(t => !t[4]).map(bgBtn).join("") + '</div>' +
           '<p class="cfg-sub">Claras</p><div class="cfg-bgs">' + window.DT_THEMES.filter(t => t[4]).map(bgBtn).join("") + '</div></div>' +
+          (() => { const P = layoutPrefs(); return '<div class="cfg-sec"><b class="cfg-h">Diário</b><small>O que aparece em cada linha. Fica guardado só neste telemóvel ou computador.</small>' +
+            '<p class="cfg-sub">Colunas a mostrar</p><div class="cfg-chips">' + [["tp", "TP"], ["sl", "SL"], ["to", "TO"], ["eur", "Euros (€)"]].map(([k, l]) => '<button type="button" data-cfgcol="' + k + '" aria-pressed="' + !P.hid.includes(k) + '">' + (P.hid.includes(k) ? "" : "✓ ") + l + '</button>').join("") + '</div>' +
+            '<p class="cfg-sub">No telemóvel, mostrar</p><div class="cfg-chips">' + [["ambas", "As duas tabelas"], ["estr", "Só a Estratégia"], ["conta", "Só a Fusion / Prop"]].map(([k, l]) => '<button type="button" data-cfgone="' + k + '" aria-pressed="' + (P.one === k) + '">' + l + '</button>').join("") + '</div>' +
+            '<small class="cfg-mini">A bolinha BE liga-se em Técnicas.</small></div>'; })() +
           '<div class="cfg-sec"><label class="cfg-sw"><input type="checkbox" id="cfgSom"' + (cfg.som ? " checked" : "") + '><span class="sw" aria-hidden="true"></span><span><b>Som de sino ao abrir</b><small>Um toque suave quando abres o site. Fica só neste telemóvel ou computador. No iPhone toca quando tocas no ecrã pela primeira vez.</small></span></label></div>' +
           '<div class="dlg-actions"><button type="button" class="btn primary" data-cfg="site-ok">Fechar</button></div></div>'
         : '<p class="cfg-note">A Fusion e a Prop podem ter valores diferentes. A Estratégia de cada uma usa o mesmo valor da sua conta. Ao mudar, os resultados são recalculados.</p>' +
@@ -5528,6 +5670,15 @@ html.th-light body.night .page::after { background: rgba(0, 0, 0, .06); }
     const tb = e.target.closest("[data-cfgtab]"); if (tb) { cfgRead(); cfg.tab = tb.dataset.cfgtab; drawCfg(); cfgDlg.querySelector(".dlg-card").scrollTop = 0; return; }
     const bg = e.target.closest("[data-cfgbg]");
     if (bg) { const sc = cfgDlg.querySelector(".dlg-card").scrollTop; cfgRead(); window.DT_setTheme(bg.dataset.cfgbg); try { localStorage.setItem("diario-fundo", bg.dataset.cfgbg); } catch (_) {} drawCfg(); cfgDlg.querySelector(".dlg-card").scrollTop = sc; return; }
+    const cc = e.target.closest("[data-cfgcol]"), co = e.target.closest("[data-cfgone]");
+    if (cc || co) {
+      const sc = cfgDlg.querySelector(".dlg-card").scrollTop, P = layoutPrefs(); cfgRead();
+      try {
+        if (cc) { const k = cc.dataset.cfgcol, h = P.hid.includes(k) ? P.hid.filter(x => x !== k) : P.hid.concat(k); localStorage.setItem(LS_COLS, JSON.stringify(h)); }
+        else localStorage.setItem(LS_ONE, co.dataset.cfgone);
+      } catch (_) {}
+      applyLayoutPrefs(); drawCfg(); cfgDlg.querySelector(".dlg-card").scrollTop = sc; return;
+    }
     if (e.target.closest('[data-cfg="site-ok"]')) { cfgRead(); try { localStorage.setItem("diario-som-abrir", cfg.som ? "1" : "0"); } catch (_) {} return closeCfg(); }
     const t = e.target.closest("[data-cfgtp]"); if (t) { const [k, v] = t.dataset.cfgtp.split("|"); cfgRead(); if (k === "f") cfg.tpF = +v; else cfg.tpP = +v; drawCfg(); return; }
     const a = e.target.closest("[data-cfg]"); if (!a) return;
